@@ -20,7 +20,7 @@ namespace BugLab.Business.QueryHandlers
 
         public async Task<BugResponse> Handle(GetBugQuery request, CancellationToken cancellationToken)
         {
-            var bug = await _context.Bugs.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var bug = await _context.Bugs.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             return bug.Adapt<BugResponse>();
         }
