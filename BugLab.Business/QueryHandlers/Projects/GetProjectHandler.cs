@@ -43,7 +43,7 @@ namespace BugLab.Business.QueryHandlers.Projects
             var project = await _context.Projects.ProjectToType<ProjectResponse>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             if (project == null) return project;
 
-            var bugsCount = await _context.Bugs
+            var bugsCount = await _context.Bugs.AsNoTracking()
                 .Where(x => x.ProjectId == request.Id)
                 .GroupBy(bug => 1, (key, bugs) => new
                 {
