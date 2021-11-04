@@ -1,4 +1,5 @@
 ﻿using BugLab.Data.Entities;
+using BugLab.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
@@ -13,12 +14,13 @@ namespace BugLab.Data
         }
 
         public DbSet<Bug> Bugs { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            builder.Seed();
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

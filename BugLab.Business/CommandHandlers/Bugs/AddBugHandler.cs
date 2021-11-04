@@ -1,8 +1,11 @@
-﻿using BugLab.Data;
+﻿using BugLab.Business.Helpers;
+using BugLab.Data;
 using BugLab.Data.Entities;
 using BugLab.Shared.Commands;
 using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +22,19 @@ namespace BugLab.Business.CommandHandlers.Bugs
 
         public async Task<int> Handle(AddBugCommand request, CancellationToken cancellationToken)
         {
-            var newBug = request.Adapt<Bug>(); 
+            var projectExists = await _context.Projects.AsNoTracking()
+                .AnyAsync(x => x.Id == request.ProjectId, cancellationToken);
+            if (!projectExists) Throw.NotFound(nameof(Project), request.ProjectId);
+
+            var newBug = new Bug
+            {
+                Title = request.Title,
+                Description = request.Description,
+                Priority = request.Priority,
+                Status = request.Status,
+                ProjectId = request.ProjectId
+            };
+
             await _context.Bugs.AddAsync(newBug, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 

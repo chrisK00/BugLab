@@ -4,6 +4,7 @@ using BugLab.Shared.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,13 @@ namespace BugLab.API.Controllers
         {
             var bug = await _mediator.Send(new GetBugQuery(id), cancellationToken);
             return bug;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<BugResponse>>> GetAll([FromQuery] GetBugsQuery query, CancellationToken cancellationToken)
+        {
+            var bugs = await _mediator.Send(query, cancellationToken);
+            return Ok(bugs);
         }
 
         [HttpPost]

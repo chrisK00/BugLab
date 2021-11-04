@@ -19,6 +19,11 @@ namespace BugLab.Data.EntityConfigs
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(255);
+
+            builder.HasOne<Project>()
+                .WithMany()
+                .HasForeignKey(x => x.ProjectId);
+
         }
     }
 }

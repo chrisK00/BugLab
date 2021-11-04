@@ -9,5 +9,6 @@ namespace BugLab.Shared.Commands
         public string Description { get; set; }
         public BugPriority Priority { get; set; }
         public BugStatus Status { get; set; }
+        public int ProjectId { get; set; }
     }
 }
