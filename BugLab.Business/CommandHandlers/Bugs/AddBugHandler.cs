@@ -6,7 +6,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BugLab.Business.CommandHandlers
+namespace BugLab.Business.CommandHandlers.Bugs
 {
     public class AddBugHandler : IRequestHandler<AddBugCommand, int>
     {
