@@ -37,5 +37,13 @@ namespace BugLab.API.Controllers
 
             return CreatedAtRoute(nameof(Get), new { id }, id);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBug(UpdateBugCommand command, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(command, cancellationToken);
+
+            return NoContent();
+        }
     }
 }

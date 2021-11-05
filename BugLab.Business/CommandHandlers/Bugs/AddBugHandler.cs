@@ -4,6 +4,7 @@ using BugLab.Data.Entities;
 using BugLab.Shared.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,8 @@ namespace BugLab.Business.CommandHandlers.Bugs
         {
             var projectExists = await _context.Projects.AsNoTracking()
                 .AnyAsync(x => x.Id == request.ProjectId, cancellationToken);
-            if (!projectExists) Throw.NotFound(nameof(Project), request.ProjectId);
+
+            Guard.NotFound(projectExists, nameof(Project), request.ProjectId);
 
             var newBug = new Bug
             {
