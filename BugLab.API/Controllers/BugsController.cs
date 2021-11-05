@@ -16,15 +16,15 @@ namespace BugLab.API.Controllers
         {
         }
 
-        [HttpGet("{id}", Name = nameof(Get))]
-        public async Task<ActionResult<BugResponse>> Get(int id, CancellationToken cancellationToken)
+        [HttpGet("{id}", Name = nameof(GetBug))]
+        public async Task<ActionResult<BugResponse>> GetBug(int id, CancellationToken cancellationToken)
         {
             var bug = await _mediator.Send(new GetBugQuery(id), cancellationToken);
             return bug;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BugResponse>>> GetAll([FromQuery] GetBugsQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<BugResponse>>> GetBugs([FromQuery] GetBugsQuery query, CancellationToken cancellationToken)
         {
             var bugs = await _mediator.Send(query, cancellationToken);
             return Ok(bugs);
@@ -35,7 +35,7 @@ namespace BugLab.API.Controllers
         {
             var id = await _mediator.Send(command, cancellationToken);
 
-            return CreatedAtRoute(nameof(Get), new { id }, id);
+            return CreatedAtRoute(nameof(GetBug), new { id }, id);
         }
 
         [HttpPut("{id}")]
