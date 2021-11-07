@@ -1,4 +1,5 @@
-﻿using BugLab.Shared.Commands;
+﻿using BugLab.API.Extensions;
+using BugLab.Shared.Commands;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using MediatR;
@@ -27,6 +28,8 @@ namespace BugLab.API.Controllers
         public async Task<ActionResult<IEnumerable<BugResponse>>> GetBugs([FromQuery] GetBugsQuery query, CancellationToken cancellationToken)
         {
             var bugs = await _mediator.Send(query, cancellationToken);
+            Response.AddPaginationHeader(bugs.PageNumber, bugs.PageSize, bugs.TotalPages, bugs.TotalItems);
+
             return Ok(bugs);
         }
 

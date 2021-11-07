@@ -1,4 +1,5 @@
 ﻿using BugLab.Data;
+using BugLab.Shared.Helpers;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using Mapster;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BugLab.Business.QueryHandlers.Bugs
 {
-    public class GetBugsHandler : IRequestHandler<GetBugsQuery, IEnumerable<BugResponse>>
+    public class GetBugsHandler : IRequestHandler<GetBugsQuery, PagedList<BugResponse>>
     {
         private readonly AppDbContext _context;
 
@@ -20,14 +21,14 @@ namespace BugLab.Business.QueryHandlers.Bugs
             _context = context;
         }
 
-        public async Task<IEnumerable<BugResponse>> Handle(GetBugsQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<BugResponse>> Handle(GetBugsQuery request, CancellationToken cancellationToken)
         {
             var query = _context.Bugs.AsNoTracking();
 
             if (request.ProjectId.HasValue) query = query.Where(x => x.ProjectId == request.ProjectId);
-            else return await Task.FromResult(new List<BugResponse>());
+            else return new PagedList<BugResponse>(new List<BugResponse>(), 0, 1, 0);
 
-            return await query.ProjectToType<BugResponse>().ToListAsync(cancellationToken);
+            return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(), request.PageNumber, request.PageSize, cancellationToken);
         }
     }
 }

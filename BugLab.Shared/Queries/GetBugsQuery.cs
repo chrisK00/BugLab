@@ -1,10 +1,11 @@
-﻿using BugLab.Shared.Responses;
+﻿using BugLab.Shared.Helpers;
+using BugLab.Shared.QueryParams;
+using BugLab.Shared.Responses;
 using MediatR;
-using System.Collections.Generic;
 
 namespace BugLab.Shared.Queries
 {
-    public class GetBugsQuery : IRequest<IEnumerable<BugResponse>>
+    public class GetBugsQuery : PaginationParams, IRequest<PagedList<BugResponse>>
     {
         public int? ProjectId { get; set; }
     }

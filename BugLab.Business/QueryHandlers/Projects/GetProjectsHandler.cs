@@ -23,7 +23,8 @@ namespace BugLab.Business.QueryHandlers.Projects
 
         public async Task<PagedList<ProjectResponse>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
-            var projects = await PagedList<ProjectResponse>.CreateAsync(_context.Projects.ProjectToType<ProjectResponse>(), request.PageNumber, request.PageSize);
+            var projects = await PagedList<ProjectResponse>
+                .CreateAsync(_context.Projects.ProjectToType<ProjectResponse>(), request.PageNumber, request.PageSize, cancellationToken);
 
             foreach (var project in projects)
             {
