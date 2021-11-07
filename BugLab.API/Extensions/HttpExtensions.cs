@@ -1,4 +1,4 @@
-﻿using BugLab.API.Helpers;
+﻿using BugLab.Shared.Headers;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 

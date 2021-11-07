@@ -1,0 +1,49 @@
+﻿@page "/projects"
+
+@inject HttpClient Client
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<ProjectResponse>>>(GetProjects))"
+          @ref="_table" Dense="true" Hover="true" Bordered="true" Striped="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Projects</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>High prioritized bugs</MudTh>
+        <MudTh>Bugs</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Title</MudTd>
+        <MudTd>@context.TotalHighPriorityBugs</MudTd>
+        <MudTd>@context.TotalBugs</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
+    </PagerContent>
+</MudTable>
+
+@code{
+
+    private MudTable<ProjectResponse> _table;
+    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10 };
+
+    public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
+    {
+        var request = new StringBuilder(Endpoints.Projects)
+            .Append("?")
+            .Append($"{nameof(PaginationHeader.PageNumber)}={state.Page}")
+            .Append("&")
+            .Append($"{nameof(state.PageSize)}={state.PageSize}")
+            .ToString();
+
+        var response = await Client.GetAsync(request);
+        Console.WriteLine(response.RequestMessage.RequestUri);
+        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(response.Headers.GetValues("Pagination").First());
+
+        return new TableData<ProjectResponse>
+        {
+            Items = await response.Content.ReadFromJsonAsync<IEnumerable<ProjectResponse>>(),
+            TotalItems = paginationInfo.TotalItems
+        };
+    }
+}

@@ -2,7 +2,7 @@
 {
     public static class Endpoints
     {
-        public const string Projects = "/projects";
-        public const string Bugs = "/bugs";
+        public const string Projects = "/api/projects";
+        public const string Bugs = "/api/bugs";
     }
 }
