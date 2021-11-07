@@ -1,8 +1,10 @@
-﻿using BugLab.Shared.Commands;
+﻿using BugLab.API.Extensions;
+using BugLab.Shared.Commands;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +22,15 @@ namespace BugLab.API.Controllers
             var project = await _mediator.Send(new GetProjectQuery(id), cancellationToken);
 
             return project;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetProjects([FromQuery] GetProjectsQuery query, CancellationToken cancellationToken)
+        {
+            var projects = await _mediator.Send(query, cancellationToken);
+            Response.AddPaginationHeader(projects.PageNumber, projects.PageSize, projects.TotalPages, projects.TotalItems);
+            
+            return projects;
         }
 
         [HttpPost]

@@ -1,34 +1,16 @@
 ﻿using BugLab.Data;
-using BugLab.Data.Entities;
 using BugLab.Shared.Enums;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BugLab.Business.QueryHandlers.Projects
 {
-    public class BugsCountAccumulator
-    {
-        public int HighPrioritizedBugsCount { get; set; }
-        public int BugsCount { get; set; }
-
-
-        public BugsCountAccumulator(Bug bug)
-        {
-            BugsCount++;
-            if (bug.Priority == BugPriority.High)
-            {
-                HighPrioritizedBugsCount++;
-            }
-        }
-    }
-
     public class GetProjectHandler : IRequestHandler<GetProjectQuery, ProjectResponse>
     {
         private readonly AppDbContext _context;
