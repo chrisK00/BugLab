@@ -3,7 +3,7 @@
 @inject HttpClient Client
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<ProjectResponse>>>(GetProjects))"
-          @ref="_table" Dense="true" Hover="true" Bordered="true" Striped="true">
+          @ref="_table" RowStyleFunc="RowStyleFunc" Dense="true" Hover="true" Bordered="true" Striped="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Projects</MudText>
     </ToolBarContent>
@@ -13,7 +13,7 @@
         <MudTh>Bugs</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd>@context.Title</MudTd>
+        <MudTd Class="text-l">@context.Title</MudTd>
         <MudTd>@context.TotalHighPriorityBugs</MudTd>
         <MudTd>@context.TotalBugs</MudTd>
     </RowTemplate>
@@ -25,7 +25,7 @@
 @code{
 
     private MudTable<ProjectResponse> _table;
-    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10 };
+    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
@@ -42,6 +42,16 @@
         {
             Items = await response.Content.ReadFromJsonAsync<IEnumerable<ProjectResponse>>(),
             TotalItems = paginationInfo.TotalItems
+        };
+    }
+
+    public string RowStyleFunc(ProjectResponse item, int index)
+    {
+        return item.TotalHighPriorityBugs switch
+        {
+            > 10 => $"{Css.BgColor}red",
+            >= 5 and < 10 => $"{Css.BgColor}yellow",
+            _ => $"{Css.BgColor}white"
         };
     }
 }
