@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugLab.Business", "BugLab.B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugLab.Blazor", "BugLab.Blazor\BugLab.Blazor.csproj", "{3DFB1848-B4AC-4988-A043-DAC4CBE5BDD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugLab.Tests", "BugLab.Tests\BugLab.Tests.csproj", "{A0F16356-6F75-4345-97EC-320864CEADE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3DFB1848-B4AC-4988-A043-DAC4CBE5BDD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DFB1848-B4AC-4988-A043-DAC4CBE5BDD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DFB1848-B4AC-4988-A043-DAC4CBE5BDD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F16356-6F75-4345-97EC-320864CEADE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F16356-6F75-4345-97EC-320864CEADE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F16356-6F75-4345-97EC-320864CEADE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F16356-6F75-4345-97EC-320864CEADE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

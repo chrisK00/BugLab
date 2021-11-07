@@ -29,12 +29,10 @@
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
-        var request = new StringBuilder(Endpoints.Projects)
-            .Append("?")
-            .Append($"{nameof(PaginationHeader.PageNumber)}={state.Page}")
-            .Append("&")
-            .Append($"{nameof(state.PageSize)}={state.PageSize}")
-            .ToString();
+        var request = QueryBuilder.Use(Endpoints.Projects)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page)
+            .WithParam(nameof(state.PageSize), state.PageSize)
+            .Build();
 
         var response = await Client.GetAsync(request);
         Console.WriteLine(response.RequestMessage.RequestUri);
