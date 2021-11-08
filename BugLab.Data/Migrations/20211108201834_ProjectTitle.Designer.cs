@@ -4,14 +4,16 @@ using BugLab.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211108201834_ProjectTitle")]
+    partial class ProjectTitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,39 +64,6 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Bugs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Priority = "None",
-                            ProjectId = 1,
-                            ProjectTitle = "BugLab",
-                            Status = "Open",
-                            Title = "Implement project controllers"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Description = "Better domaine events pattern",
-                            Priority = "None",
-                            ProjectId = 1,
-                            ProjectTitle = "BugLab",
-                            Status = "Open",
-                            Title = "update project title"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Priority = "None",
-                            ProjectId = 2,
-                            ProjectTitle = "Plannial",
-                            Status = "Open",
-                            Title = "How you doing?"
-                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Project", b =>
@@ -115,23 +84,6 @@ namespace Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Title = "BugLab"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Title = "Plannial"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Title = "SweatSpace"
-                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Bug", b =>

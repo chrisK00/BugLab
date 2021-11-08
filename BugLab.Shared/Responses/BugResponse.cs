@@ -12,5 +12,7 @@ namespace BugLab.Shared.Responses
         public BugStatus Status { get; init; }
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
+        public string ProjectTitle { get; set; }
+        public int ProjectId { get; set; }
     }
 }

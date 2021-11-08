@@ -22,6 +22,7 @@
         <MudTh>Priority</MudTh>
         <MudTh>Created On</MudTh>
         <MudTh>Modified On</MudTh>
+        <MudTh>Project</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd><MudButton @onclick="() => SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
@@ -29,6 +30,7 @@
         <MudTd>@context.Priority</MudTd>
         <MudTd>@context.Created</MudTd>
         <MudTd>@context.Modified</MudTd>
+        <MudTd>@context.ProjectTitle</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />

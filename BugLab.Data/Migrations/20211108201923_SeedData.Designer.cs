@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211104115252_Seed")]
-    partial class Seed
+    [Migration("20211108201923_SeedData")]
+    partial class SeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,6 +45,10 @@ namespace Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProjectTitle")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -68,6 +72,7 @@ namespace Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Priority = "None",
                             ProjectId = 1,
+                            ProjectTitle = "BugLab",
                             Status = "Open",
                             Title = "Implement project controllers"
                         },
@@ -75,10 +80,22 @@ namespace Migrations
                         {
                             Id = 2,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Better domaine events pattern",
                             Priority = "None",
                             ProjectId = 1,
+                            ProjectTitle = "BugLab",
                             Status = "Open",
-                            Title = "update bugs controllers"
+                            Title = "update project title"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Priority = "None",
+                            ProjectId = 2,
+                            ProjectTitle = "Plannial",
+                            Status = "Open",
+                            Title = "How you doing?"
                         });
                 });
 
@@ -99,7 +116,7 @@ namespace Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Project");
+                    b.ToTable("Projects");
 
                     b.HasData(
                         new
@@ -111,6 +128,11 @@ namespace Migrations
                         {
                             Id = 2,
                             Title = "Plannial"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "SweatSpace"
                         });
                 });
 

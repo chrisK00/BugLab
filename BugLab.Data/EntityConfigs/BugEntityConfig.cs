@@ -24,6 +24,9 @@ namespace BugLab.Data.EntityConfigs
                 .WithMany()
                 .HasForeignKey(x => x.ProjectId);
 
+            builder.Property(X => X.ProjectTitle)
+                .HasMaxLength(255);
+
         }
     }
 }

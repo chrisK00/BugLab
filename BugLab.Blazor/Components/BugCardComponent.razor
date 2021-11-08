@@ -1,7 +1,7 @@
 ﻿<MudCard>
     <MudCardHeader>
         <CardHeaderContent>
-            <MudText Typo="Typo.h6">@Bug.Title</MudText>
+            <MudText Typo="Typo.h6" Color="Color.Primary">@Bug.Title</MudText>
         </CardHeaderContent>
         <CardHeaderActions>
             <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" />
@@ -16,6 +16,7 @@
         {
             <MudText Typo="Typo.body2">Modified on: @Bug.Modified</MudText>
         }
+        <MudText Typo="Typo.body2" Color="Color.Primary">Project: @Bug.ProjectTitle</MudText>
     </MudCardContent>
     <MudCardActions>
         <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>

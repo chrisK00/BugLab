@@ -12,14 +12,16 @@ namespace BugLab.Data.Extensions
                 .HasData(new List<Project>
                 {
                     new Project { Id = 1, Title = "BugLab"},
-                    new Project { Id = 2, Title = "Plannial"}
+                    new Project { Id = 2, Title = "Plannial"},
+                    new Project { Id = 3, Title = "SweatSpace"}
                 });
 
             builder.Entity<Bug>()
                .HasData(new List<Bug>
                {
-                    new Bug { Id = 1, Title = "Implement project controllers", ProjectId = 1},
-                    new Bug { Id = 2, Title = "update bugs controllers", ProjectId = 1},
+                    new Bug { Id = 1, Title = "Implement project controllers", ProjectId = 1, ProjectTitle = "BugLab"},
+                    new Bug { Id = 2, Title = "update project title", Description = "Better domaine events pattern", ProjectId = 1, ProjectTitle = "BugLab"},
+                    new Bug { Id = 3, Title = "How you doing?", ProjectId = 2, ProjectTitle = "Plannial"},
                });
         }
     }
