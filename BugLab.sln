@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugLab.Shared", "BugLab.Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugLab.Business", "BugLab.Business\BugLab.Business.csproj", "{49B1E36F-544A-4869-BF8A-000AD4D882FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugLab.Blazor", "BugLab.Blazor\BugLab.Blazor.csproj", "{3DFB1848-B4AC-4988-A043-DAC4CBE5BDD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugLab.Blazor", "BugLab.Blazor\BugLab.Blazor.csproj", "{3DFB1848-B4AC-4988-A043-DAC4CBE5BDD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugLab.Tests", "BugLab.Tests\BugLab.Tests.csproj", "{A0F16356-6F75-4345-97EC-320864CEADE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugLab.Tests", "BugLab.Tests\BugLab.Tests.csproj", "{A0F16356-6F75-4345-97EC-320864CEADE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

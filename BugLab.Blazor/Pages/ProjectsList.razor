@@ -1,19 +1,22 @@
 ﻿@page "/projects"
 
 @inject HttpClient Client
+@inject NavigationManager Nav
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<ProjectResponse>>>(GetProjects))"
-          @ref="_table" RowStyleFunc="RowStyleFunc" Dense="true" Hover="true" Striped="true">
+          @ref="_table" RowsPerPage="10" RowStyleFunc="RowStyleFunc" Dense="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Projects</MudText>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>
+        <MudTh>Description</MudTh>
         <MudTh>High prioritized bugs</MudTh>
         <MudTh>Bugs</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd Class="text-l">@context.Title</MudTd>
+        <MudTd id="title"><MudLink @onclick="() => OnProjectClick(context.Id)">@context.Title</MudLink></MudTd>
+        <MudTd>@context.Description</MudTd>
         <MudTd>@context.TotalHighPriorityBugs</MudTd>
         <MudTd>@context.TotalBugs</MudTd>
     </RowTemplate>
@@ -23,9 +26,9 @@
 </MudTable>
 
 @code{
-
     private MudTable<ProjectResponse> _table;
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
+
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
@@ -54,4 +57,16 @@
             _ => $"{Css.BgColor}white"
         };
     }
+
+    public void OnProjectClick(int projectId)
+    {
+        Nav.NavigateTo($"/bugs/{projectId}");
+    }
 }
+
+<style>
+    #title {
+        cursor: pointer;
+        font-size: 20px;
+    }
+</style>

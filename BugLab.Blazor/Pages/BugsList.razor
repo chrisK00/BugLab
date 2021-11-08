@@ -1,0 +1,77 @@
+﻿@page "/bugs/{projectId:int}"
+@page "/bugs"
+
+@inject HttpClient Client
+
+<p>Gets bugs for a project or all your bugs</p>
+@if (ProjectId != default)
+{
+    <AddBugComponent />
+    <p>Oh you can even add stuff (AddBugComponent) and we will use callbacks to update ourselves/get the newly added item</p>
+    <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
+}
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"
+          @ref="_table" Striped="true" Hover="true" RowsPerPage="6" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Bugs</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Priority</MudTh>
+        <MudTh>Created On</MudTh>
+        <MudTh>Modified On</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><MudButton @onclick="() => SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
+        <MudTd>@context.Status</MudTd>
+        <MudTd>@context.Priority</MudTd>
+        <MudTd>@context.Created</MudTd>
+        <MudTd>@context.Modified</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
+    </PagerContent>
+</MudTable>
+
+@if (_selectedBug != null)
+{
+<MudContainer Class="mt-5 mb-5">
+    <BugCardComponent Bug="_selectedBug" />
+</MudContainer>
+}
+
+@code{
+    private MudTable<BugResponse> _table;
+    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
+    private BugResponse _selectedBug;
+
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+    public void SelectedBugChanged(BugResponse bug)
+    {
+        _selectedBug = bug;
+    }
+
+    public async Task<TableData<BugResponse>> GetBugs(TableState state)
+    {
+        var request = QueryBuilder.Use(Endpoints.Bugs)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page)
+            .WithParam(nameof(state.PageSize), state.PageSize);
+
+        if (ProjectId != default) request.WithParam(nameof(ProjectId), ProjectId);
+
+        var response = await Client.GetAsync(request.Build());
+        var jsonPaginationInfo = response.Headers.GetValues("pagination").First();
+        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(jsonPaginationInfo, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        return new TableData<BugResponse>
+        {
+            Items = await response.Content.ReadFromJsonAsync<IEnumerable<BugResponse>>(JsonOptions.Defaults()),
+            TotalItems = paginationInfo.TotalItems
+        };
+    }
+}
+

@@ -1,0 +1,28 @@
+﻿<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Bug.Title</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>@Bug.Description</MudText>
+        <MudText Typo="Typo.body2">Status: @Bug.Status</MudText>
+        <MudText Typo="Typo.body2">Priority: @Bug.Priority</MudText>
+        <MudText Typo="Typo.body2">Created on: @Bug.Created</MudText>
+        @if (Bug.Modified.HasValue)
+        {
+            <MudText Typo="Typo.body2">Modified on: @Bug.Modified</MudText>
+        }
+    </MudCardContent>
+    <MudCardActions>
+        <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter]
+    public BugResponse Bug { get; set; }
+}
