@@ -35,8 +35,8 @@
             .Build();
 
         var response = await Client.GetAsync(request);
-        Console.WriteLine(response.RequestMessage.RequestUri);
-        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(response.Headers.GetValues("Pagination").First());
+        var jsonPaginationInfo = response.Headers.GetValues("pagination").First();
+        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(jsonPaginationInfo, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
         return new TableData<ProjectResponse>
         {

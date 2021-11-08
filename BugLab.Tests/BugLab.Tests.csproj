@@ -21,7 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BugLab.Business\BugLab.Business.csproj" />
     <ProjectReference Include="..\BugLab.Shared\BugLab.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Business\" />
   </ItemGroup>
 
 </Project>

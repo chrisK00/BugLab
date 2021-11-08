@@ -1,4 +1,6 @@
-﻿namespace BugLab.Shared.Headers
+﻿using System.Text.Json.Serialization;
+
+namespace BugLab.Shared.Headers
 {
     public class PaginationHeader
     {
@@ -10,9 +12,9 @@
             TotalPages = totalPages;
         }
 
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
-        public int TotalItems { get; set; }
-        public int TotalPages { get; set; }
+        public int PageNumber { get; init; }
+        public int PageSize { get; init; }
+        public int TotalItems { get; init; }
+        public int TotalPages { get; init; }
     }
 }
