@@ -20,13 +20,9 @@ namespace BugLab.Data.EntityConfigs
                 .IsRequired()
                 .HasMaxLength(255);
 
-            builder.HasOne<Project>()
+            builder.HasOne(x => x.Project)
                 .WithMany()
                 .HasForeignKey(x => x.ProjectId);
-
-            builder.Property(X => X.ProjectTitle)
-                .HasMaxLength(255);
-
         }
     }
 }

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211108201834_ProjectTitle")]
-    partial class ProjectTitle
+    [Migration("20211109110237_ProjectNavOnBug")]
+    partial class ProjectNavOnBug
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,10 +44,6 @@ namespace Migrations
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ProjectTitle")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -88,11 +84,13 @@ namespace Migrations
 
             modelBuilder.Entity("BugLab.Data.Entities.Bug", b =>
                 {
-                    b.HasOne("BugLab.Data.Entities.Project", null)
+                    b.HasOne("BugLab.Data.Entities.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

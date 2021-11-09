@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211108201923_SeedData")]
-    partial class SeedData
+    [Migration("20211109110314_Seed")]
+    partial class Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,10 +45,6 @@ namespace Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProjectTitle")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -72,7 +68,6 @@ namespace Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Priority = "None",
                             ProjectId = 1,
-                            ProjectTitle = "BugLab",
                             Status = "Open",
                             Title = "Implement project controllers"
                         },
@@ -83,7 +78,6 @@ namespace Migrations
                             Description = "Better domaine events pattern",
                             Priority = "None",
                             ProjectId = 1,
-                            ProjectTitle = "BugLab",
                             Status = "Open",
                             Title = "update project title"
                         },
@@ -93,7 +87,6 @@ namespace Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Priority = "None",
                             ProjectId = 2,
-                            ProjectTitle = "Plannial",
                             Status = "Open",
                             Title = "How you doing?"
                         });
@@ -138,11 +131,13 @@ namespace Migrations
 
             modelBuilder.Entity("BugLab.Data.Entities.Bug", b =>
                 {
-                    b.HasOne("BugLab.Data.Entities.Project", null)
+                    b.HasOne("BugLab.Data.Entities.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }
