@@ -15,7 +15,7 @@ namespace BugLab.Tests.Business.QueryHandlers
         [Fact]
         public async Task GetProject_ReturnsNull_WhenNotFound()
         {
-            using var context = DbContextHelpers.Create();
+            using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);
             var result = await _sut.Handle(new GetProjectQuery(default), default);
 
@@ -25,7 +25,7 @@ namespace BugLab.Tests.Business.QueryHandlers
         [Fact]
         public async Task GetProject_ReturnsSpecifiedProject_With_BugsCount()
         {
-            using var context = DbContextHelpers.Create();
+            using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);
             var projectId = context.Projects.FirstOrDefault().Id;
             var result = await _sut.Handle(new GetProjectQuery(projectId), default);

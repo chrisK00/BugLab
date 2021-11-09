@@ -1,22 +1,22 @@
 ﻿using BugLab.Data;
 using BugLab.Data.Entities;
 using BugLab.Shared.Enums;
-using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TestSupport.EfHelpers;
 
 namespace BugLab.Tests.Helpers
 {
     public static class DbContextHelpers
     {
-        public static AppDbContext Create()
+        public static async Task<AppDbContext> CreateAsync()
         {
             var options = SqliteInMemory.CreateOptions<AppDbContext>();
             var context = new AppDbContext(options);
             context.Database.EnsureCreated();
             context.SeedProjects();
             context.SeedBugs();
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             return context;
         }

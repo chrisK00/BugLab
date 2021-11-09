@@ -23,6 +23,12 @@ namespace BugLab.Data
             builder.Seed();
         }
 
+        /// <summary>
+        /// Saves Changes and updates any audit tracked entities
+        /// </summary>
+        /// <inheritdoc cref="DbContext.SaveChangesAsync(CancellationToken)"/>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
