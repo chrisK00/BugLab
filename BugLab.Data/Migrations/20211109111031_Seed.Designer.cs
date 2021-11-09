@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211104114106_Project")]
-    partial class Project
+    [Migration("20211109111031_Seed")]
+    partial class Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -60,6 +60,36 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Bugs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Priority = "None",
+                            ProjectId = 1,
+                            Status = "Open",
+                            Title = "Implement project controllers"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Better domaine events pattern",
+                            Priority = "None",
+                            ProjectId = 1,
+                            Status = "Open",
+                            Title = "update project title"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Priority = "None",
+                            ProjectId = 2,
+                            Status = "Open",
+                            Title = "How you doing?"
+                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Project", b =>
@@ -79,16 +109,35 @@ namespace Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Project");
+                    b.ToTable("Projects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "BugLab"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "Plannial"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "SweatSpace"
+                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Bug", b =>
                 {
-                    b.HasOne("BugLab.Data.Entities.Project", null)
+                    b.HasOne("BugLab.Data.Entities.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

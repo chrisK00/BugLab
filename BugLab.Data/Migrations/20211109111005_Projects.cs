@@ -2,7 +2,7 @@
 
 namespace Migrations
 {
-    public partial class Project : Migration
+    public partial class Projects : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,7 +14,7 @@ namespace Migrations
                 defaultValue: 0);
 
             migrationBuilder.CreateTable(
-                name: "Project",
+                name: "Projects",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -24,7 +24,7 @@ namespace Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Project", x => x.Id);
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -33,10 +33,10 @@ namespace Migrations
                 column: "ProjectId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Bugs_Project_ProjectId",
+                name: "FK_Bugs_Projects_ProjectId",
                 table: "Bugs",
                 column: "ProjectId",
-                principalTable: "Project",
+                principalTable: "Projects",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -44,11 +44,11 @@ namespace Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Bugs_Project_ProjectId",
+                name: "FK_Bugs_Projects_ProjectId",
                 table: "Bugs");
 
             migrationBuilder.DropTable(
-                name: "Project");
+                name: "Projects");
 
             migrationBuilder.DropIndex(
                 name: "IX_Bugs_ProjectId",
