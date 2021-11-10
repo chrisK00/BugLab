@@ -60,7 +60,7 @@
     public async Task<TableData<BugResponse>> GetBugs(TableState state)
     {
         var request = QueryBuilder.Use(Endpoints.Bugs)
-            .WithParam(nameof(PaginationHeader.PageNumber), state.Page)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
             .WithParam(nameof(state.PageSize), state.PageSize);
 
         if (ProjectId != default) request.WithParam(nameof(ProjectId), ProjectId);

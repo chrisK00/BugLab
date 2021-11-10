@@ -33,7 +33,7 @@
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
         var request = QueryBuilder.Use(Endpoints.Projects)
-            .WithParam(nameof(PaginationHeader.PageNumber), state.Page)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
             .WithParam(nameof(state.PageSize), state.PageSize)
             .Build();
 
