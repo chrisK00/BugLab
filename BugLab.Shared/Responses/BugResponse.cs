@@ -1,5 +1,6 @@
 ﻿using BugLab.Shared.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace BugLab.Shared.Responses
 {
@@ -14,5 +15,6 @@ namespace BugLab.Shared.Responses
         public DateTime? Modified { get; set; }
         public string ProjectTitle { get; set; }
         public int ProjectId { get; set; }
+        public ICollection<CommentResponse> Comments { get; set; } = new List<CommentResponse>();
     }
 }
