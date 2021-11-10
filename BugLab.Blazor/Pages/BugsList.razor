@@ -4,10 +4,16 @@
 @inject HttpClient Client
 
 <p>Gets bugs for a project or all your bugs</p>
-@if (ProjectId != default)
+<MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
+@if (ProjectId != default && _showAddBug)
 {
-    <AddBugComponent />
-    <p>Oh you can even add stuff (AddBugComponent) and we will use callbacks to update ourselves/get the newly added item</p>
+    //TODO:
+    @*<MudText Typo="Typo.h6" Color="Color.Primary">@ProjectTitle</MudText>*@
+
+    @*<AddBugComponent OnAdd="OnBugAdded" />*@
+    <AddBugComponent ProjectId="ProjectId.Value" />
+
+    <p>Oh you can even add stuff (AddBugComponent shows if ShowAddBug will let us know when a user clicks on add bug) and we will use callbacks to update ourselves/get the newly added item</p>
     <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
 }
 
@@ -39,18 +45,23 @@
 
 @if (_selectedBug != null)
 {
-<MudContainer Class="mt-5 mb-5">
-    <BugCardComponent Bug="_selectedBug" />
-</MudContainer>
+    <MudContainer Class="mt-5 mb-5">
+        <BugCardComponent Bug="_selectedBug" />
+    </MudContainer>
 }
 
 @code{
     private MudTable<BugResponse> _table;
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
     private BugResponse _selectedBug;
+    private bool _showAddBug;
 
     [Parameter]
     public int? ProjectId { get; set; }
+
+    //TODO:
+    //[Parameter]
+    //public int? ProjectTitle { get; set; }
 
     public void SelectedBugChanged(BugResponse bug)
     {
@@ -74,6 +85,12 @@
             Items = await response.Content.ReadFromJsonAsync<IEnumerable<BugResponse>>(JsonOptions.Defaults()),
             TotalItems = paginationInfo.TotalItems
         };
+    }
+
+    public void OnBugAdded(int id)
+    {
+        Console.WriteLine(id);
+        // Fetch the newly created bug and add it to the list
     }
 }
 

@@ -15,7 +15,7 @@
         <MudTh>Bugs</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd id="title"><MudLink @onclick="() => OnProjectClick(context.Id)">@context.Title</MudLink></MudTd>
+        <MudTd id="title"><MudLink @onclick="() => OnProjectClick(context.Title, context.Id)">@context.Title</MudLink></MudTd>
         <MudTd>@context.Description</MudTd>
         <MudTd>@context.TotalHighPriorityBugs</MudTd>
         <MudTd>@context.TotalBugs</MudTd>
@@ -58,7 +58,7 @@
         };
     }
 
-    public void OnProjectClick(int projectId)
+    public void OnProjectClick(string projectTitle, int projectId)
     {
         Nav.NavigateTo($"/bugs/{projectId}");
     }

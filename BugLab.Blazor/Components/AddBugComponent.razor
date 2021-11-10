@@ -1,5 +1,36 @@
-﻿<h3>AddBugComponent</h3>
+﻿@inject HttpClient Client
+
+<MudCard Class="mb-5">
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
+        <FluentValidationValidator />
+        <MudCardContent>
+            <MudTextField Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            <MudTextField Label="Priority" @bind-Value="_model.Priority" />
+            <MudTextField Label="Status" @bind-Value="_model.Status" />
+            <MudTextField Label="Description" @bind-Value="_model.Description" />
+            <input hidden value="@ProjectId" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+        </MudCardActions>
+    </EditForm>
+</MudCard>
 
 @code {
+    private AddBugCommand _model = new();
+    private AddBugValidator _validator = new();
 
+    [Parameter]
+    public int ProjectId { get; init; }
+
+    //[Parameter]
+    //public EventCallback<int> OnAdd { get; set; }
+
+    public async Task OnSubmit()
+    {
+        //TODO:
+        Console.WriteLine("success");
+        // add the item using the client and return the id
+        //await OnAdd.InvokeAsync(0);
+    }
 }
