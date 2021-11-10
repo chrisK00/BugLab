@@ -1,7 +1,7 @@
 ﻿@inject HttpClient Client
 
 <MudCard>
-    <EditForm Model="_model" OnValidSubmit="OnSubmit">
+    <EditForm Model="_model" OnSubmit="OnSubmit">
         <FluentValidationValidator />
         <MudCardContent>
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
@@ -18,9 +18,8 @@
                     <MudSelectItem Value="status">@status</MudSelectItem>
                 }
             </MudSelect>
-            <MudTextField  AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
                           Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
-            <input hidden value="@ProjectId" />
         </MudCardContent>
         <MudCardActions>
             <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
@@ -35,15 +34,21 @@
     [Parameter]
     public int ProjectId { get; init; }
 
-    //[Parameter]
-    //public EventCallback<int> OnAdd { get; set; }
+    [Parameter]
+    public EventCallback OnAdd { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _model.ProjectId = ProjectId;
+    }
 
     public async Task OnSubmit()
     {
-        //TODO:
-        Console.WriteLine("success");
-        // add the item using the client and return the id
-        //await OnAdd.InvokeAsync(0);
+        Console.WriteLine("Submit called");
+        var response = await Client.PostAsJsonAsync<AddBugCommand>(Endpoints.Bugs, _model);
+        // Can make sure we get a valid id back
+        // TODO: show error msg in a div or snackbar
+        await OnAdd.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);
     }
 }
 

@@ -4,7 +4,6 @@ using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
