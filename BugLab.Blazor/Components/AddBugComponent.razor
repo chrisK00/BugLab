@@ -1,13 +1,25 @@
 ﻿@inject HttpClient Client
 
-<MudCard Class="mb-5">
+<MudCard>
     <EditForm Model="_model" OnValidSubmit="OnSubmit">
         <FluentValidationValidator />
         <MudCardContent>
-            <MudTextField Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
-            <MudTextField Label="Priority" @bind-Value="_model.Priority" />
-            <MudTextField Label="Status" @bind-Value="_model.Status" />
-            <MudTextField Label="Description" @bind-Value="_model.Description" />
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                          Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority" @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
+                @foreach (var priority in Enum.GetValues<BugPriority>())
+                {
+                    <MudSelectItem Value="priority">@priority</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled" Label="Status" @bind-Value="_model.Status">
+                @foreach (var status in Enum.GetValues<BugStatus>())
+                {
+                    <MudSelectItem Value="status">@status</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField  AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
+                          Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
             <input hidden value="@ProjectId" />
         </MudCardContent>
         <MudCardActions>
@@ -34,3 +46,9 @@
         //await OnAdd.InvokeAsync(0);
     }
 }
+
+<style>
+    .mud-card {
+        width: 75%
+    }
+</style>

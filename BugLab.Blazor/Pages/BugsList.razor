@@ -11,8 +11,9 @@
     @*<MudText Typo="Typo.h6" Color="Color.Primary">@ProjectTitle</MudText>*@
 
     @*<AddBugComponent OnAdd="OnBugAdded" />*@
-    <AddBugComponent ProjectId="ProjectId.Value" />
-
+    <MudContainer Class="mb-5">
+        <AddBugComponent ProjectId="ProjectId.Value" />
+    </MudContainer>
     <p>Oh you can even add stuff (AddBugComponent shows if ShowAddBug will let us know when a user clicks on add bug) and we will use callbacks to update ourselves/get the newly added item</p>
     <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
 }
