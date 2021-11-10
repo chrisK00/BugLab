@@ -4,14 +4,16 @@ using BugLab.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211110165823_CommentTable")]
+    partial class CommentTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,29 +117,6 @@ namespace Migrations
                     b.HasIndex("BugId");
 
                     b.ToTable("Comments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BugId = 1,
-                            Created = new DateTime(2021, 11, 10, 17, 10, 59, 664, DateTimeKind.Utc).AddTicks(1611),
-                            Text = "This has been implemented"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BugId = 1,
-                            Created = new DateTime(2021, 11, 10, 17, 10, 59, 664, DateTimeKind.Utc).AddTicks(2116),
-                            Text = "Nope"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            BugId = 2,
-                            Created = new DateTime(2021, 11, 10, 17, 10, 59, 664, DateTimeKind.Utc).AddTicks(2119),
-                            Text = "Any progress?"
-                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Project", b =>

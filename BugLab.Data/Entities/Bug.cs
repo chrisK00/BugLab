@@ -1,4 +1,5 @@
 ﻿using BugLab.Shared.Enums;
+using System.Collections.Generic;
 
 namespace BugLab.Data.Entities
 {
@@ -12,5 +13,7 @@ namespace BugLab.Data.Entities
 
         public int ProjectId { get; init; }
         public Project Project { get; init; }
+
+        public ICollection<Comment> Comments { get; init; } = new List<Comment>();
     }
 }

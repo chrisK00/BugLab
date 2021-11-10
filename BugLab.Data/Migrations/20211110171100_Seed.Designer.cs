@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211109111031_Seed")]
+    [Migration("20211110171100_Seed")]
     partial class Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,6 +92,56 @@ namespace Migrations
                         });
                 });
 
+            modelBuilder.Entity("BugLab.Data.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BugId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BugId");
+
+                    b.ToTable("Comments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BugId = 1,
+                            Created = new DateTime(2021, 11, 10, 17, 10, 59, 664, DateTimeKind.Utc).AddTicks(1611),
+                            Text = "This has been implemented"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BugId = 1,
+                            Created = new DateTime(2021, 11, 10, 17, 10, 59, 664, DateTimeKind.Utc).AddTicks(2116),
+                            Text = "Nope"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BugId = 2,
+                            Created = new DateTime(2021, 11, 10, 17, 10, 59, 664, DateTimeKind.Utc).AddTicks(2119),
+                            Text = "Any progress?"
+                        });
+                });
+
             modelBuilder.Entity("BugLab.Data.Entities.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -138,6 +188,20 @@ namespace Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.Comment", b =>
+                {
+                    b.HasOne("BugLab.Data.Entities.Bug", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("BugId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.Bug", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
