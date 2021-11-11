@@ -3,9 +3,11 @@ using BugLab.Business.Options;
 using BugLab.Data;
 using BugLab.Data.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
@@ -16,12 +18,12 @@ namespace BugLab.API.Extensions
 {
     public static class ServicesExtensions
     {
-        public static void AddApiServices(this IServiceCollection services, IConfiguration config)
+        public static void AddApiServices(this IServiceCollection services, IConfiguration config, IWebHostEnvironment environment)
         {
             services.AddBusinessServices();
             services.AddDataServices(config);
             services.AddSwagger();
-            services.AddAuth(config);
+            services.AddAuth(config, environment);
         }
 
         public static void AddSwagger(this IServiceCollection services)
@@ -52,7 +54,7 @@ namespace BugLab.API.Extensions
             });
         }
 
-        private static void AddAuth(this IServiceCollection services, IConfiguration config)
+        private static void AddAuth(this IServiceCollection services, IConfiguration config, IWebHostEnvironment environment)
         {
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {

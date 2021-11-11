@@ -16,5 +16,7 @@ namespace BugLab.Shared.Responses
         public string ProjectTitle { get; set; }
         public int ProjectId { get; set; }
         public ICollection<CommentResponse> Comments { get; set; } = new List<CommentResponse>();
+        public UserResponse CreatedBy { get; set; }
+        public UserResponse ModifiedBy { get; set; }
     }
 }

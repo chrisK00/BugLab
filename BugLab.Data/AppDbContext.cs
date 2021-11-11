@@ -1,5 +1,6 @@
 ﻿using BugLab.Data.Entities;
 using BugLab.Data.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,8 +11,11 @@ namespace BugLab.Data
 {
     public class AppDbContext : IdentityDbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        private readonly string _currentUserId;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContext = null) : base(options)
         {
+            _currentUserId = httpContext?.HttpContext?.User?.UserId();
         }
 
         public DbSet<Bug> Bugs { get; set; }
@@ -21,7 +25,7 @@ namespace BugLab.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-            builder.Seed();
+            //builder.Seed();
         }
 
         /// <summary>
@@ -38,10 +42,12 @@ namespace BugLab.Data
                 {
                     case EntityState.Modified:
                         entry.Entity.Modified = DateTime.UtcNow;
+                        entry.Entity.ModifiedById = _currentUserId;
                         break;
 
                     case EntityState.Added:
                         entry.Entity.Created = DateTime.UtcNow;
+                        entry.Entity.CreatedById = _currentUserId;
                         break;
 
                     default:

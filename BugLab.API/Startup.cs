@@ -13,16 +13,18 @@ namespace BugLab.API
     public class Startup
     {
         private readonly IConfiguration _config;
+        private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment  environment)
         {
             _config = configuration;
+            _environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApiServices(_config);
+            services.AddApiServices(_config, _environment);
 
             services.AddControllers()
                 .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))

@@ -12,6 +12,16 @@ namespace BugLab.Data.EntityConfigs
 
             builder.Property(x => x.Text)
                 .IsRequired();
+
+            builder.HasOne(x => x.CreatedBy)
+              .WithMany()
+              .IsRequired()
+              .OnDelete(DeleteBehavior.Restrict)
+              .HasForeignKey(x => x.CreatedById);
+
+            builder.HasOne(x => x.ModifiedBy)
+              .WithMany()
+              .HasForeignKey(x => x.ModifiedById);
         }
     }
 }
