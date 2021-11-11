@@ -8,6 +8,7 @@ MediatRs request models are currently shared in order to boost dev speed but the
 
 ### API
 - EF core, audit tracking, SQL server
+- Authentication and Authorization using ASP identity and JWT tokens
 - CQRS with MediatR - SRP and maintainability
 - Mapster - a faster mapper
 - Fluentvalidation - Clean validation instead of polluting models with data annotations
