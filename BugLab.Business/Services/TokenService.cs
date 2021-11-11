@@ -21,7 +21,7 @@ namespace BugLab.Business.Services
             _options = options.Value;
         }
 
-        public string CreateToken(UserResponse user)
+        public string CreateToken(LoginResponse user)
         {
             var claims = new List<Claim>
             {

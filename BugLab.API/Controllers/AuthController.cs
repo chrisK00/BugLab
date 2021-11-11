@@ -16,7 +16,7 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserResponse>> LoginAsync(LoginCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult<LoginResponse>> LoginAsync(LoginCommand command, CancellationToken cancellationToken)
         {
             var user = await _mediator.Send(command, cancellationToken);
 

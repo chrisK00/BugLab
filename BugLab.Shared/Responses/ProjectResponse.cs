@@ -1,4 +1,6 @@
-﻿namespace BugLab.Shared.Responses
+﻿using System.Collections.Generic;
+
+namespace BugLab.Shared.Responses
 {
     public class ProjectResponse
     {
@@ -7,5 +9,6 @@
         public string Description { get; init; }
         public int TotalBugs { get; set; }
         public int TotalHighPriorityBugs{ get; set; }
+        public IEnumerable<UserResponse> Users { get; set; } = new List<UserResponse>();
     }
 }

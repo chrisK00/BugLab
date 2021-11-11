@@ -1,4 +1,5 @@
 ﻿using BugLab.API.Extensions;
+using BugLab.Data.Extensions;
 using BugLab.Shared.Commands;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
@@ -36,6 +37,7 @@ namespace BugLab.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProject(AddProjectCommand command, CancellationToken cancellationToken)
         {
+            command.UserId = User.UserId();
             var id = await _mediator.Send(command, cancellationToken);
 
             return CreatedAtRoute(nameof(GetProject), new { id }, id);

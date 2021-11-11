@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BugLab.Business.CommandHandlers.Auth
 {
-    public class LoginHandler : IRequestHandler<LoginCommand, UserResponse>
+    public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ITokenService _tokenService;
@@ -22,7 +22,7 @@ namespace BugLab.Business.CommandHandlers.Auth
             _userManager = userManager;
         }
 
-        public async Task<UserResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
             _ = user ?? throw new UnauthorizedAccessException("Failed to login");
@@ -32,7 +32,7 @@ namespace BugLab.Business.CommandHandlers.Auth
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var userResponse = new UserResponse
+            var userResponse = new LoginResponse
             {
                 Roles = roles,
                 Email = user.Email,

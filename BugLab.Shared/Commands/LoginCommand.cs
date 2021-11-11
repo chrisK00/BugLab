@@ -3,7 +3,7 @@ using MediatR;
 
 namespace BugLab.Shared.Commands
 {
-    public class LoginCommand : IRequest<UserResponse>
+    public class LoginCommand : IRequest<LoginResponse>
     {
         private string _email;
 

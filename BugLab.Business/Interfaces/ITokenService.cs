@@ -4,6 +4,6 @@ namespace BugLab.Business.Interfaces
 {
     public interface ITokenService
     {
-        string CreateToken(UserResponse user);
+        string CreateToken(LoginResponse user);
     }
 }

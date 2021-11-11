@@ -11,6 +11,9 @@ namespace BugLab.Data.EntityConfigs
             builder.Property(x => x.Title)
                .IsRequired()
                .HasMaxLength(255);
+
+            builder.HasMany(x => x.Users)
+                .WithMany(nameof(AppDbContext.Projects));
         }
     }
 }
