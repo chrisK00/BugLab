@@ -8,5 +8,6 @@ namespace BugLab.Shared.Queries
     public class GetBugsQuery : PaginationParams, IRequest<PagedList<BugResponse>>
     {
         public int? ProjectId { get; set; }
+        public string UserId { get; set; }
     }
 }

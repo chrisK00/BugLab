@@ -5,7 +5,6 @@ using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,8 +24,9 @@ namespace BugLab.Business.QueryHandlers.Bugs
         {
             var query = _context.Bugs.AsNoTracking();
 
-            if (request.ProjectId.HasValue) query = query.Where(x => x.ProjectId == request.ProjectId);
-            else return new PagedList<BugResponse>(new List<BugResponse>(), 0, 1, 0);
+            query = request.ProjectId.HasValue
+                ? query.Where(x => x.ProjectId == request.ProjectId)
+                : query.Where(b => b.CreatedById == request.UserId);
 
             return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(), request.PageNumber, request.PageSize, cancellationToken);
         }

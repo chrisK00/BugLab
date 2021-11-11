@@ -1,4 +1,5 @@
 ﻿using BugLab.API.Extensions;
+using BugLab.Business.Interfaces;
 using BugLab.Data.Extensions;
 using BugLab.Shared.Commands;
 using BugLab.Shared.Queries;
@@ -13,8 +14,11 @@ namespace BugLab.API.Controllers
 {
     public class ProjectsController : BaseApiController
     {
-        public ProjectsController(IMediator mediator) : base(mediator)
+        private readonly IProjectAuthService _projectAuthService;
+
+        public ProjectsController(IMediator mediator, IProjectAuthService projectAuthService) : base(mediator)
         {
+            _projectAuthService = projectAuthService;
         }
 
         [HttpGet("{id}", Name = nameof(GetProject))]

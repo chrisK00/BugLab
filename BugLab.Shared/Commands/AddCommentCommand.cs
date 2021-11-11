@@ -6,5 +6,6 @@ namespace BugLab.Shared.Commands
     {
         public string Text { get; set; }
         public int BugId { get; set; }
+        public int ProjectId { get; set; }
     }
 }

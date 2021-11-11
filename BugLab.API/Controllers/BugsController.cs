@@ -1,4 +1,6 @@
 ﻿using BugLab.API.Extensions;
+using BugLab.Business.Interfaces;
+using BugLab.Data.Extensions;
 using BugLab.Shared.Commands;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
@@ -12,8 +14,11 @@ namespace BugLab.API.Controllers
 {
     public class BugsController : BaseApiController
     {
-        public BugsController(IMediator mediator) : base(mediator)
+        private readonly IProjectAuthService _projectAuthService;
+
+        public BugsController(IMediator mediator, IProjectAuthService projectAuthService) : base(mediator)
         {
+            _projectAuthService = projectAuthService;
         }
 
         [HttpGet("{id}", Name = nameof(GetBug))]
@@ -26,6 +31,7 @@ namespace BugLab.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BugResponse>>> GetBugs([FromQuery] GetBugsQuery query, CancellationToken cancellationToken)
         {
+            query.UserId = User.UserId();
             var bugs = await _mediator.Send(query, cancellationToken);
             Response.AddPaginationHeader(bugs.PageNumber, bugs.PageSize, bugs.TotalPages, bugs.TotalItems);
 
@@ -35,6 +41,8 @@ namespace BugLab.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBug(AddBugCommand command, CancellationToken cancellationToken)
         {
+            await _projectAuthService.HasAccess(User.UserId(), command.ProjectId);
+
             var id = await _mediator.Send(command, cancellationToken);
 
             return CreatedAtRoute(nameof(GetBug), new { id }, id);
@@ -43,6 +51,8 @@ namespace BugLab.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBug(UpdateBugCommand command, CancellationToken cancellationToken)
         {
+            await _projectAuthService.HasAccess(User.UserId(), command.ProjectId);
+
             await _mediator.Send(command, cancellationToken);
 
             return NoContent();

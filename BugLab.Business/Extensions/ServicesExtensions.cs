@@ -15,6 +15,7 @@ namespace BugLab.Business.Extensions
             TypeAdapterConfig.GlobalSettings.Scan(typeof(Mappings).Assembly);
 
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IProjectAuthService, ProjectAuthService>();
         }
     }
 }
