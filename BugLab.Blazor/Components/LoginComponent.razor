@@ -11,7 +11,8 @@
     <MudTextField @bind-Value="_model.Password" InputType="InputType.Password" Label="Password" For="() => _model.Password"
                   AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Password" Adornment="Adornment.End" Variant="Variant.Filled">
     </MudTextField>
-        <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Login</MudButton>
+    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Login</MudButton>
+    <MudButton Color="Color.Primary" OnClick="SampleUserLogin">Login with sample user</MudButton>
 </EditForm>
 
 @code{
@@ -32,5 +33,12 @@
         var user = await response.Content.ReadFromJsonAsync<LoginResponse>();
         await AuthState.LogInAsync(user);
         Nav.NavigateTo("/");
+    }
+
+    public async Task SampleUserLogin()
+    {
+        _model.Email = "chris@gmail.com";
+        _model.Password = "Password123.";
+        await OnSubmit();
     }
 }

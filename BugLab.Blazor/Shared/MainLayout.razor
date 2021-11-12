@@ -12,7 +12,7 @@
         @if (LoggedInUser != null)
         {
             <MudText>Logged in as @LoggedInUser</MudText>
-            <MudIconButton Icon="@Icons.Material.Filled.Logout" OnClick="async () => await AuthState.LogoutAsync()"></MudIconButton>
+            <MudIconButton id="logout" Icon="@Icons.Material.Filled.Logout" OnClick="async () => await AuthState.LogoutAsync()"></MudIconButton>
         }
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
@@ -49,3 +49,9 @@
     }
 
 }
+
+<style>
+    #logout {
+        color: white;
+    }
+</style>

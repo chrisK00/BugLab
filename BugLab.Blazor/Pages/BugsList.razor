@@ -3,7 +3,6 @@
 
 @inject HttpClient Client
 
-<p>Gets bugs for a project or all your bugs</p>
 <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
 @if (ProjectId != default && _showAddBug)
 {

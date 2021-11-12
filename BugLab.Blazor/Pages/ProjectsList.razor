@@ -3,6 +3,14 @@
 @inject HttpClient Client
 @inject NavigationManager Nav
 
+<MudButton Class="mb-5" OnClick="() => _showAddProject = !_showAddProject" Color="Color.Primary">@(_showAddProject ? "Hide" : "Add a new project")</MudButton>
+@if (_showAddProject)
+{
+    <MudContainer Class="mb-5">
+        <AddProjectComponent OnAdd="OnProjectAdded" />
+    </MudContainer>
+}
+
 <MudTable ServerData="@(new Func<TableState, Task<TableData<ProjectResponse>>>(GetProjects))"
           @ref="_table" RowsPerPage="10" RowStyleFunc="RowStyleFunc" Dense="true">
     <ToolBarContent>
@@ -28,7 +36,7 @@
 @code{
     private MudTable<ProjectResponse> _table;
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
-
+    private bool _showAddProject;
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
@@ -61,6 +69,12 @@
     public void OnProjectClick(string projectTitle, int projectId)
     {
         Nav.NavigateTo($"/project/{projectId}/bugs");
+    }
+
+    public async Task OnProjectAdded()
+    {
+        _showAddProject = false;
+        await _table.ReloadServerData();
     }
 }
 
