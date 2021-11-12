@@ -1,3 +1,6 @@
+using Blazored.LocalStorage;
+using BugLab.Blazor.Helpers;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
@@ -22,6 +25,11 @@ namespace BugLab.Blazor
                 cfg.ShowCloseIcon = true;
                 cfg.PreventDuplicates = false;
             });
+
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddScoped<AuthState>();
+            builder.Services.AddScoped<AuthenticationStateProvider>(p => p.GetRequiredService<AuthState>());
+            builder.Services.AddAuthorizationCore();
 
             await builder.Build().RunAsync();
         }
