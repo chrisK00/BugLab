@@ -25,9 +25,7 @@ namespace BugLab.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
-            // TODO: update relational data
-            //builder.Seed();
+            builder.Seed();
         }
 
         /// <summary>
