@@ -1,7 +1,5 @@
 ﻿using BugLab.Business.Interfaces;
 using BugLab.Data;
-using BugLab.Shared.Responses;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
