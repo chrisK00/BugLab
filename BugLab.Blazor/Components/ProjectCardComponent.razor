@@ -1,0 +1,23 @@
+﻿<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6" Color="Color.Primary">@Project.Title</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText>@Project.Description</MudText>
+        <MudText Typo="Typo.body2">Total high prioritized bugs: @Project.TotalHighPriorityBugs</MudText>
+        <MudText Typo="Typo.body2">Total bugs: @Project.TotalBugs</MudText>
+    </MudCardContent>
+    <MudCardActions>
+        <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete (will show a confirm dialog)</MudIconButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter]
+    public ProjectResponse Project { get; set; }
+}

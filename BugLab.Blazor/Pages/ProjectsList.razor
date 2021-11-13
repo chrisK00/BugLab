@@ -18,25 +18,38 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>
-        <MudTh>Description</MudTh>
         <MudTh>High prioritized bugs</MudTh>
         <MudTh>Bugs</MudTh>
+        <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd id="title"><MudLink @onclick="() => OnProjectClick(context.Title, context.Id)">@context.Title</MudLink></MudTd>
-        <MudTd>@context.Description</MudTd>
-        <MudTd>@context.TotalHighPriorityBugs</MudTd>
-        <MudTd>@context.TotalBugs</MudTd>
+        <MudTd DataLabel="Title" id="title"><MudButton @onclick="() => SelectedProjectChanged(context)">@context.Title</MudButton></MudTd>
+        <MudTd DataLabel="High prioritized bugs">@context.TotalHighPriorityBugs</MudTd>
+        <MudTd DataLabel="Total bugs">@context.TotalBugs</MudTd>
+        <MudTd>
+            <MudLink @onclick="() => OnProjectClick(context.Title, context.Id)">Go to bugs</MudLink>
+        </MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
     </PagerContent>
 </MudTable>
 
+@if (_selectedProject != null)
+{
+    <MudContainer Class="d-flex mt-5 mb-5">
+        <MudItem id="project-card">
+            <ProjectCardComponent Project="_selectedProject" />
+        </MudItem>
+        <ProjectMembersListComponent Members="_selectedProject.Users" />
+    </MudContainer>
+}
+
 @code{
     private MudTable<ProjectResponse> _table;
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
     private bool _showAddProject;
+    private ProjectResponse _selectedProject;
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
@@ -66,6 +79,11 @@
         };
     }
 
+    public void SelectedProjectChanged(ProjectResponse projectResponse)
+    {
+        _selectedProject = projectResponse;
+    }
+
     public void OnProjectClick(string projectTitle, int projectId)
     {
         Nav.NavigateTo($"/project/{projectId}/bugs");
@@ -79,8 +97,11 @@
 }
 
 <style>
-    #title {
-        cursor: pointer;
-        font-size: 20px;
+    a {
+        cursor: pointer
+    }
+
+    #project-card {
+        width: 100%;
     }
 </style>

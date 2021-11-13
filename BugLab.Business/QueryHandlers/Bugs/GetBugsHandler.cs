@@ -22,7 +22,7 @@ namespace BugLab.Business.QueryHandlers.Bugs
 
         public async Task<PagedList<BugResponse>> Handle(GetBugsQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Bugs.AsNoTracking();
+            var query = _context.Bugs.OrderByDescending(x => x.Priority).AsNoTracking();
 
             query = request.ProjectId.HasValue
                 ? query.Where(x => x.ProjectId == request.ProjectId)

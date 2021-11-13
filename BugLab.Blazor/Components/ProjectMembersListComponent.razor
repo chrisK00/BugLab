@@ -1,0 +1,20 @@
+﻿
+<MudContainer Class="ml-5">
+    <MudText>@Members.Count() Members</MudText>
+    <MudText>We should be able to add more members from here, mb using a dialog</MudText>
+    <MudList>
+        @foreach (var member in Members)
+        {
+            <MudItem Class="mb-2 d-flex member">
+                <MudText Color="Color.Primary">@member.Email</MudText>
+                <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+            </MudItem>
+        }
+    </MudList>
+</MudContainer>
+
+@code{
+    [Parameter]
+    public IEnumerable<UserResponse> Members { get; set; }
+
+}

@@ -24,7 +24,11 @@ namespace BugLab.Business.CommandHandlers.Bugs
             var bug = await _context.Bugs.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             Guard.NotFound(bug, nameof(Bug), request.Id);
 
-            request.Adapt(bug);
+            bug.Title = request.Title;
+            bug.Status = request.Status;
+            bug.Priority = request.Priority;
+            bug.Description = request.Description;
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;

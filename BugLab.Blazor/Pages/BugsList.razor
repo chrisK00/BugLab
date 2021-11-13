@@ -43,7 +43,7 @@
 {
     <MudContainer Class="d-flex mt-5 mb-5">
         <MudItem id="bug-card">
-            <BugCardComponent Bug="_selectedBug" />
+            <BugCardComponent OnUpdate="OnBugUpdated" Bug="_selectedBug" />
         </MudItem>
         <CommentsListComponent Comments="_selectedBug.Comments" />
     </MudContainer>
@@ -88,11 +88,14 @@
 
         // TODO: We can Fetch the newly created bug and add it to the list
         //var newBug = Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{id}");
-
         await _table.ReloadServerData();
     }
-}
 
+    public async Task OnBugUpdated() {
+        await _table.ReloadServerData();
+        _selectedBug = null;
+    }
+}
 
 <style>
     #bug-card {
