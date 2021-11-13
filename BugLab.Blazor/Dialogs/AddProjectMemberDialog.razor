@@ -32,7 +32,7 @@
 
     private HashSet<UserResponse> _selectedUsers = new HashSet<UserResponse>();
 
-    [Parameter] public ProjectResponse Project { get; set; }
+    [Parameter] public int ProjectId { get; set; }
     [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
 
     private void OnSearch(string searchTerm)
@@ -47,25 +47,23 @@
             .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
             .WithParam(nameof(state.PageSize), state.PageSize)
             .WithParam(nameof(GetUsersQuery.Email), _emailSearch)
+            .WithParam(nameof(GetUsersQuery.NotInProjectId), ProjectId)
             .Build();
 
         var response = await Client.GetAsync(request);
         var jsonPaginationInfo = response.Headers.GetValues("pagination").First();
         var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(jsonPaginationInfo, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
-        var users = await response.Content.ReadFromJsonAsync<IEnumerable<UserResponse>>();
-
         return new TableData<UserResponse>
         {
-            // TODO: this should be happening server side by providing a filter once we have the join table
-            Items = users.Where(x => !Project.Users.Any(y => y.Id == x.Id)).ToList(),
+            Items = await response.Content.ReadFromJsonAsync<IEnumerable<UserResponse>>(),
             TotalItems = paginationInfo.TotalItems
         };
     }
 
     private async Task AddUsersToProject()
     {
-        var request = QueryBuilder.Use($"{Endpoints.Projects}/{Project.Id}/add-users");
+        var request = QueryBuilder.Use($"{Endpoints.Projects}/{ProjectId}/add-users");
         foreach (var user in _selectedUsers)
         {
             request.WithParam("userIds", user.Id);

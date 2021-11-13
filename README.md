@@ -38,4 +38,20 @@ An open source bug/issue tracker with .Net 5 using Blazor WASM and Web API that 
 - I'm not a front-end designer and my focus is not on the design but rather functionality so feel free to improve it and accessibility
 - Integration tests and more unit tests!
 - Error handling mainly on the Blazor side when dealing with http requests, (the api side just needs a global exc handler)
-- Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, we might want to manually create a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (at this point we could  alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 .
+- Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, I could not find many code benefits with manually creating a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment but at the same time it requires more code and management), here are some things you'll need for the first alternative: 
+
+`Add a ProjectUser class with ProjectId, UserId and User.`
+
+`Configure the relationship for UserEntityConfig:  builder.HasMany<ProjectUser>()
+                .WithOne()
+                .HasForeignKey(x => x.UserId);`
+
+`Configure the ProjectEntityConfig  builder.HasMany(x => x.ProjectUsers)
+                .WithOne();`
+
+`Configure ProjectUser entity config builder.HasKey(x => new { x.ProjectId, x.UserId });`
+
+`Call .Include() and .ThenInclude() where project are being referenced but replace them with _context.ProjectUsers where possible in order to prevent unnecessary items loaded`
+
+
+

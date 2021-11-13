@@ -29,6 +29,13 @@ namespace BugLab.Business.QueryHandlers
                 query = query.Where(x => x.Email.Contains(request.Email));
             }
 
+            if (request.NotInProjectId.HasValue)
+            {
+                query = query.Where(u => 
+                !_context.Projects.Where(p => p.Id == request.NotInProjectId.Value)
+                .Any(x => x.Users.Any(pu => pu.Id == u.Id)));
+            }
+
             return await PagedList<UserResponse>.CreateAsync(query.ProjectToType<UserResponse>(), request.PageNumber, request.PageSize, cancellationToken);
         }
     }

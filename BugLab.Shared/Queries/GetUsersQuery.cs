@@ -8,5 +8,6 @@ namespace BugLab.Shared.Queries
     public class GetUsersQuery : PaginationParams, IRequest<PagedList<UserResponse>>
     {
         public string Email { get; set; }
+        public int? NotInProjectId { get; set; }
     }
 }

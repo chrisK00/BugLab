@@ -102,8 +102,8 @@
     public async Task OpenAddMemberDialog()
     {
         var dialogParams = new DialogParameters
-    {
-            { "Project", _selectedProject }
+        {
+            { nameof(AddProjectMemberDialog.ProjectId), _selectedProject.Id }
         };
 
         var dialog = DialogService.Show<AddProjectMemberDialog>("Add member", dialogParams, new DialogOptions { CloseButton = true });
@@ -115,7 +115,7 @@
         }
 
         _selectedProject = null;
-       await _table.ReloadServerData();
+        await _table.ReloadServerData();
     }
 }
 
