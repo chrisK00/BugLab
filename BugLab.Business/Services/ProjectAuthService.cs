@@ -19,11 +19,7 @@ namespace BugLab.Business.Services
         public async Task HasAccess(string userId, int projectId)
         {
             var userIsInProject = await _context.Projects.Where(x => x.Id == projectId)
-                .Select(x => new
-                {
-                    UserIds = x.Users.Select(u => u.Id),
-                    ProjectId = x.Id
-                }).AnyAsync(x => x.UserIds.Contains(userId));
+                .AnyAsync(x => x.Users.Any(x => x.Id == userId));
 
             if (!userIsInProject)
             {
