@@ -3,7 +3,6 @@
 
 @inject HttpClient Client
 
-
 @if (ProjectId.HasValue)
 {
     <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
@@ -15,7 +14,6 @@
         <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
     }
 }
-
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"
           @ref="_table" Striped="true" Hover="true" RowsPerPage="6" Dense="true">
@@ -39,7 +37,7 @@
         <MudTd>@context.ProjectTitle</MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Bugs per page" />
+        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
     </PagerContent>
 </MudTable>
 
