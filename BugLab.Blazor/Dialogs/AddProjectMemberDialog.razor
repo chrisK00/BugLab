@@ -1,0 +1,75 @@
+﻿@inject HttpClient Client
+@inject ISnackbar Snackbar
+
+
+<MudTable @bind-SelectedItems="_selectedUsers" MultiSelection="true" ServerData="@(new Func<TableState, Task<TableData<UserResponse>>>(GetUsers))"
+          @ref="_table" RowsPerPage="10" Striped="true" Hover="true" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Users</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(searchTerm => OnSearch(searchTerm))" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Email</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Users per page" />
+    </PagerContent>
+</MudTable>
+
+<MudContainer Class="d-flex">
+    <MudIconButton Icon="@Icons.Material.Filled.Add" OnClick="AddUsersToProject" Color="Color.Primary"></MudIconButton>
+    <MudIconButton Icon="@Icons.Material.Filled.Cancel" OnClick="MudDialog.Cancel" Color="Color.Error"></MudIconButton>
+</MudContainer>
+
+@code{
+    private MudTable<UserResponse> _table;
+    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
+    private string _emailSearch;
+
+    private HashSet<UserResponse> _selectedUsers = new HashSet<UserResponse>();
+
+    [Parameter] public int ProjectId { get; set; }
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+
+    private void OnSearch(string searchTerm)
+    {
+        _emailSearch = searchTerm;
+        _table.ReloadServerData();
+    }
+
+    public async Task<TableData<UserResponse>> GetUsers(TableState state)
+    {
+        var request = QueryBuilder.Use(Endpoints.Users)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
+            .WithParam(nameof(state.PageSize), state.PageSize)
+            .WithParam(nameof(GetUsersQuery.Email), _emailSearch)
+            .WithParam(nameof(GetUsersQuery.NotInProjectId), ProjectId)
+            .Build();
+
+        var response = await Client.GetAsync(request);
+        var jsonPaginationInfo = response.Headers.GetValues("pagination").First();
+        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(jsonPaginationInfo, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        return new TableData<UserResponse>
+        {
+            Items = await response.Content.ReadFromJsonAsync<IEnumerable<UserResponse>>(),
+            TotalItems = paginationInfo.TotalItems
+        };
+    }
+
+    private async Task AddUsersToProject()
+    {
+        var request = QueryBuilder.Use($"{Endpoints.Projects}/{ProjectId}/add-users");
+        foreach (var user in _selectedUsers)
+        {
+            request.WithParam("userIds", user.Id);
+        }
+
+        var response = await Client.PostAsJsonAsync(request.Build(), new { });
+        MudDialog.Close();
+    }
+}

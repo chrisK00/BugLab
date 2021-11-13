@@ -1,0 +1,104 @@
+﻿@page "/project/{projectId:int}/bugs"
+@page "/my-bugs"
+
+@inject HttpClient Client
+
+<MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
+@if (ProjectId != default && _showAddBug)
+{
+    <MudContainer Class="mb-5">
+        <AddBugComponent OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
+    </MudContainer>
+    <p>Oh you can even add stuff (AddBugComponent shows if ShowAddBug will let us know when a user clicks on add bug) and we will use callbacks to update ourselves/get the newly added item</p>
+    <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
+}
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"
+          @ref="_table" Striped="true" Hover="true" RowsPerPage="6" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Bugs</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Status</MudTh>
+        <MudTh>Priority</MudTh>
+        <MudTh>Created On</MudTh>
+        <MudTh>Modified On</MudTh>
+        <MudTh>Project</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd><MudButton @onclick="() => SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
+        <MudTd>@context.Status</MudTd>
+        <MudTd>@context.Priority</MudTd>
+        <MudTd>@context.Created</MudTd>
+        <MudTd>@context.Modified</MudTd>
+        <MudTd>@context.ProjectTitle</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
+    </PagerContent>
+</MudTable>
+
+@if (_selectedBug != null)
+{
+    <MudContainer Class="d-flex mt-5 mb-5">
+        <MudItem id="bug-card">
+            <BugCardComponent OnUpdate="OnBugUpdated" Bug="_selectedBug" />
+        </MudItem>
+        <CommentsListComponent Comments="_selectedBug.Comments" />
+    </MudContainer>
+}
+
+@code{
+    private MudTable<BugResponse> _table;
+    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
+    private BugResponse _selectedBug;
+    private bool _showAddBug;
+
+    [Parameter]
+    public int? ProjectId { get; set; }
+
+    public void SelectedBugChanged(BugResponse bug)
+    {
+        _selectedBug = bug;
+    }
+
+    public async Task<TableData<BugResponse>> GetBugs(TableState state)
+    {
+        var request = QueryBuilder.Use(Endpoints.Bugs)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
+            .WithParam(nameof(state.PageSize), state.PageSize);
+
+        if (ProjectId != default) request.WithParam(nameof(ProjectId), ProjectId);
+
+        var response = await Client.GetAsync(request.Build());
+        var jsonPaginationInfo = response.Headers.GetValues("pagination").First();
+        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(jsonPaginationInfo, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        return new TableData<BugResponse>
+        {
+            Items = await response.Content.ReadFromJsonAsync<IEnumerable<BugResponse>>(JsonOptions.Defaults()),
+            TotalItems = paginationInfo.TotalItems
+        };
+    }
+
+    public async Task OnBugAdded()
+    {
+        _showAddBug = false;
+
+        // TODO: We can Fetch the newly created bug and add it to the list
+        //var newBug = Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{id}");
+        await _table.ReloadServerData();
+    }
+
+    public async Task OnBugUpdated() {
+        await _table.ReloadServerData();
+        _selectedBug = null;
+    }
+}
+
+<style>
+    #bug-card {
+        width: 100%;
+    }
+</style>

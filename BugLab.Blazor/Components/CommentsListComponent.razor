@@ -1,0 +1,24 @@
+﻿
+<MudContainer Class="ml-5">
+    @foreach (var comment in Comments)
+    {
+        <MudCard Class="mb-5 comment-card">
+            <MudCardContent>
+                <MudText Color="Color.Primary">@comment.Created</MudText>
+                <MudText>@comment?.Modified</MudText>
+                <MudText>@comment.Text</MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+</MudContainer>
+@code {
+
+    [Parameter]
+    public ICollection<CommentResponse> Comments { get; set; }
+}
+
+<style>
+    .comment-card {
+        width: 100%
+    }
+</style>

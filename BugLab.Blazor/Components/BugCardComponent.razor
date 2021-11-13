@@ -1,0 +1,77 @@
+﻿@inject HttpClient Client
+
+<MudCard>
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
+        <FluentValidationValidator />
+        <MudCardHeader>
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                          Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTextField For="() => _model.Description" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
+                          Lines="10" Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
+            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority" 
+                       @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
+                @foreach (var priority in Enum.GetValues<BugPriority>())
+                {
+                    <MudSelectItem For="_model.Priority" Value="priority">@priority</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
+                       Label="Status" @bind-Value="_model.Status">
+                @foreach (var status in Enum.GetValues<BugStatus>())
+                {
+                    <MudSelectItem For="_model.Status" Value="status">@status</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudText Typo="Typo.body2">Created on: @Bug.Created</MudText>
+            @if (Bug.Modified.HasValue)
+            {
+                <MudText Typo="Typo.body2">Modified on: @Bug.Modified</MudText>
+            }
+            <MudText Typo="Typo.body2" Color="Color.Primary">Project: @Bug.ProjectTitle</MudText>
+
+        </MudCardContent>
+            <MudCardActions>
+                <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+                @if (context.IsModified())
+                {
+                    <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.Update" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+                }
+            </MudCardActions>
+    </EditForm>
+</MudCard>
+
+@code {
+    [Parameter]
+    public BugResponse Bug { get; set; }
+    private UpdateBugCommand _model;
+    private UpdateBugValidator _validator = new();
+
+    [Parameter]
+    public EventCallback OnUpdate { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _model = new UpdateBugCommand
+        {
+            Id = Bug.Id,
+            Title = Bug.Title,
+            Description = Bug.Description,
+            Priority = Bug.Priority,
+            Status = Bug.Status,
+            ProjectId = Bug.ProjectId
+        };
+    }
+
+    public async Task OnSubmit()
+    {
+        Console.WriteLine("Submit called");
+        var response = await Client.PutAsJsonAsync<UpdateBugCommand>($"{Endpoints.Bugs}/{_model.Id}", _model);
+        // Can make sure we get a valid id back
+        // TODO: show error msg in a div or snackbar
+        await OnUpdate.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);
+    }
+}

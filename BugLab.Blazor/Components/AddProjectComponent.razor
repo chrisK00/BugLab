@@ -1,0 +1,42 @@
+﻿@inject HttpClient Client
+
+<MudCard>
+    <EditForm Model="_model" OnSubmit="OnSubmit">
+        <FluentValidationValidator />
+        <MudCardContent>
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                          Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            <MudTextField Lines="5" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
+                          Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+            @if (context.IsModified())
+            {
+                <MudText Class="ml-2" Color="Color.Warning">You have unsaved changes</MudText>
+            }
+        </MudCardActions>
+    </EditForm>
+</MudCard>
+
+@code {
+    private AddProjectCommand _model = new();
+    private AddProjectValidator _validator = new();
+
+    [Parameter]
+    public EventCallback OnAdd { get; set; }
+
+    public async Task OnSubmit()
+    {
+        var response = await Client.PostAsJsonAsync<AddProjectCommand>(Endpoints.Projects, _model);
+        // Can make sure we get a valid id back
+        // TODO: show error msg in a div or snackbar
+        await OnAdd.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);
+    }
+}
+
+<style>
+    .mud-card {
+        width: 75%
+    }
+</style>

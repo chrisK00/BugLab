@@ -1,0 +1,130 @@
+﻿@page "/projects"
+
+@inject HttpClient Client
+@inject NavigationManager Nav
+@inject IDialogService DialogService
+
+<MudButton Class="mb-5" OnClick="() => _showAddProject = !_showAddProject" Color="Color.Primary">@(_showAddProject ? "Hide" : "Add a new project")</MudButton>
+@if (_showAddProject)
+{
+    <MudContainer Class="mb-5">
+        <AddProjectComponent OnAdd="OnProjectAdded" />
+    </MudContainer>
+}
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<ProjectResponse>>>(GetProjects))"
+          @ref="_table" RowsPerPage="10" RowStyleFunc="RowStyleFunc" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Projects</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>High prioritized bugs</MudTh>
+        <MudTh>Bugs</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Title" id="title"><MudButton @onclick="() => SelectedProjectChanged(context)">@context.Title</MudButton></MudTd>
+        <MudTd DataLabel="High prioritized bugs">@context.TotalHighPriorityBugs</MudTd>
+        <MudTd DataLabel="Total bugs">@context.TotalBugs</MudTd>
+        <MudTd>
+            <MudLink @onclick="() => OnProjectClick(context.Title, context.Id)">Go to bugs</MudLink>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
+    </PagerContent>
+</MudTable>
+
+@if (_selectedProject != null)
+{
+    <MudContainer Class="d-flex mt-5 mb-5">
+        <MudItem id="project-card">
+            <ProjectCardComponent Project="_selectedProject" />
+        </MudItem>
+        <MudItem>
+            <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
+            <ProjectMembersListComponent Members="_selectedProject.Users" />
+        </MudItem>
+    </MudContainer>
+}
+
+@code{
+    private MudTable<ProjectResponse> _table;
+    private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
+    private bool _showAddProject;
+    private ProjectResponse _selectedProject;
+
+    public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
+    {
+        var request = QueryBuilder.Use(Endpoints.Projects)
+            .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
+            .WithParam(nameof(state.PageSize), state.PageSize)
+            .Build();
+
+        var response = await Client.GetAsync(request);
+        var jsonPaginationInfo = response.Headers.GetValues("pagination").First();
+        var paginationInfo = JsonSerializer.Deserialize<PaginationHeader>(jsonPaginationInfo, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        return new TableData<ProjectResponse>
+        {
+            Items = await response.Content.ReadFromJsonAsync<IEnumerable<ProjectResponse>>(),
+            TotalItems = paginationInfo.TotalItems
+        };
+    }
+
+    public string RowStyleFunc(ProjectResponse item, int index)
+    {
+        return item.TotalHighPriorityBugs switch
+        {
+            > 10 => $"{Css.BgColor}red",
+            >= 5 and < 10 => $"{Css.BgColor}yellow",
+            _ => $"{Css.BgColor}white"
+        };
+    }
+
+    public void SelectedProjectChanged(ProjectResponse projectResponse)
+    {
+        _selectedProject = projectResponse;
+    }
+
+    public void OnProjectClick(string projectTitle, int projectId)
+    {
+        Nav.NavigateTo($"/project/{projectId}/bugs");
+    }
+
+    public async Task OnProjectAdded()
+    {
+        _showAddProject = false;
+        await _table.ReloadServerData();
+    }
+
+    public async Task OpenAddMemberDialog()
+    {
+        var dialogParams = new DialogParameters
+        {
+            { nameof(AddProjectMemberDialog.ProjectId), _selectedProject.Id }
+        };
+
+        var dialog = DialogService.Show<AddProjectMemberDialog>("Add member", dialogParams, new DialogOptions { CloseButton = true });
+
+        var result = await dialog.Result;
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        _selectedProject = null;
+        await _table.ReloadServerData();
+    }
+}
+
+<style>
+    a {
+        cursor: pointer
+    }
+
+    #project-card {
+        width: 100%;
+    }
+</style>

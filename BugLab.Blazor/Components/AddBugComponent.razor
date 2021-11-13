@@ -1,0 +1,59 @@
+﻿@inject HttpClient Client
+
+<MudCard>
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
+        <FluentValidationValidator />
+        <MudCardContent>
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                          Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority" @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
+                @foreach (var priority in Enum.GetValues<BugPriority>())
+                {
+                    <MudSelectItem Value="priority">@priority</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled" Label="Status" @bind-Value="_model.Status">
+                @foreach (var status in Enum.GetValues<BugStatus>())
+                {
+                    <MudSelectItem Value="status">@status</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
+                        Lines="10"  Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+        </MudCardActions>
+    </EditForm>
+</MudCard>
+
+@code {
+    private AddBugCommand _model = new();
+    private AddBugValidator _validator = new();
+
+    [Parameter]
+    public int ProjectId { get; init; }
+
+    [Parameter]
+    public EventCallback OnAdd { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _model.ProjectId = ProjectId;
+    }
+
+    public async Task OnSubmit()
+    {
+        Console.WriteLine("Submit called");
+        var response = await Client.PostAsJsonAsync<AddBugCommand>(Endpoints.Bugs, _model);
+        // Can make sure we get a valid id back
+        // TODO: show error msg in a div or snackbar
+        await OnAdd.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);
+    }
+}
+
+<style>
+    .mud-card {
+        width: 75%
+    }
+</style>

@@ -1,0 +1,44 @@
+﻿@inject HttpClient Client
+@inject AuthState AuthState
+@inject NavigationManager Nav
+
+<MudText Typo="Typo.h6" Color="Color.Error">@_errorMessage</MudText>
+<EditForm Model="_model" OnValidSubmit="OnSubmit">
+    <FluentValidationValidator />
+    <MudTextField @bind-Value="_model.Email" InputType="InputType.Email" Label="Email" For="() => _model.Email"
+                  AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Email" Adornment="Adornment.End" Variant="Variant.Filled">
+    </MudTextField>
+    <MudTextField @bind-Value="_model.Password" InputType="InputType.Password" Label="Password" For="() => _model.Password"
+                  AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Password" Adornment="Adornment.End" Variant="Variant.Filled">
+    </MudTextField>
+    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Login</MudButton>
+    <MudButton Color="Color.Primary" OnClick="SampleUserLogin">Login with sample user</MudButton>
+</EditForm>
+
+@code{
+    private LoginCommand _model = new();
+    private LoginValidator _validator = new();
+    private string _errorMessage = string.Empty;
+
+    public async Task OnSubmit()
+    {
+        var response = await Client.PostAsJsonAsync($"{Endpoints.Auth}/login", _model);
+        if (!response.IsSuccessStatusCode)
+        {
+            // TODO: use the apis error response model once a global exc handler is in place
+            _errorMessage = await response.Content.ReadAsStringAsync();
+            return;
+        }
+
+        var user = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        await AuthState.LogInAsync(user);
+        Nav.NavigateTo("/");
+    }
+
+    public async Task SampleUserLogin()
+    {
+        _model.Email = "chris@gmail.com";
+        _model.Password = "Password123.";
+        await OnSubmit();
+    }
+}
