@@ -3,14 +3,16 @@
 
 @inject HttpClient Client
 
-<MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
-@if (ProjectId != default && _showAddBug)
+@if (ProjectId.HasValue)
 {
-    <MudContainer Class="mb-5">
-        <AddBugComponent OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
-    </MudContainer>
-    <p>Oh you can even add stuff (AddBugComponent shows if ShowAddBug will let us know when a user clicks on add bug) and we will use callbacks to update ourselves/get the newly added item</p>
-    <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
+    <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
+    @if (_showAddBug)
+    {
+        <MudContainer Class="mb-5">
+            <AddBugComponent OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
+        </MudContainer>
+        <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
+    }
 }
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"
@@ -91,7 +93,8 @@
         await _table.ReloadServerData();
     }
 
-    public async Task OnBugUpdated() {
+    public async Task OnBugUpdated()
+    {
         await _table.ReloadServerData();
         _selectedBug = null;
     }

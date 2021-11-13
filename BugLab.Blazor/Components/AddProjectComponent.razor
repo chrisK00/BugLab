@@ -11,10 +11,6 @@
         </MudCardContent>
         <MudCardActions>
             <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
-            @if (context.IsModified())
-            {
-                <MudText Class="ml-2" Color="Color.Warning">You have unsaved changes</MudText>
-            }
         </MudCardActions>
     </EditForm>
 </MudCard>

@@ -1,6 +1,17 @@
 # BugLab
 An open source bug/issue tracker with .Net 5 using Blazor WASM and Web API that can be used internally to manage different projects and see what needs to be done. It started out with only the necessary features and code in order to practice a more Agile approach and lots of refactoring.
 
+### Images
+Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-Gv-K0-Kr2w.png)](https://postimg.cc/GHgLrTHp)
+
+My projects page [![msedge-v-Q8988e-ASJ.png](https://i.postimg.cc/jjj29tL5/msedge-v-Q8988e-ASJ.png)](https://postimg.cc/ZW1JvkPt)
+
+My Bugs page [![msedge-GTR9-WM7r1m.png](https://i.postimg.cc/nh2M0CVg/msedge-GTR9-WM7r1m.png)](https://postimg.cc/TKyRP2DJ)
+
+Add bug to project [![msedge-z2v-E1h-Srab.png](https://i.postimg.cc/4NzYHWDJ/msedge-z2v-E1h-Srab.png)](https://postimg.cc/XpYjTkNh)
+
+Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.cc/MHBmQySh/msedge-s-Rxd-ELn30-T.png)](https://postimg.cc/bSznXSdT)
+
 ## What this project has/makes use of
 ### Blazor
 - Mudblazor - instead of bootstrap, let's us focus more on code and less on design/reponsivness
