@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace BugLab.Shared.Helpers.HttpClientHelpers
@@ -14,12 +15,14 @@ namespace BugLab.Shared.Helpers.HttpClientHelpers
 
         public IKeyValueBuilder WithParam(string key, string value)
         {
+            if (string.IsNullOrWhiteSpace(value)) return this;
             Append(key, value);
             return this;
         }
 
         public IKeyValueBuilder WithParam<T>(string key, T value)
         {
+            if (EqualityComparer<T>.Default.Equals(value, default)) return this;
             Append(key, $"{value}");
             return this;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BugLab.Business.Helpers
 {
@@ -8,6 +9,12 @@ namespace BugLab.Business.Helpers
         public static void NotFound<TInput, TId>(TInput input, string inputName, TId id)
         {
             _ = input ?? throw new KeyNotFoundException($"The requested {inputName} with an id of {id} was not found");
+        }
+
+        public static void NotFound<TInput>(IEnumerable<TInput> inputs, string inputsName = null, string message = null)
+        {
+            if (string.IsNullOrWhiteSpace(message)) message = $"The requested {inputsName ?? "items"} were not found";
+            if (inputs == null || !inputs.Any()) throw new KeyNotFoundException(message);
         }
 
         public static void NotFound<TInput, TId>(TInput input, string inputTitle)

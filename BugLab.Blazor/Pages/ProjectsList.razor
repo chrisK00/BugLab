@@ -2,6 +2,7 @@
 
 @inject HttpClient Client
 @inject NavigationManager Nav
+@inject IDialogService DialogService
 
 <MudButton Class="mb-5" OnClick="() => _showAddProject = !_showAddProject" Color="Color.Primary">@(_showAddProject ? "Hide" : "Add a new project")</MudButton>
 @if (_showAddProject)
@@ -41,7 +42,10 @@
         <MudItem id="project-card">
             <ProjectCardComponent Project="_selectedProject" />
         </MudItem>
-        <ProjectMembersListComponent Members="_selectedProject.Users" />
+        <MudItem>
+            <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
+            <ProjectMembersListComponent Members="_selectedProject.Users" />
+        </MudItem>
     </MudContainer>
 }
 
@@ -93,6 +97,25 @@
     {
         _showAddProject = false;
         await _table.ReloadServerData();
+    }
+
+    public async Task OpenAddMemberDialog()
+    {
+        var dialogParams = new DialogParameters
+    {
+            { "Project", _selectedProject }
+        };
+
+        var dialog = DialogService.Show<AddProjectMemberDialog>("Add member", dialogParams, new DialogOptions { CloseButton = true });
+
+        var result = await dialog.Result;
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        _selectedProject = null;
+       await _table.ReloadServerData();
     }
 }
 

@@ -5,9 +5,11 @@ using BugLab.Shared.Commands;
 using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +37,7 @@ namespace BugLab.API.Controllers
         {
             var projects = await _mediator.Send(query, cancellationToken);
             Response.AddPaginationHeader(projects.PageNumber, projects.PageSize, projects.TotalPages, projects.TotalItems);
-            
+
             return projects;
         }
 
@@ -48,11 +50,12 @@ namespace BugLab.API.Controllers
             return CreatedAtRoute(nameof(GetProject), new { id }, id);
         }
 
-        [HttpPost("{projectId}/add-user/{userId}")]
-        public async Task<IActionResult> AddUserToProject(int projectId, string userId, CancellationToken cancellationToken)
+        [HttpPost("{projectId}/add-users")]
+        public async Task<IActionResult> AddUsersToProject(int projectId, [FromQuery] IEnumerable<string> userIds, CancellationToken cancellationToken)
         {
+            if (!userIds.Any()) return BadRequest("You need to specify at least 1 user to add");
             await _projectAuthService.HasAccess(User.UserId(), projectId);
-            await _mediator.Send(new AddProjectUserCommand { UserId = userId, ProjectId = projectId }, cancellationToken);
+            await _mediator.Send(new AddProjectUsersCommand { UserIds = userIds, ProjectId = projectId }, cancellationToken);
 
             return NoContent();
         }

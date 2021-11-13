@@ -9,6 +9,6 @@ namespace BugLab.Data.Entities
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public ICollection<IdentityUser> Users { get; set; } = new List<IdentityUser>();
+        public List<IdentityUser> Users { get; set; } = new();
     }
 }
