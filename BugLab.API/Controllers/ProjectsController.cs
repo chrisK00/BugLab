@@ -49,10 +49,10 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost("{projectId}/add-user/{userId}")]
-        public async Task<IActionResult> AddUserToProject(int projectId, string userId)
+        public async Task<IActionResult> AddUserToProject(int projectId, string userId, CancellationToken cancellationToken)
         {
             await _projectAuthService.HasAccess(User.UserId(), projectId);
-            await _mediator.Send(new AddProjectUserCommand { UserId = userId, ProjectId = projectId });
+            await _mediator.Send(new AddProjectUserCommand { UserId = userId, ProjectId = projectId }, cancellationToken);
 
             return NoContent();
         }
