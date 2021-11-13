@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace BugLab.Business.CommandHandlers.Projects
 {
-    public class AddProjectUserHandler : IRequestHandler<AddProjectUsersCommand>
+    public class AddProjectUsersHandler : IRequestHandler<AddProjectUsersCommand>
     {
         private readonly AppDbContext _context;
 
-        public AddProjectUserHandler(AppDbContext context)
+        public AddProjectUsersHandler(AppDbContext context)
         {
             _context = context;
         }
