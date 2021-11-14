@@ -20,6 +20,7 @@ namespace BugLab.Data
 
         public DbSet<Bug> Bugs { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<BugType> BugTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

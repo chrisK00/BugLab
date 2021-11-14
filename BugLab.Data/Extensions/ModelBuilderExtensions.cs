@@ -34,15 +34,24 @@ namespace BugLab.Data.Extensions
                 );
 
             builder.Entity<Bug>().HasData(
-                   new Bug { Id = 1, Title = "Implement project controllers", ProjectId = 1, CreatedById = userId },
-                    new Bug { Id = 2, Title = "update project title", Description = "Better domaine events pattern", ProjectId = 1, CreatedById = userId },
-                    new Bug { Id = 3, Title = "How you doing?", ProjectId = 2, CreatedById = userId2 }
+                   new Bug { Id = 1, Title = "Implement project controllers", ProjectId = 1, CreatedById = userId, BugTypeId = 3 },
+                    new Bug { Id = 2, Title = "update project title", Description = "Better domaine events pattern", ProjectId = 1, CreatedById = userId, BugTypeId = 1 },
+                    new Bug { Id = 3, Title = "How you doing?", ProjectId = 2, CreatedById = userId2, BugTypeId = 1 }
                     );
 
             builder.Entity<Comment>().HasData(
                 new { Id = 1, Text = "This has been implemented", Created = DateTime.UtcNow, BugId = 1, CreatedById = userId },
                 new { Id = 2, Text = "Nope", Created = DateTime.UtcNow, BugId = 1, CreatedById = userId },
                 new { Id = 3, Text = "Any progress?", Created = DateTime.UtcNow, BugId = 2, CreatedById = userId2 }
+                );
+
+            builder.Entity<BugType>().HasData(
+                new BugType { Id = 1, ProjectId = 1, Title = "refactor" },
+                new BugType { Id = 2, ProjectId = 1, Title = "bug" },
+                new BugType { Id = 3, ProjectId = 1, Title = "feature" },
+                new BugType { Id = 4, ProjectId = 2, Title = "feature" },
+                new BugType { Id = 5, ProjectId = 2, Title = "bug" },
+                new BugType { Id = 6, ProjectId = 2, Title = "refactor" }
                 );
         }
 

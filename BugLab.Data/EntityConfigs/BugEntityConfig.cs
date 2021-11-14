@@ -33,6 +33,12 @@ namespace BugLab.Data.EntityConfigs
             builder.HasOne(x => x.ModifiedBy)
               .WithMany()
               .HasForeignKey(x => x.ModifiedById);
+
+            builder.HasOne(x => x.BugType)
+                .WithMany()
+                .HasForeignKey(x => x.BugTypeId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

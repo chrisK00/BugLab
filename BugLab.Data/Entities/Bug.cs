@@ -1,4 +1,5 @@
 ﻿using BugLab.Shared.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace BugLab.Data.Entities
@@ -12,7 +13,10 @@ namespace BugLab.Data.Entities
         public BugStatus Status { get; set; }
 
         public int ProjectId { get; init; }
-        public Project Project { get; init; }
+        public Project Project { get; private set; }
+
+        public int BugTypeId { get; set; }
+        public BugType BugType { get; private set; }
 
         public ICollection<Comment> Comments { get; init; } = new List<Comment>();
     }
