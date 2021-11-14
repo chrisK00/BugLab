@@ -50,7 +50,10 @@ namespace BugLab.Data
                         entry.Entity.Created = DateTime.UtcNow;
                         entry.Entity.CreatedById = _currentUserId;
                         break;
-
+                    case EntityState.Deleted:
+                        entry.Entity.Deleted = DateTime.UtcNow;
+                        entry.Entity.DeletedById = _currentUserId;
+                        break;
                     default:
                         break;
                 }

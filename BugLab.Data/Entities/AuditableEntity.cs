@@ -7,6 +7,7 @@ namespace BugLab.Data.Entities
     {
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
+        public DateTime? Deleted { get; set; }
 
         public IdentityUser CreatedBy { get; set; }
         public string CreatedById { get; set; }
