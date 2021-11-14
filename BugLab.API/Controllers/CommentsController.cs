@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BugLab.API.Controllers
 {
-    [Route("api/{bugId}/[controller]")]
+    [Route("api/bugs/{bugId}/[controller]")]
     public class CommentsController : BaseApiController
     {
         private readonly IProjectAuthService _projectAuthService;
