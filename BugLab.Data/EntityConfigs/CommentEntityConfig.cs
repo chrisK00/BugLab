@@ -8,20 +8,12 @@ namespace BugLab.Data.EntityConfigs
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
+            builder.ConfigureAudit();
+
             builder.ToTable("Comments");
 
             builder.Property(x => x.Text)
                 .IsRequired();
-
-            builder.HasOne(x => x.CreatedBy)
-              .WithMany()
-              .IsRequired()
-              .OnDelete(DeleteBehavior.Restrict)
-              .HasForeignKey(x => x.CreatedById);
-
-            builder.HasOne(x => x.ModifiedBy)
-              .WithMany()
-              .HasForeignKey(x => x.ModifiedById);
         }
     }
 }

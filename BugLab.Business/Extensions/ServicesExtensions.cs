@@ -1,4 +1,5 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.BackgroundServices;
+using BugLab.Business.Helpers;
 using BugLab.Business.Interfaces;
 using BugLab.Business.Services;
 using Mapster;
@@ -16,6 +17,9 @@ namespace BugLab.Business.Extensions
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IProjectAuthService, ProjectAuthService>();
+
+            // TODO: implement
+            // services.AddHostedService<RemoveDeletedBugsService>();
         }
     }
 }

@@ -13,5 +13,8 @@ namespace BugLab.Data.Entities
 
         public string ModifiedById { get; set; }
         public IdentityUser ModifiedBy { get; set; }
+
+        public string DeletedById { get; set; }
+        public IdentityUser DeletedBy { get; set; }
     }
 }

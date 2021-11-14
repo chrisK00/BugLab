@@ -8,6 +8,8 @@ namespace BugLab.Data.EntityConfigs
     {
         public void Configure(EntityTypeBuilder<Bug> builder)
         {
+            builder.ConfigureAudit();
+
             builder.Property(x => x.Status)
                 .HasConversion<string>()
                 .HasMaxLength(30);
@@ -23,16 +25,6 @@ namespace BugLab.Data.EntityConfigs
             builder.HasMany(x => x.Comments)
                 .WithOne()
                 .IsRequired();
-
-            builder.HasOne(x => x.CreatedBy)
-                .WithMany()
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasForeignKey(x => x.CreatedById);
-
-            builder.HasOne(x => x.ModifiedBy)
-              .WithMany()
-              .HasForeignKey(x => x.ModifiedById);
 
             builder.HasOne(x => x.BugType)
                 .WithMany()
