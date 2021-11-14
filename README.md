@@ -48,6 +48,8 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - The Blazor app is currently not making use of the built in authorize view or authorize attribute and not parsing any claims from the JWT token. We currently don't have any roles implemented so this is not a big deal
 - I'm not a front-end designer and my focus is not on the design but rather functionality so feel free to improve it and accessibility
 - Integration tests and more unit tests!
+- BugType (f.e feature, bug, refactor)
+- Attachments (f.e image, gif)
 - Error handling mainly on the Blazor side when dealing with http requests, (the api side just needs a global exc handler)
 - Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, I could not find many code benefits with manually creating a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment but at the same time it requires more code and management), here are some things you'll need for the first alternative: 
 
