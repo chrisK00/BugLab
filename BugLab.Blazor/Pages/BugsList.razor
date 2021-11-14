@@ -57,7 +57,7 @@
 {
     <MudContainer Class="d-flex mt-5 mb-5">
         <MudItem id="bug-card">
-            <BugCardComponent BugTypes="_bugTypes" OnUpdate="OnBugUpdated" Bug="_selectedBug" />
+            <BugCardComponent OnDelete="OnBugDeleted" BugTypes="_bugTypes" OnUpdate="OnBugUpdated" Bug="_selectedBug" />
         </MudItem>
         <CommentsListComponent Comments="_selectedBug.Comments" />
     </MudContainer>
@@ -122,6 +122,12 @@
     public async Task OnBugUpdated()
     {
         _selectedBug = await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{_selectedBug.Id}", JsonOptions.Defaults());
+        await _table.ReloadServerData();
+    }
+
+    public async Task OnBugDeleted()
+    {
+        _selectedBug = null;
         await _table.ReloadServerData();
     }
 }

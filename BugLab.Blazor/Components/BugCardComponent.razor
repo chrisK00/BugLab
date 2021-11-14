@@ -1,4 +1,5 @@
 ﻿@inject HttpClient Client
+@inject IDialogService Dialog
 
 <MudCard>
     <EditForm Model="_model" OnValidSubmit="OnSubmit">
@@ -44,7 +45,7 @@
 
         </MudCardContent>
         <MudCardActions>
-            <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+            <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error">Delete</MudIconButton>
             @if (context.IsModified())
             {
                 <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>
@@ -62,6 +63,7 @@
     [Parameter] public BugResponse Bug { get; set; }
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
     [Parameter] public EventCallback OnUpdate { get; set; }
+    [Parameter] public EventCallback OnDelete { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -72,9 +74,18 @@
             Description = Bug.Description,
             Priority = Bug.Priority,
             Status = Bug.Status,
-            ProjectId = Bug.ProjectId,
             BugTypeId = Bug.BugType.Id
         };
+    }
+
+    private async Task ConfirmDelete()
+    {
+        var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {_model.Title}", "This cannot be undone", "OK", "Cancel");
+        if (!result.HasValue) return;
+        if (!result.Value) return;
+
+        var response = await Client.DeleteAsync($"{Endpoints.Bugs}/{_model.Id}");
+        await OnDelete.InvokeAsync();
     }
 
     public async Task OnSubmit()
