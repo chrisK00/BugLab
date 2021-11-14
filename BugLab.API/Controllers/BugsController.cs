@@ -51,7 +51,6 @@ namespace BugLab.API.Controllers
         public async Task<IActionResult> AddBug(AddBugCommand command, CancellationToken cancellationToken)
         {
             await _projectAuthService.HasAccessToProject(User.UserId(), command.ProjectId);
-
             var id = await _mediator.Send(command, cancellationToken);
 
             return CreatedAtRoute(nameof(GetBug), new { id }, id);
@@ -60,8 +59,7 @@ namespace BugLab.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBug(UpdateBugCommand command, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccessToProject(User.UserId(), command.ProjectId);
-
+            await _projectAuthService.HasAccessToBug(User.UserId(), command.Id);
             await _mediator.Send(command, cancellationToken);
 
             return NoContent();

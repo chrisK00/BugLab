@@ -18,8 +18,7 @@ namespace BugLab.Business.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
 
-            // TODO: implement
-            // services.AddHostedService<RemoveDeletedBugsService>();
+            services.AddHostedService<RemoveDeletedBugsService>();
         }
     }
 }
