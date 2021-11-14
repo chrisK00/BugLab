@@ -14,9 +14,9 @@ namespace BugLab.API.Controllers
 {
     public class BugsController : BaseApiController
     {
-        private readonly IProjectAuthService _projectAuthService;
+        private readonly IAuthService _projectAuthService;
 
-        public BugsController(IMediator mediator, IProjectAuthService projectAuthService) : base(mediator)
+        public BugsController(IMediator mediator, IAuthService projectAuthService) : base(mediator)
         {
             _projectAuthService = projectAuthService;
         }
@@ -38,10 +38,19 @@ namespace BugLab.API.Controllers
             return Ok(bugs);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBug(int id, CancellationToken cancellationToken)
+        {
+            await _projectAuthService.HasAccessToBug(User.UserId(), id);
+            await _mediator.Send(new DeleteBugCommand(id), cancellationToken);
+
+            return NoContent();
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddBug(AddBugCommand command, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccess(User.UserId(), command.ProjectId);
+            await _projectAuthService.HasAccessToProject(User.UserId(), command.ProjectId);
 
             var id = await _mediator.Send(command, cancellationToken);
 
@@ -51,7 +60,7 @@ namespace BugLab.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBug(UpdateBugCommand command, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccess(User.UserId(), command.ProjectId);
+            await _projectAuthService.HasAccessToProject(User.UserId(), command.ProjectId);
 
             await _mediator.Send(command, cancellationToken);
 

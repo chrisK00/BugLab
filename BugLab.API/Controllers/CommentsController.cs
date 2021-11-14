@@ -11,9 +11,9 @@ namespace BugLab.API.Controllers
     [Route("api/bugs/{bugId}/[controller]")]
     public class CommentsController : BaseApiController
     {
-        private readonly IProjectAuthService _projectAuthService;
+        private readonly IAuthService _projectAuthService;
 
-        public CommentsController(IMediator mediator, IProjectAuthService projectAuthService) : base(mediator)
+        public CommentsController(IMediator mediator, IAuthService projectAuthService) : base(mediator)
         {
             _projectAuthService = projectAuthService;
         }
@@ -21,7 +21,7 @@ namespace BugLab.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCommentAsync(AddCommentCommand command, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccess(User.UserId(), command.ProjectId);
+            await _projectAuthService.HasAccessToProject(User.UserId(), command.ProjectId);
 
             await _mediator.Send(command, cancellationToken);
 

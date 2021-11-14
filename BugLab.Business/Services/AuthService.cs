@@ -7,19 +7,30 @@ using System.Threading.Tasks;
 
 namespace BugLab.Business.Services
 {
-    public class ProjectAuthService : IProjectAuthService
+    public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
 
-        public ProjectAuthService(AppDbContext context)
+        public AuthService(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task HasAccess(string userId, int projectId)
+        public async Task HasAccessToProject(string userId, int projectId)
         {
             var userIsInProject = await _context.Projects.Where(x => x.Id == projectId)
                 .AnyAsync(x => x.Users.Any(x => x.Id == userId));
+
+            if (!userIsInProject)
+            {
+                throw new UnauthorizedAccessException("You are not part of this project");
+            }
+        }
+
+        public async Task HasAccessToBug(string userId, int bugId)
+        {
+            var userIsInProject = await _context.Projects.Where(x => x.Id == _context.Bugs.AsNoTracking().FirstOrDefault(x => x.Id == bugId).ProjectId)
+             .AnyAsync(x => x.Users.Any(x => x.Id == userId));
 
             if (!userIsInProject)
             {

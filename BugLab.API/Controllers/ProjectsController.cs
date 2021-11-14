@@ -17,9 +17,9 @@ namespace BugLab.API.Controllers
 {
     public class ProjectsController : BaseApiController
     {
-        private readonly IProjectAuthService _projectAuthService;
+        private readonly IAuthService _projectAuthService;
 
-        public ProjectsController(IMediator mediator, IProjectAuthService projectAuthService) : base(mediator)
+        public ProjectsController(IMediator mediator, IAuthService projectAuthService) : base(mediator)
         {
             _projectAuthService = projectAuthService;
         }
@@ -54,7 +54,7 @@ namespace BugLab.API.Controllers
         public async Task<IActionResult> AddUsersToProject(int projectId, [FromQuery] IEnumerable<string> userIds, CancellationToken cancellationToken)
         {
             if (!userIds.Any()) return BadRequest("You need to specify at least 1 user to add");
-            await _projectAuthService.HasAccess(User.UserId(), projectId);
+            await _projectAuthService.HasAccessToProject(User.UserId(), projectId);
             await _mediator.Send(new AddProjectUsersCommand { UserIds = userIds, ProjectId = projectId }, cancellationToken);
 
             return NoContent();

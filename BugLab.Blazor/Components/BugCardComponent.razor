@@ -10,7 +10,7 @@
         <MudCardContent>
             <MudTextField For="() => _model.Description" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
                           Lines="10" Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
-            
+
             <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
                        @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
                 @foreach (var priority in Enum.GetValues<BugPriority>())
@@ -27,7 +27,7 @@
                 }
             </MudSelect>
 
-            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled" 
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled"
                        Label="Bug Type" @bind-Value="_model.BugTypeId">
                 @foreach (var bugType in BugTypes)
                 {
@@ -35,22 +35,22 @@
                 }
             </MudSelect>
 
-            <MudText Typo="Typo.body2">Created on: @Bug.Created.ToLocalTime()</MudText>
+            <MudText Typo="Typo.body2">Created on @Bug.Created.ToLocalTime() by @Bug.CreatedBy.Email</MudText>
             @if (Bug.Modified.HasValue)
             {
-                <MudText Typo="Typo.body2">Modified on: @Bug.Modified?.ToLocalTime()</MudText>
+                <MudText Typo="Typo.body2">Modified on @Bug.Modified.Value.ToLocalTime() by @Bug.ModifiedBy.Email</MudText>
             }
             <MudText Typo="Typo.body2" Color="Color.Primary">Project: @Bug.ProjectTitle</MudText>
 
         </MudCardContent>
-            <MudCardActions>
-                <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
-                @if (context.IsModified())
-                {
-                    <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>
-                    <MudIconButton Icon="@Icons.Material.Filled.Update" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
-                }
-            </MudCardActions>
+        <MudCardActions>
+            <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+            @if (context.IsModified())
+            {
+                <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.Update" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+            }
+        </MudCardActions>
     </EditForm>
 </MudCard>
 

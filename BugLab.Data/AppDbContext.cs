@@ -44,15 +44,12 @@ namespace BugLab.Data
                     case EntityState.Modified:
                         entry.Entity.Modified = DateTime.UtcNow;
                         entry.Entity.ModifiedById = _currentUserId;
+                        if (entry.Entity.Deleted.HasValue) entry.Entity.DeletedById = _currentUserId;
                         break;
 
                     case EntityState.Added:
                         entry.Entity.Created = DateTime.UtcNow;
                         entry.Entity.CreatedById = _currentUserId;
-                        break;
-                    case EntityState.Deleted:
-                        entry.Entity.Deleted = DateTime.UtcNow;
-                        entry.Entity.DeletedById = _currentUserId;
                         break;
                     default:
                         break;

@@ -16,7 +16,7 @@ namespace BugLab.Business.Extensions
             TypeAdapterConfig.GlobalSettings.Scan(typeof(Mappings).Assembly);
 
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IProjectAuthService, ProjectAuthService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             // TODO: implement
             // services.AddHostedService<RemoveDeletedBugsService>();

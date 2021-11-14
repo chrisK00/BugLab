@@ -21,6 +21,8 @@ namespace BugLab.Data.EntityConfigs
             builder.HasOne(x => x.DeletedBy)
                 .WithMany()
                 .HasForeignKey(x => x.DeletedById);
+
+            builder.HasQueryFilter(x => !x.Deleted.HasValue);
         }
     }
 }
