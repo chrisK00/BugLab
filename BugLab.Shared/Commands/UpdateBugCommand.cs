@@ -11,5 +11,6 @@ namespace BugLab.Shared.Commands
         public BugPriority Priority { get; set; }
         public BugStatus Status { get; set; }
         public int ProjectId { get; set; }
+        public int BugTypeId { get; set; }
     }
 }

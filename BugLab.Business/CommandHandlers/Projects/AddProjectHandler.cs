@@ -20,11 +20,18 @@ namespace BugLab.Business.CommandHandlers.Projects
 
         public async Task<int> Handle(AddProjectCommand request, CancellationToken cancellationToken)
         {
-            var projectToAdd = request.Adapt<Project>();
             var user = await _context.Users.FirstAsync(x => x.Id == request.UserId, cancellationToken);
+            var projectToAdd = request.Adapt<Project>();
 
             projectToAdd.Users.Add(user);
-            await _context.AddAsync(projectToAdd, cancellationToken);
+            await _context.Projects.AddAsync(projectToAdd, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            await _context.BugTypes.AddRangeAsync(
+                new BugType { ProjectId = projectToAdd.Id, Title = "refactor" },
+                new BugType { ProjectId = projectToAdd.Id, Title = "bug" },
+                new BugType { ProjectId = projectToAdd.Id, Title = "feature" }
+                );
             await _context.SaveChangesAsync(cancellationToken);
 
             return projectToAdd.Id;
