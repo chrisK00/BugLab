@@ -81,8 +81,7 @@
     private async Task ConfirmDelete()
     {
         var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {_model.Title}", "This cannot be undone", "OK", "Cancel");
-        if (!result.HasValue) return;
-        if (!result.Value) return;
+        if (!result.HasValue || !result.Value) return;
 
         var response = await Client.DeleteAsync($"{Endpoints.Bugs}/{_model.Id}");
         await OnDelete.InvokeAsync();
