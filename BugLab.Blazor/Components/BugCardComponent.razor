@@ -10,13 +10,15 @@
         <MudCardContent>
             <MudTextField For="() => _model.Description" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
                           Lines="10" Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
-            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority" 
+            
+            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
                        @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
                 @foreach (var priority in Enum.GetValues<BugPriority>())
                 {
                     <MudSelectItem For="_model.Priority" Value="priority">@priority</MudSelectItem>
                 }
             </MudSelect>
+
             <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
                        Label="Status" @bind-Value="_model.Status">
                 @foreach (var status in Enum.GetValues<BugStatus>())
@@ -25,10 +27,18 @@
                 }
             </MudSelect>
 
-            <MudText Typo="Typo.body2">Created on: @Bug.Created</MudText>
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled" 
+                       Label="Bug Type" @bind-Value="_model.BugTypeId">
+                @foreach (var bugType in BugTypes)
+                {
+                    <MudSelectItem Value="bugType.Id">@bugType.Title</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudText Typo="Typo.body2">Created on: @Bug.Created.ToLocalTime()</MudText>
             @if (Bug.Modified.HasValue)
             {
-                <MudText Typo="Typo.body2">Modified on: @Bug.Modified</MudText>
+                <MudText Typo="Typo.body2">Modified on: @Bug.Modified?.ToLocalTime()</MudText>
             }
             <MudText Typo="Typo.body2" Color="Color.Primary">Project: @Bug.ProjectTitle</MudText>
 
@@ -45,13 +55,13 @@
 </MudCard>
 
 @code {
-    [Parameter]
-    public BugResponse Bug { get; set; }
+
     private UpdateBugCommand _model;
     private UpdateBugValidator _validator = new();
 
-    [Parameter]
-    public EventCallback OnUpdate { get; set; }
+    [Parameter] public BugResponse Bug { get; set; }
+    [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
+    [Parameter] public EventCallback OnUpdate { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -62,16 +72,15 @@
             Description = Bug.Description,
             Priority = Bug.Priority,
             Status = Bug.Status,
-            ProjectId = Bug.ProjectId
+            ProjectId = Bug.ProjectId,
+            BugTypeId = Bug.BugType.Id
         };
     }
 
     public async Task OnSubmit()
     {
-        Console.WriteLine("Submit called");
         var response = await Client.PutAsJsonAsync<UpdateBugCommand>($"{Endpoints.Bugs}/{_model.Id}", _model);
-        // Can make sure we get a valid id back
-        // TODO: show error msg in a div or snackbar
-        await OnUpdate.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);
+
+        await OnUpdate.InvokeAsync();
     }
 }

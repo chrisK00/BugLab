@@ -4,10 +4,14 @@
     <MudList>
         @foreach (var member in Members)
         {
-            <MudItem Class="mb-2 d-flex member">
+        <MudCard Class="d-flex member mb-2">
+            <MudCardContent>
                 <MudText Color="Color.Primary">@member.Email</MudText>
-                <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
-            </MudItem>
+            </MudCardContent>
+                <MudCardActions>
+                    <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+                </MudCardActions>
+        </MudCard>
         }
     </MudList>
 </MudContainer>

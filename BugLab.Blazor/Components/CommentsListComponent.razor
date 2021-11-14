@@ -4,17 +4,15 @@
     {
         <MudCard Class="mb-5 comment-card">
             <MudCardContent>
-                <MudText Color="Color.Primary">@comment.Created</MudText>
-                <MudText>@comment?.Modified</MudText>
+                <MudText Color="Color.Primary">@comment.Created.ToLocalTime()</MudText>
+                <MudText>@comment.Modified?.ToLocalTime()</MudText>
                 <MudText>@comment.Text</MudText>
             </MudCardContent>
         </MudCard>
     }
 </MudContainer>
 @code {
-
-    [Parameter]
-    public ICollection<CommentResponse> Comments { get; set; }
+   [Parameter] public ICollection<CommentResponse> Comments { get; set; }
 }
 
 <style>

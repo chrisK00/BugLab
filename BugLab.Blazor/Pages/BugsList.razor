@@ -1,18 +1,23 @@
 ﻿@page "/project/{projectId:int}/bugs"
 @page "/my-bugs"
 
+@inject NavigationManager Nav
 @inject HttpClient Client
 
 @if (ProjectId.HasValue)
 {
+<MudContainer Class="d-flex">
     <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
+    <MudSpacer />
+    <MudButton>New bug type</MudButton>
+</MudContainer>
     @if (_showAddBug)
     {
-        <MudContainer Class="mb-5">
-            <AddBugComponent OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
+        <MudContainer Class="mb-5 d-flex">
+            <AddBugComponent BugTypes="_bugTypes" OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
         </MudContainer>
-        <p>When you click on a Bug a BugCardComponent will popup with its details, maybe in the future you can even edit it directly! or click and dialog pops up</p>
     }
+
 }
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"
@@ -22,6 +27,7 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>
+        <MudTh>Type</MudTh>
         <MudTh>Status</MudTh>
         <MudTh>Priority</MudTh>
         <MudTh>Created On</MudTh>
@@ -29,11 +35,12 @@
         <MudTh>Project</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd><MudButton @onclick="() => SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
+        <MudTd><MudButton @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
+        <MudTd><MudText Color="Color.Primary">@context.BugType.Title</MudText></MudTd>
         <MudTd>@context.Status</MudTd>
         <MudTd>@context.Priority</MudTd>
-        <MudTd>@context.Created</MudTd>
-        <MudTd>@context.Modified</MudTd>
+        <MudTd>@context.Created.ToLocalTime()</MudTd>
+        <MudTd>@context.Modified?.ToLocalTime()</MudTd>
         <MudTd>@context.ProjectTitle</MudTd>
     </RowTemplate>
     <PagerContent>
@@ -41,11 +48,16 @@
     </PagerContent>
 </MudTable>
 
+@if (ProjectId.HasValue)
+{
+    <MudButton OnClick="@(async () => { Nav.NavigateTo("/my-bugs"); ProjectId = null; await _table.ReloadServerData();  })">back to my bugs</MudButton>
+}
+
 @if (_selectedBug != null)
 {
     <MudContainer Class="d-flex mt-5 mb-5">
         <MudItem id="bug-card">
-            <BugCardComponent OnUpdate="OnBugUpdated" Bug="_selectedBug" />
+            <BugCardComponent BugTypes="_bugTypes" OnUpdate="OnBugUpdated" Bug="_selectedBug" />
         </MudItem>
         <CommentsListComponent Comments="_selectedBug.Comments" />
     </MudContainer>
@@ -57,11 +69,26 @@
     private BugResponse _selectedBug;
     private bool _showAddBug;
 
-    [Parameter]
-    public int? ProjectId { get; set; }
+    [Parameter] public int? ProjectId { get; set; }
+    private IEnumerable<BugTypeResponse> _bugTypes;
 
-    public void SelectedBugChanged(BugResponse bug)
+    protected override async Task OnParametersSetAsync()
     {
+        if (ProjectId.HasValue) await LoadBugTypes(ProjectId.Value);
+    }
+
+    private async Task LoadBugTypes(int projectId)
+    {
+        _bugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(projectId));
+    }
+
+    public async Task SelectedBugChanged(BugResponse bug)
+    {
+        if (!ProjectId.HasValue)
+        {
+            await LoadBugTypes(bug.ProjectId);
+        }
+
         _selectedBug = bug;
     }
 
@@ -84,19 +111,18 @@
         };
     }
 
-    public async Task OnBugAdded()
+    public async Task OnBugAdded(int id)
     {
         _showAddBug = false;
+        _selectedBug = await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{id}", JsonOptions.Defaults());
 
-        // TODO: We can Fetch the newly created bug and add it to the list
-        //var newBug = Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{id}");
         await _table.ReloadServerData();
     }
 
     public async Task OnBugUpdated()
     {
+        _selectedBug = await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{_selectedBug.Id}", JsonOptions.Defaults());
         await _table.ReloadServerData();
-        _selectedBug = null;
     }
 }
 
