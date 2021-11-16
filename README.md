@@ -32,12 +32,11 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - EFcore Test Support - creates a in memory sqlite database
 - Moq for focused tests
 
-
 ## Contributions are highly appreciated!
 - Open up an issue for whatever you think should be implemented and is necessary for this type of project
 - Include as much information as possible in the issue, such as why this needs to be added/fixed.
 - Name your branch depending on what type of issue it is, is it a feature then use feature/[issueNumber]-[title]
-- Try to follow the already existing design in order to be consistent, but if you think that something could be done in a better way I would love to take a look a approach
+- Try to follow the already existing design in order to be consistent, but if you think that something could be done in a better way I would love to take a look at that approach
 
 - There are no dumb questions! feel free to message on discord ChrisK#8272
 
@@ -52,6 +51,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - Integration tests and more unit tests!
 - Attachments (f.e image, gif)
 - Home page can have a dashboard
+- Color property on bugtypes
 - Background service that sends a weekly stats mail regarding for example the project with most completed bugs, the project with most high prioritized bugs, how many bugs you have completed
 - Error handling mainly on the Blazor side when dealing with http requests (global http request interceptor), (the api side also needs a global exc handler)
 - Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, I could not find many code benefits with manually creating a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment and that there is a performance boost because we don't have to do a join but at the same time it requires more code, management and performance is not an issue right now), here are some things you'll need for the first alternative: 
