@@ -36,7 +36,7 @@ namespace BugLab.Business.Queries.Projects
                     HighPrioritized = bugs.Count(x => x.Priority == BugPriority.High)
                 }).ToListAsync(cancellationToken);
 
-            var projects = await query.ProjectToType<ProjectResponse>().ToListAsync(cancellationToken);
+            var projects = await query.ProjectToType<ProjectResponse>().OrderBy(p => p.Title).ToListAsync(cancellationToken);
             projects = projects.Select(p =>
             {
                 var bugsCount = bugsCounts.FirstOrDefault(x => x.ProjectId == p.Id);
