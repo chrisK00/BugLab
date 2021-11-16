@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BugLab.Data.EntityConfigs
+namespace BugLab.Data.Extensions
 {
-    public static class AuditableEntityBaseConfig
+    public static class EntityConfigurationExtensions
     {
         public static void ConfigureAudit<TEntity>(this EntityTypeBuilder<TEntity> builder) where TEntity : AuditableEntity
         {

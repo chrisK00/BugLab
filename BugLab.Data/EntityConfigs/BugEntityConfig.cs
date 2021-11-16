@@ -1,4 +1,5 @@
 ﻿using BugLab.Data.Entities;
+using BugLab.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -7,6 +7,11 @@ namespace BugLab.Business.Queries.Projects
 {
     public class GetProjectsQuery : PaginationParams, IRequest<PagedList<ProjectResponse>>
     {
+        public GetProjectsQuery(string userId)
+        {
+            UserId = userId;
+        }
 
+        public string UserId { get; }
     }
 }

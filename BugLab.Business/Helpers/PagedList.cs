@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BugLab.Business.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,21 @@ namespace BugLab.Business.Helpers
         public int TotalItems { get; init; }
         public int TotalPages { get; init; }
 
+        /// <summary>
+        /// Applies pagination to the query
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>A paginated list</returns>
         public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize, CancellationToken cancellationToken = default)
         {
-            var count = await source.CountAsync(cancellationToken);
-            var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+            int totalItems;
+            (source, totalItems) = await source.PaginateAsync(pageNumber, pageSize, cancellationToken);
+            var items = await source.ToListAsync(cancellationToken);
 
-            return new PagedList<T>(items, pageNumber, pageSize, count);
+            return new PagedList<T>(items, pageNumber, pageSize, totalItems);
         }
     }
 }

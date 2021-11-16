@@ -1,4 +1,5 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Extensions;
+using BugLab.Business.Helpers;
 using BugLab.Data;
 using BugLab.Shared.Enums;
 using BugLab.Shared.Responses;
@@ -22,24 +23,32 @@ namespace BugLab.Business.Queries.Projects
 
         public async Task<PagedList<ProjectResponse>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
-            var projects = await PagedList<ProjectResponse>
-                .CreateAsync(_context.Projects.ProjectToType<ProjectResponse>(), request.PageNumber, request.PageSize, cancellationToken);
+            var query = _context.Projects.AsNoTracking().Where(x => x.Users.Any(u => u.Id == request.UserId));
+            int totalItems;
+            (query, totalItems) = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
 
-            foreach (var project in projects)
+            var bugsCounts = await _context.Bugs.AsNoTracking()
+                .Where(b => query.Select(p => p.Id).Contains(b.ProjectId))
+                .GroupBy(b => b.ProjectId, (key, bugs) => new
+                {
+                    ProjectId = key,
+                    Total = bugs.Count(),
+                    HighPrioritized = bugs.Count(x => x.Priority == BugPriority.High)
+                }).ToListAsync(cancellationToken);
+
+            var projects = await query.ProjectToType<ProjectResponse>().ToListAsync(cancellationToken);
+            projects = projects.Select(p =>
             {
-                var bugsCount = await _context.Bugs.AsNoTracking()
-                  .Where(x => x.ProjectId == project.Id)
-                  .GroupBy(bug => 1, (key, bugs) => new
-                  {
-                      Total = bugs.Count(),
-                      HighPrioritized = bugs.Count(x => x.Priority == BugPriority.High)
-                  }).FirstOrDefaultAsync(cancellationToken);
+                var bugsCount = bugsCounts.FirstOrDefault(x => x.ProjectId == p.Id);
+                if (bugsCount == null) return p;
 
-                project.TotalBugs = bugsCount.Total;
-                project.TotalHighPriorityBugs = bugsCount.HighPrioritized;
-            }
+                p.TotalBugs = bugsCount.Total;
+                p.TotalHighPriorityBugs = bugsCount.HighPrioritized;
 
-            return projects;
+                return p;
+            }).ToList();
+
+            return new PagedList<ProjectResponse>(projects, request.PageNumber, request.PageSize, totalItems);
         }
     }
 }

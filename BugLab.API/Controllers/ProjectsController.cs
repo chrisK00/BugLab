@@ -36,7 +36,9 @@ namespace BugLab.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetProjects([FromQuery] PaginationParams queryParams, CancellationToken cancellationToken)
         {
-            var projects = await _mediator.Send(queryParams.Adapt<GetProjectsQuery>(), cancellationToken);
+            var query = new GetProjectsQuery(User.UserId());
+            queryParams.Adapt(query);
+            var projects = await _mediator.Send(query, cancellationToken);
             Response.AddPaginationHeader(projects.PageNumber, projects.PageSize, projects.TotalPages, projects.TotalItems);
 
             return projects;
