@@ -20,9 +20,6 @@ namespace BugLab.Business.CommandHandlers.Bugs
 
         public async Task<int> Handle(AddBugCommand request, CancellationToken cancellationToken)
         {
-            var projectExists = await _context.Projects.AnyAsync(x => x.Id == request.ProjectId, cancellationToken);
-            Guard.NotFound(projectExists, nameof(Project), request.ProjectId);
-
             var newBug = new Bug
             {
                 Title = request.Title,

@@ -21,11 +21,8 @@ namespace BugLab.Business.CommandHandlers.Comments
         public async Task<Unit> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {
             var bug = await _context.Bugs.Include(x => x.Comments).FirstOrDefaultAsync(x => x.Id == request.BugId, cancellationToken);
-            Guard.NotFound(bug, nameof(bug), request.BugId);
-
             var commentToRemove = bug.Comments.FirstOrDefault(x => x.Id == request.CommentId);
             Guard.NotFound(commentToRemove, "comment", request.CommentId);
-
             bug.Comments.Remove(commentToRemove);
             await _context.SaveChangesAsync(cancellationToken);
 

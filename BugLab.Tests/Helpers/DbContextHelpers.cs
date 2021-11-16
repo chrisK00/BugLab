@@ -12,8 +12,11 @@ namespace BugLab.Tests.Helpers
 {
     public static class DbContextHelpers
     {
+        public static string CurrentUserId { get; private set; }
+
         public static async Task<AppDbContext> CreateAsync(string currentUserId = "1")
         {
+            CurrentUserId = currentUserId;
             var options = SqliteInMemory.CreateOptions<AppDbContext>();
             await InitSeed(options);
 
