@@ -1,16 +1,16 @@
 ﻿using MediatR;
 
-namespace BugLab.Shared.Commands
+namespace BugLab.Business.Commands.Comments
 {
     public class DeleteCommentCommand : IRequest
     {
-        public DeleteCommentCommand(int bugId, int commentId)
+        public DeleteCommentCommand(int commentId, int bugId)
         {
-            BugId = bugId;
             CommentId = commentId;
+            BugId = bugId;
         }
 
-        public int BugId { get; }
         public int CommentId { get; }
+        public int BugId { get; }
     }
 }

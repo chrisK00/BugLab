@@ -1,9 +1,9 @@
-﻿using BugLab.Shared.Commands;
+﻿using BugLab.Shared.Requests.Bugs;
 using FluentValidation;
 
 namespace BugLab.Shared.Validators
 {
-    public class UpdateBugValidator : AbstractValidator<UpdateBugCommand>
+    public class UpdateBugValidator : AbstractValidator<UpdateBugRequest>
     {
         public UpdateBugValidator()
         {

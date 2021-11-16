@@ -1,6 +1,7 @@
-﻿using BugLab.Business.Interfaces;
+﻿using BugLab.Business.Commands.Comments;
+using BugLab.Business.Interfaces;
 using BugLab.Data.Extensions;
-using BugLab.Shared.Commands;
+using BugLab.Shared.Requests.Comments;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
@@ -19,13 +20,12 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddComment(AddCommentCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddComment(int bugId, AddCommentRequest request, CancellationToken cancellationToken)
         {
-            await _authService.HasAccessToBug(User.UserId(), command.BugId);
+            await _authService.HasAccessToBug(User.UserId(), bugId);
+            await _mediator.Send(new AddCommentCommand(bugId, request.Text), cancellationToken);
 
-            await _mediator.Send(command, cancellationToken);
-
-            return CreatedAtRoute(nameof(BugsController.GetBug), new { id = command.BugId }, new { command.BugId });
+            return CreatedAtRoute(nameof(BugsController.GetBug), new { id = bugId }, new { bugId });
         }
 
         [HttpDelete("{commentId}")]

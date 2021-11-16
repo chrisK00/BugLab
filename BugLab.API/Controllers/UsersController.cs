@@ -1,7 +1,9 @@
 ﻿using BugLab.API.Extensions;
-using BugLab.Shared.Helpers;
-using BugLab.Shared.Queries;
+using BugLab.Business.Helpers;
+using BugLab.Business.Queries.Users;
+using BugLab.Shared.QueryParams;
 using BugLab.Shared.Responses;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
@@ -16,9 +18,9 @@ namespace BugLab.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<UserResponse>>> GetUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<PagedList<UserResponse>>> GetUsers([FromQuery] UserParams queryParams, CancellationToken cancellationToken)
         {
-            var users = await _mediator.Send(query, cancellationToken);
+            var users = await _mediator.Send(queryParams.Adapt<GetUsersQuery>(), cancellationToken);
             Response.AddPaginationHeader(users.PageNumber, users.PageSize, users.TotalPages, users.TotalItems);
 
             return users;

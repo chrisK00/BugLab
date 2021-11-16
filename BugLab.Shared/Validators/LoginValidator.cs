@@ -1,9 +1,9 @@
-﻿using BugLab.Shared.Commands;
+﻿using BugLab.Shared.Auth.Requests;
 using FluentValidation;
 
 namespace BugLab.Shared.Validators
 {
-    public class LoginValidator : AbstractValidator<LoginCommand>
+    public class LoginValidator : AbstractValidator<LoginRequest>
     {
         public LoginValidator()
         {

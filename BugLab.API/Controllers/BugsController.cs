@@ -1,9 +1,12 @@
 ﻿using BugLab.API.Extensions;
+using BugLab.Business.Commands.Bugs;
 using BugLab.Business.Interfaces;
+using BugLab.Business.Queries.Bugs;
 using BugLab.Data.Extensions;
-using BugLab.Shared.Commands;
-using BugLab.Shared.Queries;
+using BugLab.Shared.QueryParams;
+using BugLab.Shared.Requests.Bugs;
 using BugLab.Shared.Responses;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -25,14 +28,16 @@ namespace BugLab.API.Controllers
         public async Task<ActionResult<BugResponse>> GetBug(int id, CancellationToken cancellationToken)
         {
             var bug = await _mediator.Send(new GetBugQuery(id), cancellationToken);
+
             return bug;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BugResponse>>> GetBugs([FromQuery] GetBugsQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<BugResponse>>> GetBugs([FromQuery] BugParams queryParams, CancellationToken cancellationToken)
         {
-            query.UserId = User.UserId();
-            var bugs = await _mediator.Send(query, cancellationToken);
+            var query = new GetBugsQuery(User.UserId());
+            
+            var bugs = await _mediator.Send(queryParams.Adapt(query), cancellationToken);
             Response.AddPaginationHeader(bugs.PageNumber, bugs.PageSize, bugs.TotalPages, bugs.TotalItems);
 
             return Ok(bugs);
@@ -48,19 +53,19 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBug(AddBugCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddBug(AddBugRequest request, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccessToProject(User.UserId(), command.ProjectId);
-            var id = await _mediator.Send(command, cancellationToken);
+            await _projectAuthService.HasAccessToProject(User.UserId(), request.ProjectId);
+            var id = await _mediator.Send(request.Adapt<AddBugCommand>(), cancellationToken);
 
             return CreatedAtRoute(nameof(GetBug), new { id }, id);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBug(UpdateBugCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateBug(UpdateBugRequest request, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccessToBug(User.UserId(), command.Id);
-            await _mediator.Send(command, cancellationToken);
+            await _projectAuthService.HasAccessToBug(User.UserId(), request.Id);
+            await _mediator.Send(request.Adapt<UpdateBugCommand>(), cancellationToken);
 
             return NoContent();
         }

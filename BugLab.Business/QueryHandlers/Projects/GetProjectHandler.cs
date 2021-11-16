@@ -1,6 +1,5 @@
 ﻿using BugLab.Data;
 using BugLab.Shared.Enums;
-using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BugLab.Business.QueryHandlers.Projects
+namespace BugLab.Business.Queries.Projects
 {
     public class GetProjectHandler : IRequestHandler<GetProjectQuery, ProjectResponse>
     {

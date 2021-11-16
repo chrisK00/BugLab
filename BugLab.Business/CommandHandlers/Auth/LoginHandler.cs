@@ -1,5 +1,5 @@
-﻿using BugLab.Business.Interfaces;
-using BugLab.Shared.Commands;
+﻿using BugLab.Business.Commands.Auth;
+using BugLab.Business.Interfaces;
 using BugLab.Shared.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Identity;

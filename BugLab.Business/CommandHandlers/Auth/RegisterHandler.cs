@@ -1,8 +1,7 @@
-﻿using BugLab.Shared.Commands;
+﻿using BugLab.Business.Commands.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;

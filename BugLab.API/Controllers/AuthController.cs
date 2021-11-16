@@ -1,5 +1,7 @@
-﻿using BugLab.Shared.Commands;
+﻿using BugLab.Business.Commands.Auth;
+using BugLab.Shared.Auth.Requests;
 using BugLab.Shared.Responses;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +18,17 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<LoginResponse>> LoginAsync(LoginCommand command, CancellationToken cancellationToken)
+        public async Task<ActionResult<LoginResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
         {
-            var user = await _mediator.Send(command, cancellationToken);
+            var user = await _mediator.Send(request.Adapt<LoginCommand>(), cancellationToken);
 
             return user;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync(RegisterCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
         {
-            await _mediator.Send(command, cancellationToken);
+            await _mediator.Send(request.Adapt<RegisterCommand>(), cancellationToken);
 
             return NoContent();
         }

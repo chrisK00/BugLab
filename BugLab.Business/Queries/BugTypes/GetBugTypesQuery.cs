@@ -2,15 +2,15 @@
 using MediatR;
 using System.Collections.Generic;
 
-namespace BugLab.Shared.Queries
+namespace BugLab.Business.Queries.BugTypes
 {
     public class GetBugTypesQuery : IRequest<IEnumerable<BugTypeResponse>>
     {
-        public int ProjectId { get; private set; }
-
         public GetBugTypesQuery(int projectId)
         {
             ProjectId = projectId;
         }
+
+        public int ProjectId { get; }
     }
 }

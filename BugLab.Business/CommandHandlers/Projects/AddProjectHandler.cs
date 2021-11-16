@@ -1,6 +1,6 @@
-﻿using BugLab.Data;
+﻿using BugLab.Business.Commands.Projects;
+using BugLab.Data;
 using BugLab.Data.Entities;
-using BugLab.Shared.Commands;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

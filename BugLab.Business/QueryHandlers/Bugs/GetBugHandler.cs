@@ -1,5 +1,4 @@
 ﻿using BugLab.Data;
-using BugLab.Shared.Queries;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BugLab.Business.QueryHandlers.Bugs
+namespace BugLab.Business.Queries.Bugs
 {
     public class GetBugHandler : IRequestHandler<GetBugQuery, BugResponse>
     {

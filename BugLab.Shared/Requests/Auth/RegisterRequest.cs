@@ -1,9 +1,6 @@
-﻿using BugLab.Shared.Responses;
-using MediatR;
-
-namespace BugLab.Shared.Commands
+﻿namespace BugLab.Shared.Auth.Requests
 {
-    public class LoginCommand : IRequest<LoginResponse>
+    public class RegisterRequest
     {
         private string _email;
 

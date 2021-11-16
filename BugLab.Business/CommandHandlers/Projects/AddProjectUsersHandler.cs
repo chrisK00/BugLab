@@ -1,6 +1,6 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Commands.Projects;
+using BugLab.Business.Helpers;
 using BugLab.Data;
-using BugLab.Shared.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +39,7 @@ namespace BugLab.Business.CommandHandlers.Projects
             await _context.SaveChangesAsync(cancellationToken);
 
             if (notAlreadyMembersUsers.Count != usersToAdd.Count)
-            {
                 throw new InvalidOperationException("Some users were not added because they could not be found or they are already members of this project");
-            }
 
             return Unit.Value;
         }

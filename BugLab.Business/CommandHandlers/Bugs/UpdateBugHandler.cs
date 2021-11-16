@@ -1,8 +1,7 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Commands.Bugs;
+using BugLab.Business.Helpers;
 using BugLab.Data;
 using BugLab.Data.Entities;
-using BugLab.Shared.Commands;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -28,7 +27,7 @@ namespace BugLab.Business.CommandHandlers.Bugs
             bug.Status = request.Status;
             bug.Priority = request.Priority;
             bug.Description = request.Description;
-            bug.BugTypeId = request.BugTypeId;
+            bug.BugTypeId = request.TypeId;
 
             await _context.SaveChangesAsync(cancellationToken);
 

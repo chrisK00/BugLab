@@ -45,7 +45,6 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - Right click the solution and press properties, then select multiple startup projects. After that you can choose to have BugLab.Blazor and BugLab.API to start when you run the app
 
 ### Here are some things Todo:
-- MediatR's request models are currently shared in order to boost dev speed but they should be refactored in to the Business layer. Id's are currently being fetched through the model due to the models being MediatR's but some will only require the id to be in the URL. You can also convert them to records instead of classes. You can have a file for each feature for example all bug commands (if they are records) can be inside a BugCommands file.
 - The Blazor app is currently not making use of the built in authorize view or authorize attribute and not parsing any claims from the JWT token. We currently don't have any roles implemented so this is not a big deal
 - I'm not a front-end designer and my focus is not on the design but rather functionality so feel free to improve it and accessibility
 - Integration tests and more unit tests!

@@ -57,7 +57,7 @@
 
 @code {
 
-    private UpdateBugCommand _model;
+    private UpdateBugRequest _model;
     private UpdateBugValidator _validator = new();
 
     [Parameter] public BugResponse Bug { get; set; }
@@ -67,7 +67,7 @@
 
     protected override void OnParametersSet()
     {
-        _model = new UpdateBugCommand
+        _model = new UpdateBugRequest
         {
             Id = Bug.Id,
             Title = Bug.Title,
@@ -89,7 +89,7 @@
 
     public async Task OnSubmit()
     {
-        var response = await Client.PutAsJsonAsync<UpdateBugCommand>($"{Endpoints.Bugs}/{_model.Id}", _model);
+        var response = await Client.PutAsJsonAsync<UpdateBugRequest>($"{Endpoints.Bugs}/{_model.Id}", _model);
 
         await OnUpdate.InvokeAsync();
     }

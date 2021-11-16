@@ -1,15 +1,14 @@
 ﻿using BugLab.Shared.Enums;
-using MediatR;
 
-namespace BugLab.Shared.Commands
+namespace BugLab.Shared.Requests.Bugs
 {
-    public class AddBugCommand : IRequest<int>
+    public class UpdateBugRequest
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public BugPriority Priority { get; set; }
         public BugStatus Status { get; set; }
         public int BugTypeId { get; set; }
-        public int ProjectId { get; set; }
     }
 }

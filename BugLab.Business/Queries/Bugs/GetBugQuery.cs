@@ -1,7 +1,7 @@
 ﻿using BugLab.Shared.Responses;
 using MediatR;
 
-namespace BugLab.Shared.Queries
+namespace BugLab.Business.Queries.Bugs
 {
     public class GetBugQuery : IRequest<BugResponse>
     {
@@ -10,6 +10,6 @@ namespace BugLab.Shared.Queries
             Id = id;
         }
 
-        public int Id { get; set; }
+        public int Id { get; }
     }
 }

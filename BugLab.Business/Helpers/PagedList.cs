@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BugLab.Shared.Helpers
+namespace BugLab.Business.Helpers
 {
     public class PagedList<T> : List<T>
     {

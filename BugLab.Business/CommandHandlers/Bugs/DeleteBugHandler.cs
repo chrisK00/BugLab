@@ -1,6 +1,6 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Commands.Bugs;
+using BugLab.Business.Helpers;
 using BugLab.Data;
-using BugLab.Shared.Commands;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;

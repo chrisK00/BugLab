@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace BugLab.Shared.Commands
+namespace BugLab.Business.Commands.Bugs
 {
     public class DeleteBugCommand : IRequest
     {
@@ -9,6 +9,6 @@ namespace BugLab.Shared.Commands
             Id = id;
         }
 
-        public int Id { get; private set; }
+        public int Id { get; }
     }
 }

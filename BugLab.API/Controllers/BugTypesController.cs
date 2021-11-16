@@ -1,4 +1,4 @@
-﻿using BugLab.Shared.Queries;
+﻿using BugLab.Business.Queries.BugTypes;
 using BugLab.Shared.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

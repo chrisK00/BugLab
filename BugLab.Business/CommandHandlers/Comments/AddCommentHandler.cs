@@ -1,7 +1,7 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Commands.Comments;
+using BugLab.Business.Helpers;
 using BugLab.Data;
 using BugLab.Data.Entities;
-using BugLab.Shared.Commands;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

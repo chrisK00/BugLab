@@ -1,13 +1,14 @@
 ﻿using BugLab.API.Extensions;
+using BugLab.Business.Commands.Projects;
 using BugLab.Business.Interfaces;
+using BugLab.Business.Queries.Projects;
 using BugLab.Data.Extensions;
-using BugLab.Shared.Commands;
-using BugLab.Shared.Queries;
+using BugLab.Shared.QueryParams;
+using BugLab.Shared.Requests.Projects;
 using BugLab.Shared.Responses;
+using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -33,19 +34,18 @@ namespace BugLab.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetProjects([FromQuery] GetProjectsQuery query, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<ProjectResponse>>> GetProjects([FromQuery] PaginationParams queryParams, CancellationToken cancellationToken)
         {
-            var projects = await _mediator.Send(query, cancellationToken);
+            var projects = await _mediator.Send(queryParams.Adapt<GetProjectsQuery>(), cancellationToken);
             Response.AddPaginationHeader(projects.PageNumber, projects.PageSize, projects.TotalPages, projects.TotalItems);
 
             return projects;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProject(AddProjectCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddProject(AddProjectRequest request, CancellationToken cancellationToken)
         {
-            command.UserId = User.UserId();
-            var id = await _mediator.Send(command, cancellationToken);
+            var id = await _mediator.Send(new AddProjectCommand(User.UserId(), request.Title, request.Description), cancellationToken);
 
             return CreatedAtRoute(nameof(GetProject), new { id }, id);
         }
@@ -53,9 +53,10 @@ namespace BugLab.API.Controllers
         [HttpPost("{projectId}/add-users")]
         public async Task<IActionResult> AddUsersToProject(int projectId, [FromQuery] IEnumerable<string> userIds, CancellationToken cancellationToken)
         {
-            if (!userIds.Any()) return BadRequest("You need to specify at least 1 user to add");
+            if (!userIds.Any()) return NoContent();
+
             await _projectAuthService.HasAccessToProject(User.UserId(), projectId);
-            await _mediator.Send(new AddProjectUsersCommand { UserIds = userIds, ProjectId = projectId }, cancellationToken);
+            await _mediator.Send(new AddProjectUsersCommand(projectId, userIds), cancellationToken);
 
             return NoContent();
         }

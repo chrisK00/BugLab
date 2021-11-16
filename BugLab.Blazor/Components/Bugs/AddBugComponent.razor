@@ -35,7 +35,7 @@
 </MudCard>
 
 @code {
-    private AddBugCommand _model = new();
+    private AddBugRequest _model = new();
     private AddBugValidator _validator = new();
 
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
@@ -49,7 +49,7 @@
 
     public async Task OnSubmit()
     {
-        var response = await Client.PostAsJsonAsync<AddBugCommand>(Endpoints.Bugs, _model);
+        var response = await Client.PostAsJsonAsync<AddBugRequest>(Endpoints.Bugs, _model);
 
         // TODO: show error msg in a div or snackbar if id is default or just ensure success status code
         var id = await response.Content.ReadFromJsonAsync<int>();

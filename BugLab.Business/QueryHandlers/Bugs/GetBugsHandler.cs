@@ -1,6 +1,5 @@
-﻿using BugLab.Data;
-using BugLab.Shared.Helpers;
-using BugLab.Shared.Queries;
+﻿using BugLab.Business.Helpers;
+using BugLab.Data;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BugLab.Business.QueryHandlers.Bugs
+namespace BugLab.Business.Queries.Bugs
 {
     public class GetBugsHandler : IRequestHandler<GetBugsQuery, PagedList<BugResponse>>
     {
@@ -28,7 +27,8 @@ namespace BugLab.Business.QueryHandlers.Bugs
                 ? query.Where(x => x.ProjectId == request.ProjectId)
                 : query.Where(b => b.CreatedById == request.UserId);
 
-            return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(), request.PageNumber, request.PageSize, cancellationToken);
+            return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(),
+                request.PageNumber, request.PageSize, cancellationToken);
         }
     }
 }
