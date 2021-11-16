@@ -1,5 +1,6 @@
 ﻿using BugLab.Business.CommandHandlers.Bugs;
-using BugLab.Shared.Commands;
+using BugLab.Business.Commands.Bugs;
+using BugLab.Shared.Enums;
 using BugLab.Tests.Helpers;
 using FluentAssertions;
 using System;
@@ -18,8 +19,8 @@ namespace BugLab.Tests.Business.CommandHandlers
         {
             using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);
-            var request = new AddBugRequest { Title = "New Bug",ProjectId = 1 };
-            var id = await _sut.Handle(request, default);
+            var command = new AddBugCommand("New Bug",null ,BugPriority.None, BugStatus.InProgress, 1, 1);
+            var id = await _sut.Handle(command, default);
 
             id.Should().NotBe(0);
             var addedBug = context.Bugs.OrderBy(x => x.Id).LastOrDefault();

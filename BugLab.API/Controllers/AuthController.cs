@@ -1,5 +1,5 @@
 ﻿using BugLab.Business.Commands.Auth;
-using BugLab.Shared.Auth.Requests;
+using BugLab.Shared.Requests.Auth;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;

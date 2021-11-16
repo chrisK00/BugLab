@@ -46,8 +46,8 @@
         var request = QueryBuilder.Use(Endpoints.Users)
             .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
             .WithParam(nameof(state.PageSize), state.PageSize)
-            .WithParam(nameof(GetUsersQuery.Email), _emailSearch)
-            .WithParam(nameof(GetUsersQuery.NotInProjectId), ProjectId)
+            .WithParam(nameof(UserParams.Email), _emailSearch)
+            .WithParam(nameof(UserParams.NotInProjectId), ProjectId)
             .Build();
 
         var response = await Client.GetAsync(request);

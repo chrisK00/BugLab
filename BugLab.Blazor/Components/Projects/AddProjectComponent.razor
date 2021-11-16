@@ -16,7 +16,7 @@
 </MudCard>
 
 @code {
-    private AddProjectCommand _model = new();
+    private AddProjectRequest _model = new();
     private AddProjectValidator _validator = new();
 
     [Parameter]
@@ -24,7 +24,7 @@
 
     public async Task OnSubmit()
     {
-        var response = await Client.PostAsJsonAsync<AddProjectCommand>(Endpoints.Projects, _model);
+        var response = await Client.PostAsJsonAsync<AddProjectRequest>(Endpoints.Projects, _model);
         // Can make sure we get a valid id back
         // TODO: show error msg in a div or snackbar
         await OnAdd.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);

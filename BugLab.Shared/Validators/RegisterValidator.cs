@@ -1,4 +1,4 @@
-﻿using BugLab.Shared.Auth.Requests;
+﻿using BugLab.Shared.Requests.Auth;
 using FluentValidation;
 
 namespace BugLab.Shared.Validators

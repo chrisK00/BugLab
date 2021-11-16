@@ -1,4 +1,4 @@
-﻿namespace BugLab.Shared.Auth.Requests
+﻿namespace BugLab.Shared.Requests.Auth
 {
     public class LoginRequest 
     {
