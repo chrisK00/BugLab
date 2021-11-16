@@ -30,6 +30,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 ### Test
 - Fluentassertions - asserts with better error logs
 - EFcore Test Support - creates a in memory sqlite database
+- Moq for focused tests
 
 
 ## Contributions are highly appreciated!

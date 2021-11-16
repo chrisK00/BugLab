@@ -1,7 +1,10 @@
 ﻿using BugLab.Data;
 using BugLab.Data.Entities;
 using BugLab.Shared.Enums;
+using Microsoft.AspNetCore.Http;
+using Moq;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TestSupport.EfHelpers;
 
@@ -9,36 +12,32 @@ namespace BugLab.Tests.Helpers
 {
     public static class DbContextHelpers
     {
-        public static async Task<AppDbContext> CreateAsync()
+        public static async Task<AppDbContext> CreateAsync(string currentUserId = "1")
         {
             var options = SqliteInMemory.CreateOptions<AppDbContext>();
-            var context = new AppDbContext(options);
-            context.Database.EnsureCreated();
+            await InitSeed(options);
+
+            var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.NameIdentifier, currentUserId) }));
+            var mockHttpAccessor = new Mock<IHttpContextAccessor>();
+            mockHttpAccessor.Setup(_ => _.HttpContext.User).Returns(claimsPrincipal);
+
+            var context = new AppDbContext(options, mockHttpAccessor.Object);
             context.SeedProjects();
+            context.SeedBugTypes();
             context.SeedBugs();
+
             await context.SaveChangesAsync();
 
             return context;
         }
 
-        public static void SeedProjects(this AppDbContext context)
+        private static async Task InitSeed(DbContextOptionsDisposable<AppDbContext> options)
         {
-            context.Projects.AddRange(new List<Project>
-            {
-                new Project { Title = "project1"},
-                new Project { Title = "project2"},
-                new Project { Title = "project3"},
-            });
-        }
+            var context = new AppDbContext(options);
+            context.Database.EnsureCreated();
+            context.SeedUsers();
 
-        public static void SeedBugs(this AppDbContext context)
-        {
-            context.Bugs.AddRange(new List<Bug>
-            {
-                new Bug { Title = "bug1", Priority = BugPriority.High, Status = BugStatus.Open, ProjectId = 1 },
-                new Bug { Title = "bug2", ProjectId = 1 },
-                new Bug { Title = "bug3", ProjectId = 2 },
-            });
+            await context.SaveChangesAsync();
         }
     }
 }
