@@ -46,6 +46,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - Right click the solution and press properties, then select multiple startup projects. After that you can choose to have BugLab.Blazor and BugLab.API to start when you run the app
 
 ### Here are some things Todo:
+- You could refactor the commands/queries to become records instead, then you would have a Commands folder, with feature by folder, then a file with all the Commands for that feature and your handler files: Commands/Bugs/ in this folder we can find BugCommands.cs, AddBugHandler, DeleteBugHandler etc.... If you do this then you need to create a PaginationParams record we can inherit from, I normally choose composition over inheritence but in this app we wont inherit from something else and it's more convenient to do request.PageNumber over request.PaginationParams.PageNumber.
 - The Blazor app is currently not making use of the built in authorize view or authorize attribute and not parsing any claims from the JWT token. We currently don't have any roles implemented so this is not a big deal
 - I'm not a front-end designer and my focus is not on the design but rather functionality so feel free to improve it and accessibility
 - Integration tests and more unit tests!

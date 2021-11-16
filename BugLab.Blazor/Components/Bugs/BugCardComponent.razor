@@ -20,19 +20,19 @@
                 }
             </MudSelect>
 
-            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
+            <MudSelect For="() => _model.Status"  AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
                        Label="Status" @bind-Value="_model.Status">
                 @foreach (var status in Enum.GetValues<BugStatus>())
                 {
-                    <MudSelectItem For="_model.Status" Value="status">@status</MudSelectItem>
+                    <MudSelectItem Value="status">@status</MudSelectItem>
                 }
             </MudSelect>
 
-            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled"
-                       Label="Bug Type" @bind-Value="_model.BugTypeId">
+            <MudSelect For="() => _model.TypeId" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled"
+                       Label="Bug Type" @bind-Value="_model.TypeId">
                 @foreach (var bugType in BugTypes)
                 {
-                    <MudSelectItem Value="bugType.Id">@bugType.Title</MudSelectItem>
+                    <MudSelectItem  Value="bugType.Id">@bugType.Title</MudSelectItem>
                 }
             </MudSelect>
 
@@ -74,7 +74,7 @@
             Description = Bug.Description,
             Priority = Bug.Priority,
             Status = Bug.Status,
-            BugTypeId = Bug.BugType.Id
+            TypeId = Bug.BugType.Id
         };
     }
 

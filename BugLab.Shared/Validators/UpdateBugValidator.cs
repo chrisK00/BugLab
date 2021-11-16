@@ -16,7 +16,7 @@ namespace BugLab.Shared.Validators
             RuleFor(x => x.Status)
                 .IsInEnum();
 
-            RuleFor(x => x.BugTypeId)
+            RuleFor(x => x.TypeId)
                 .NotEmpty();
         }
     }

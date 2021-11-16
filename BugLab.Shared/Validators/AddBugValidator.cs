@@ -19,7 +19,7 @@ namespace BugLab.Shared.Validators
             RuleFor(x => x.ProjectId)
                 .NotEmpty();
 
-            RuleFor(x => x.BugTypeId)
+            RuleFor(x => x.TypeId)
                 .NotEmpty();
         }
     }

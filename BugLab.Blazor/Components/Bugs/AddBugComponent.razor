@@ -19,7 +19,7 @@
                 }
             </MudSelect>
             <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled" Label="Bug Type"
-                       @bind-Value="_model.BugTypeId">
+                       @bind-Value="_model.TypeId">
                 @foreach (var bugType in BugTypes)
                 {
                     <MudSelectItem Value="bugType.Id">@bugType.Title</MudSelectItem>
@@ -51,7 +51,7 @@
     {
         var response = await Client.PostAsJsonAsync<AddBugRequest>(Endpoints.Bugs, _model);
 
-        // TODO: show error msg in a div or snackbar if id is default or just ensure success status code
+        // TODO: show error msg in a div or snackbar if id is default or just ensure success status code. Implement global exc handler (http interceptor)
         var id = await response.Content.ReadFromJsonAsync<int>();
         await OnAdd.InvokeAsync(id);
     }
