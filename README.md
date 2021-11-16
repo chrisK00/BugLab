@@ -53,7 +53,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - Attachments (f.e image, gif)
 - Home page can have a dashboard
 - Background service that sends a weekly stats mail regarding for example the project with most completed bugs, the project with most high prioritized bugs, how many bugs you have completed
-- Error handling mainly on the Blazor side when dealing with http requests, (the api side just needs a global exc handler)
+- Error handling mainly on the Blazor side when dealing with http requests (global http request interceptor), (the api side also needs a global exc handler)
 - Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, I could not find many code benefits with manually creating a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment but at the same time it requires more code and management), here are some things you'll need for the first alternative: 
 
 `Add a ProjectUser class with ProjectId, UserId and User.`
