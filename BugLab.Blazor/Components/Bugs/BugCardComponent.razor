@@ -20,7 +20,7 @@
                 }
             </MudSelect>
 
-            <MudSelect For="() => _model.Status"  AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
+            <MudSelect For="() => _model.Status" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
                        Label="Status" @bind-Value="_model.Status">
                 @foreach (var status in Enum.GetValues<BugStatus>())
                 {
@@ -32,7 +32,7 @@
                        Label="Bug Type" @bind-Value="_model.TypeId">
                 @foreach (var bugType in BugTypes)
                 {
-                    <MudSelectItem  Value="bugType.Id">@bugType.Title</MudSelectItem>
+                    <MudSelectItem Value="bugType.Id">@bugType.Title</MudSelectItem>
                 }
             </MudSelect>
 
@@ -67,15 +67,8 @@
 
     protected override void OnParametersSet()
     {
-        _model = new UpdateBugRequest
-        {
-            Id = Bug.Id,
-            Title = Bug.Title,
-            Description = Bug.Description,
-            Priority = Bug.Priority,
-            Status = Bug.Status,
-            TypeId = Bug.BugType.Id
-        };
+        _model = Bug.Adapt<UpdateBugRequest>();
+        _model.TypeId = Bug.BugType.Id;
     }
 
     private async Task ConfirmDelete()
@@ -89,7 +82,10 @@
 
     public async Task OnSubmit()
     {
-        var response = await Client.PutAsJsonAsync<UpdateBugRequest>($"{Endpoints.Bugs}/{_model.Id}", _model);
+        await Client.PutAsJsonAsync<UpdateBugRequest>($"{Endpoints.Bugs}/{_model.Id}", _model);
+        _model.Adapt(Bug);
+        Bug.BugType.Id = _model.TypeId;
+
         await OnUpdate.InvokeAsync();
     }
 }

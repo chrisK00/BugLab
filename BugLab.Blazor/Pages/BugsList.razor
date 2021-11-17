@@ -120,7 +120,6 @@
 
     public async Task OnBugUpdated()
     {
-        _selectedBug = await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{_selectedBug.Id}", JsonOptions.Defaults());
         await _table.ReloadServerData();
     }
 
