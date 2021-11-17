@@ -17,11 +17,11 @@ namespace BugLab.API.Controllers
 {
     public class BugsController : BaseApiController
     {
-        private readonly IAuthService _projectAuthService;
+        private readonly IAuthService _authService;
 
-        public BugsController(IMediator mediator, IAuthService projectAuthService) : base(mediator)
+        public BugsController(IMediator mediator, IAuthService authService) : base(mediator)
         {
-            _projectAuthService = projectAuthService;
+            _authService = authService;
         }
 
         [HttpGet("{id}", Name = nameof(GetBug))]
@@ -46,7 +46,7 @@ namespace BugLab.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBug(int id, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccessToBug(User.UserId(), id);
+            await _authService.HasAccessToBug(User.UserId(), id);
             await _mediator.Send(new DeleteBugCommand(id), cancellationToken);
 
             return NoContent();
@@ -55,7 +55,7 @@ namespace BugLab.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBug(AddBugRequest request, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccessToProject(User.UserId(), request.ProjectId);
+            await _authService.HasAccessToProject(User.UserId(), request.ProjectId);
             var id = await _mediator.Send(request.Adapt<AddBugCommand>(), cancellationToken);
 
             return CreatedAtRoute(nameof(GetBug), new { id }, id);
@@ -64,7 +64,7 @@ namespace BugLab.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBug(UpdateBugRequest request, CancellationToken cancellationToken)
         {
-            await _projectAuthService.HasAccessToBug(User.UserId(), request.Id);
+            await _authService.HasAccessToBug(User.UserId(), request.Id);
             await _mediator.Send(request.Adapt<UpdateBugCommand>(), cancellationToken);
 
             return NoContent();

@@ -37,10 +37,9 @@ namespace BugLab.Business.CommandHandlers.Projects
             usersAndProject.Project.Users.AddRange(notAlreadyMembersUsers);
             await _context.SaveChangesAsync(cancellationToken);
 
-            if (notAlreadyMembersUsers.Count != usersToAdd.Count)
-                throw new InvalidOperationException("Some users were not added because they could not be found or they are already members of this project");
-
-            return Unit.Value;
+            return notAlreadyMembersUsers.Count != usersToAdd.Count
+                ? throw new InvalidOperationException("Some users were not added because they could not be found or they are already members of this project")
+                : Unit.Value;
         }
     }
 }

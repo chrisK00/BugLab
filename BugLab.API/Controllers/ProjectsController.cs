@@ -18,11 +18,11 @@ namespace BugLab.API.Controllers
 {
     public class ProjectsController : BaseApiController
     {
-        private readonly IAuthService _projectAuthService;
+        private readonly IAuthService _authService;
 
-        public ProjectsController(IMediator mediator, IAuthService projectAuthService) : base(mediator)
+        public ProjectsController(IMediator mediator, IAuthService authService) : base(mediator)
         {
-            _projectAuthService = projectAuthService;
+            _authService = authService;
         }
 
         [HttpGet("{id}", Name = nameof(GetProject))]
@@ -52,13 +52,22 @@ namespace BugLab.API.Controllers
             return CreatedAtRoute(nameof(GetProject), new { id }, id);
         }
 
-        [HttpPost("{projectId}/add-users")]
-        public async Task<IActionResult> AddUsersToProject(int projectId, [FromQuery] IEnumerable<string> userIds, CancellationToken cancellationToken)
+        [HttpPost("{id}/add-users")]
+        public async Task<IActionResult> AddUsersToProject(int id, [FromQuery] IEnumerable<string> userIds, CancellationToken cancellationToken)
         {
             if (!userIds.Any()) return NoContent();
 
-            await _projectAuthService.HasAccessToProject(User.UserId(), projectId);
-            await _mediator.Send(new AddProjectUsersCommand(projectId, userIds), cancellationToken);
+            await _authService.HasAccessToProject(User.UserId(), id);
+            await _mediator.Send(new AddProjectUsersCommand(id, userIds), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProject(int id, CancellationToken cancellationToken)
+        {
+            await _authService.HasAccessToProject(User.UserId(), id);
+            await _mediator.Send(new DeleteProjectCommand(id), cancellationToken);
 
             return NoContent();
         }
