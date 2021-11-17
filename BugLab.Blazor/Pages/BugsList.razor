@@ -17,7 +17,6 @@
             <AddBugComponent BugTypes="_bugTypes" OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
         </MudContainer>
     }
-
 }
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"

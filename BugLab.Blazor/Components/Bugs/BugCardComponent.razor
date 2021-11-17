@@ -45,7 +45,7 @@
 
         </MudCardContent>
         <MudCardActions>
-            <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error">Delete</MudIconButton>
+            <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error" />
             @if (context.IsModified())
             {
                 <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>

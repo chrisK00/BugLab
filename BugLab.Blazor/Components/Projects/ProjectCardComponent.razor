@@ -1,11 +1,11 @@
-﻿<MudCard>
+﻿@inject IDialogService Dialog
+@inject HttpClient Client
+
+<MudCard>
     <MudCardHeader>
         <CardHeaderContent>
             <MudText Typo="Typo.h6" Color="Color.Primary">@Project.Title</MudText>
         </CardHeaderContent>
-        <CardHeaderActions>
-            <MudIconButton Color="Color.Primary" Icon="@Icons.Material.Filled.Edit" />
-        </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
         <MudText>@Project.Description</MudText>
@@ -13,11 +13,21 @@
         <MudText Typo="Typo.body2">Total bugs: @Project.TotalBugs</MudText>
     </MudCardContent>
     <MudCardActions>
-        <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete (will show a confirm dialog)</MudIconButton>
+        <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error" />
     </MudCardActions>
 </MudCard>
 
 @code {
     [Parameter]
     public ProjectResponse Project { get; set; }
+    [Parameter] public EventCallback OnDelete { get; set; }
+
+    private async Task ConfirmDelete()
+    {
+        var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {Project.Title}", "This cannot be undone", "OK", "Cancel");
+        if (!result.HasValue || !result.Value) return;
+
+        var response = await Client.DeleteAsync($"{Endpoints.Projects}/{Project.Id}");
+        await OnDelete.InvokeAsync();
+    }
 }
