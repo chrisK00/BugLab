@@ -1,5 +1,4 @@
 ﻿using BugLab.Business.Commands.Projects;
-using BugLab.Business.Helpers;
 using BugLab.Data;
 using BugLab.Data.Entities;
 using Mapster;
@@ -29,9 +28,9 @@ namespace BugLab.Business.CommandHandlers.Projects
             await _context.SaveChangesAsync(cancellationToken);
 
             await _context.BugTypes.AddRangeAsync(
-                new BugType { ProjectId = projectToAdd.Id, Title = "refactor", Color = "#800080" },
-                new BugType { ProjectId = projectToAdd.Id, Title = "bug", Color = "#FF0000" },
-                new BugType { ProjectId = projectToAdd.Id, Title = "feature", Color = "#00FFFF" }
+                new BugType { ProjectId = projectToAdd.Id, Title = "refactor", Color = "#977FE4" },
+                new BugType { ProjectId = projectToAdd.Id, Title = "bug", Color = "#b14639ff" },
+                new BugType { ProjectId = projectToAdd.Id, Title = "feature", Color = "#35ceceff" }
                 );
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -167,38 +167,20 @@ namespace Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Bugs",
+                name: "BugTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Priority = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Bugs", x => x.Id);
+                    table.PrimaryKey("PK_BugTypes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bugs_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bugs_AspNetUsers_ModifiedById",
-                        column: x => x.ModifiedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bugs_Projects_ProjectId",
+                        name: "FK_BugTypes_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -230,6 +212,60 @@ namespace Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bugs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Priority = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    BugTypeId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Deleted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DeletedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bugs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bugs_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bugs_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bugs_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bugs_BugTypes_BugTypeId",
+                        column: x => x.BugTypeId,
+                        principalTable: "BugTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Bugs_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -238,9 +274,11 @@ namespace Migrations
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BugId = table.Column<int>(type: "int", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    Deleted = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    DeletedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,6 +286,12 @@ namespace Migrations
                     table.ForeignKey(
                         name: "FK_Comments_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_DeletedById",
+                        column: x => x.DeletedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -264,60 +308,6 @@ namespace Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { "757b2158-40c3-4917-9523-5861973a4d2e", 0, "a1b0ac80-ac8f-4a1f-8fda-a6f2c0ccefb6", "chris@gmail.com", false, false, null, "CHRIS@GMAIL.COM", "CHRIS@GMAIL.COM", "AQAAAAEAACcQAAAAEIsTfCpD016p5SAFCKHIl+nf4oeIZsOaf8+HOO12UdQPNsF5sSb4iCB9xd/03bFzTg==", null, false, "0479686f-5a0c-4f52-9004-283bcdfd2456", false, "chris@gmail.com" },
-                    { "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", 0, "4724509b-3139-4d3f-9c78-9f7b0480ca19", "chrisk@gmail.com", false, false, null, "CHRISK@GMAIL.COM", "CHRISK@GMAIL.COM", "AQAAAAEAACcQAAAAECVWSnKQOpsPjkMkgLk0nD+35qTEVbU0w3OBxO93K3RWFpI9aKYCxbXYx9v1vFfjpg==", null, false, "0c2e1284-2da2-43ed-80fd-e0a6a35cd078", false, "chrisk@gmail.com" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Projects",
-                columns: new[] { "Id", "Description", "Title" },
-                values: new object[,]
-                {
-                    { 1, null, "BugLab" },
-                    { 2, null, "Plannial" },
-                    { 3, null, "SweatSpace" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Bugs",
-                columns: new[] { "Id", "Created", "CreatedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, "None", 1, "Open", "Implement project controllers" },
-                    { 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", "Better domaine events pattern", null, null, "None", 1, "Open", "update project title" },
-                    { 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, null, "None", 2, "Open", "How you doing?" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "IdentityUserProject",
-                columns: new[] { "ProjectsId", "UsersId" },
-                values: new object[,]
-                {
-                    { 1, "757b2158-40c3-4917-9523-5861973a4d2e" },
-                    { 2, "757b2158-40c3-4917-9523-5861973a4d2e" },
-                    { 3, "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Comments",
-                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Modified", "ModifiedById", "Text" },
-                values: new object[] { 1, 1, new DateTime(2021, 11, 12, 15, 59, 51, 525, DateTimeKind.Utc).AddTicks(4846), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, "This has been implemented" });
-
-            migrationBuilder.InsertData(
-                table: "Comments",
-                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Modified", "ModifiedById", "Text" },
-                values: new object[] { 2, 1, new DateTime(2021, 11, 12, 15, 59, 51, 525, DateTimeKind.Utc).AddTicks(5469), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, "Nope" });
-
-            migrationBuilder.InsertData(
-                table: "Comments",
-                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Modified", "ModifiedById", "Text" },
-                values: new object[] { 3, 2, new DateTime(2021, 11, 12, 15, 59, 51, 525, DateTimeKind.Utc).AddTicks(5472), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, "Any progress?" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -359,9 +349,19 @@ namespace Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bugs_BugTypeId",
+                table: "Bugs",
+                column: "BugTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bugs_CreatedById",
                 table: "Bugs",
                 column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bugs_DeletedById",
+                table: "Bugs",
+                column: "DeletedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bugs_ModifiedById",
@@ -374,6 +374,11 @@ namespace Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BugTypes_ProjectId",
+                table: "BugTypes",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_BugId",
                 table: "Comments",
                 column: "BugId");
@@ -382,6 +387,11 @@ namespace Migrations
                 name: "IX_Comments_CreatedById",
                 table: "Comments",
                 column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_DeletedById",
+                table: "Comments",
+                column: "DeletedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_ModifiedById",
@@ -425,6 +435,9 @@ namespace Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "BugTypes");
 
             migrationBuilder.DropTable(
                 name: "Projects");

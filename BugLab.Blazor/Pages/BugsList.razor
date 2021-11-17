@@ -6,17 +6,21 @@
 
 @if (ProjectId.HasValue)
 {
-<MudContainer Class="d-flex">
-    <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "Add a new bug")</MudButton>
-    <MudSpacer />
-    <MudButton>New bug type</MudButton>
-</MudContainer>
-    @if (_showAddBug)
-    {
-        <MudContainer Class="mb-5 d-flex">
+    <MudContainer Class="d-flex">
+        <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "New bug")</MudButton>
+        <MudButton Class="mb-5 ml-5" OnClick="() => _showAddBugType = !_showAddBugType" Color="Color.Primary">@(_showAddBugType ? "Hide" : "New bug type")</MudButton>
+    </MudContainer>
+    <MudContainer Class="mb-5 d-flex">
+        @if (_showAddBug)
+        {
             <AddBugComponent BugTypes="_bugTypes" OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
-        </MudContainer>
-    }
+        }
+
+        @if (_showAddBugType)
+        {
+            <AddBugTypeComponent ProjectId="ProjectId.Value" OnAdd="OnBugTypeAdded" />
+        }
+    </MudContainer>
 }
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<BugResponse>>>(GetBugs))"
@@ -34,8 +38,10 @@
         <MudTh>Project</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd><MudButton @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
-        <MudTd><MudText Color="Color.Primary">@context.BugType.Title</MudText></MudTd>
+        <MudTd><MudButton Color="Color.Primary" @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
+        <MudTd>
+            <MudChip Style="@($"{Css.BgColor} {context.BugType.Color}; {Css.Color} #fff")">@context.BugType.Title</MudChip>
+        </MudTd>
         <MudTd>@context.Status</MudTd>
         <MudTd>@context.Priority</MudTd>
         <MudTd>@context.Created.ToLocalTime()</MudTd>
@@ -67,9 +73,10 @@
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
     private BugResponse _selectedBug;
     private bool _showAddBug;
+    private bool _showAddBugType;
 
     [Parameter] public int? ProjectId { get; set; }
-    private IEnumerable<BugTypeResponse> _bugTypes;
+    private List<BugTypeResponse> _bugTypes;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -78,7 +85,13 @@
 
     private async Task LoadBugTypes(int projectId)
     {
-        _bugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(projectId));
+        _bugTypes = (await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(projectId))).ToList();
+    }
+
+    private async Task OnBugTypeAdded(int id)
+    {
+        var bugType = await Client.GetFromJsonAsync<BugTypeResponse>($"{Endpoints.BugTypes(ProjectId.Value)}/{id}");
+        _bugTypes.Add(bugType);
     }
 
     public async Task SelectedBugChanged(BugResponse bug)

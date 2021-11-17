@@ -6,8 +6,7 @@
         <MudCardContent>
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
                           Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
-            <MudTextField Lines="5" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
-                          Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
+            <MudColorPicker @bind-Text="_model.Color" Variant="Variant.Filled" Label="Color" />
         </MudCardContent>
         <MudCardActions>
             <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
@@ -16,14 +15,20 @@
 </MudCard>
 
 @code {
-    private AddProjectRequest _model = new();
-    private AddProjectValidator _validator = new();
+    private AddBugTypeRequest _model;
+    private AddBugTypeValidator _validator = new();
 
+    [Parameter] public int ProjectId { get; set; }
     [Parameter] public EventCallback<int> OnAdd { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _model = new() { ProjectId = ProjectId };
+    }
 
     public async Task OnSubmit()
     {
-        var response = await Client.PostAsJsonAsync(Endpoints.Projects, _model);
+        var response = await Client.PostAsJsonAsync(Endpoints.BugTypes(ProjectId), _model);
         var id = await response.Content.ReadFromJsonAsync<int>();
 
         await OnAdd.InvokeAsync(id);

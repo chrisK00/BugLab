@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211114115634_DeletedBy")]
-    partial class DeletedBy
+    [Migration("20211117220728_Seed")]
+    partial class Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,9 @@ namespace Migrations
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("Deleted")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedById")
                         .HasColumnType("nvarchar(450)");
@@ -126,6 +129,11 @@ namespace Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
@@ -144,36 +152,42 @@ namespace Migrations
                         new
                         {
                             Id = 1,
+                            Color = "#977FE4",
                             ProjectId = 1,
                             Title = "refactor"
                         },
                         new
                         {
                             Id = 2,
+                            Color = "#b14639ff",
                             ProjectId = 1,
                             Title = "bug"
                         },
                         new
                         {
                             Id = 3,
+                            Color = "#35ceceff",
                             ProjectId = 1,
                             Title = "feature"
                         },
                         new
                         {
                             Id = 4,
+                            Color = "#35ceceff",
                             ProjectId = 2,
                             Title = "feature"
                         },
                         new
                         {
                             Id = 5,
+                            Color = "#b14639ff",
                             ProjectId = 2,
                             Title = "bug"
                         },
                         new
                         {
                             Id = 6,
+                            Color = "#977FE4",
                             ProjectId = 2,
                             Title = "refactor"
                         });
@@ -195,6 +209,9 @@ namespace Migrations
                     b.Property<string>("CreatedById")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("Deleted")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedById")
                         .HasColumnType("nvarchar(450)");
@@ -226,7 +243,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 14, 11, 56, 33, 413, DateTimeKind.Utc).AddTicks(7890),
+                            Created = new DateTime(2021, 11, 17, 22, 7, 27, 454, DateTimeKind.Utc).AddTicks(9965),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -234,7 +251,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 14, 11, 56, 33, 413, DateTimeKind.Utc).AddTicks(8450),
+                            Created = new DateTime(2021, 11, 17, 22, 7, 27, 455, DateTimeKind.Utc).AddTicks(534),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -242,7 +259,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2021, 11, 14, 11, 56, 33, 413, DateTimeKind.Utc).AddTicks(8452),
+                            Created = new DateTime(2021, 11, 17, 22, 7, 27, 455, DateTimeKind.Utc).AddTicks(537),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -437,15 +454,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1ccc2777-5b9f-462d-a259-72af7e4b7d36",
+                            ConcurrencyStamp = "87ae3ca7-0769-4369-a2fa-9757df337f9e",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGJKCNdqzCQQZkscFRk0pVqpfDGVrYwBdx0KMFH2nxxyAbMCWFTVjVUNJ4jZ/xM65g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK6FYJVTsn24rXmqs9/18zTYcMCU3JeOtvCL6jn8vcnszE9zb5Em8zY2mnB0jNzttQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3e524b58-2640-43e0-a3a8-eedcb2197fda",
+                            SecurityStamp = "a31cea35-6c1a-4450-8ac1-8eb2de8a565a",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -453,15 +470,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8f05ba53-f3fb-4a90-bf53-ca8d61385179",
+                            ConcurrencyStamp = "8b4a38d6-27ca-4e4c-b4c1-89865ebfb8bd",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKa/S7YmiBxXoPk2EV4R42hghkAXVx026O7Wgf/DNHpbFV7k5an4aSOqzA95feak7g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPmpdZmK1kk17IjlbIa2lzgULn/eQTEDoR0XbEyqR6CjdQtiielFuNxmXOK+voIezw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8aa5a147-bac5-4129-a6dc-850b19d07cbf",
+                            SecurityStamp = "bde74562-2298-40d5-8a31-b8385a7d2b2d",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });

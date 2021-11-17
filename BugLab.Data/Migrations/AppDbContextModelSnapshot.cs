@@ -150,42 +150,42 @@ namespace Migrations
                         new
                         {
                             Id = 1,
-                            Color = "#800080",
+                            Color = "#977FE4",
                             ProjectId = 1,
                             Title = "refactor"
                         },
                         new
                         {
                             Id = 2,
-                            Color = "#FF0000",
+                            Color = "#b14639ff",
                             ProjectId = 1,
                             Title = "bug"
                         },
                         new
                         {
                             Id = 3,
-                            Color = "#00FFFF",
+                            Color = "#35ceceff",
                             ProjectId = 1,
                             Title = "feature"
                         },
                         new
                         {
                             Id = 4,
-                            Color = "#00FFFF",
+                            Color = "#35ceceff",
                             ProjectId = 2,
                             Title = "feature"
                         },
                         new
                         {
                             Id = 5,
-                            Color = "#FF0000",
+                            Color = "#b14639ff",
                             ProjectId = 2,
                             Title = "bug"
                         },
                         new
                         {
                             Id = 6,
-                            Color = "#800080",
+                            Color = "#977FE4",
                             ProjectId = 2,
                             Title = "refactor"
                         });
@@ -241,7 +241,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 17, 20, 52, 21, 173, DateTimeKind.Utc).AddTicks(290),
+                            Created = new DateTime(2021, 11, 17, 22, 7, 27, 454, DateTimeKind.Utc).AddTicks(9965),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -249,7 +249,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 17, 20, 52, 21, 173, DateTimeKind.Utc).AddTicks(877),
+                            Created = new DateTime(2021, 11, 17, 22, 7, 27, 455, DateTimeKind.Utc).AddTicks(534),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -257,7 +257,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2021, 11, 17, 20, 52, 21, 173, DateTimeKind.Utc).AddTicks(879),
+                            Created = new DateTime(2021, 11, 17, 22, 7, 27, 455, DateTimeKind.Utc).AddTicks(537),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -452,15 +452,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "12e7cc73-7435-4026-876a-176a62ceb905",
+                            ConcurrencyStamp = "87ae3ca7-0769-4369-a2fa-9757df337f9e",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC16v8i64C6MAnZXkr+RTPMszOP3gS2nyuLUFUxXUnKUpEdBJjll+4KN1a7toz6+IA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK6FYJVTsn24rXmqs9/18zTYcMCU3JeOtvCL6jn8vcnszE9zb5Em8zY2mnB0jNzttQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "39dea321-2d73-43d0-9544-a839b8cfba0b",
+                            SecurityStamp = "a31cea35-6c1a-4450-8ac1-8eb2de8a565a",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -468,15 +468,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2a145cbf-8157-43d2-8acc-b26a167ddf7a",
+                            ConcurrencyStamp = "8b4a38d6-27ca-4e4c-b4c1-89865ebfb8bd",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH1HbCwppObR9Es9sK0yg+yEOgaly+sJIb7bFYavBKQQ3WGoJV1ppKCtMM9csk2DhQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPmpdZmK1kk17IjlbIa2lzgULn/eQTEDoR0XbEyqR6CjdQtiielFuNxmXOK+voIezw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "adad6ca2-a0db-4e54-b862-94a38c701ea4",
+                            SecurityStamp = "bde74562-2298-40d5-8a31-b8385a7d2b2d",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });

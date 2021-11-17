@@ -12,8 +12,8 @@ namespace Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "757b2158-40c3-4917-9523-5861973a4d2e", 0, "beb82d59-4b98-4d3b-9c0e-cd475ccdba10", "chris@gmail.com", false, false, null, "CHRIS@GMAIL.COM", "CHRIS@GMAIL.COM", "AQAAAAEAACcQAAAAECcG+lJQ1Dien7luSX3gTnDtyDi3ua0xJJm0wG4qSaIrEG9WG73KbCPrqQWnLX1BZw==", null, false, "a5c5d217-9520-460f-b64c-daa59b0f5d59", false, "chris@gmail.com" },
-                    { "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", 0, "a9e22fa1-f9ea-4bcb-bcba-002550555fff", "chrisk@gmail.com", false, false, null, "CHRISK@GMAIL.COM", "CHRISK@GMAIL.COM", "AQAAAAEAACcQAAAAEJsCiMrS6VazQ3u39+xlXYr2Z+VzGvlWeTMRHJCsmn8sfxGYKi1BCMInR2Jyc+xnmQ==", null, false, "dc16f8af-d90e-483f-935a-6d076d15fe9c", false, "chrisk@gmail.com" }
+                    { "757b2158-40c3-4917-9523-5861973a4d2e", 0, "87ae3ca7-0769-4369-a2fa-9757df337f9e", "chris@gmail.com", false, false, null, "CHRIS@GMAIL.COM", "CHRIS@GMAIL.COM", "AQAAAAEAACcQAAAAEK6FYJVTsn24rXmqs9/18zTYcMCU3JeOtvCL6jn8vcnszE9zb5Em8zY2mnB0jNzttQ==", null, false, "a31cea35-6c1a-4450-8ac1-8eb2de8a565a", false, "chris@gmail.com" },
+                    { "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", 0, "8b4a38d6-27ca-4e4c-b4c1-89865ebfb8bd", "chrisk@gmail.com", false, false, null, "CHRISK@GMAIL.COM", "CHRISK@GMAIL.COM", "AQAAAAEAACcQAAAAEPmpdZmK1kk17IjlbIa2lzgULn/eQTEDoR0XbEyqR6CjdQtiielFuNxmXOK+voIezw==", null, false, "bde74562-2298-40d5-8a31-b8385a7d2b2d", false, "chrisk@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -28,15 +28,15 @@ namespace Migrations
 
             migrationBuilder.InsertData(
                 table: "BugTypes",
-                columns: new[] { "Id", "ProjectId", "Title" },
+                columns: new[] { "Id", "Color", "ProjectId", "Title" },
                 values: new object[,]
                 {
-                    { 1, 1, "refactor" },
-                    { 2, 1, "bug" },
-                    { 3, 1, "feature" },
-                    { 4, 2, "feature" },
-                    { 5, 2, "bug" },
-                    { 6, 2, "refactor" }
+                    { 1, "#977FE4", 1, "refactor" },
+                    { 2, "#b14639ff", 1, "bug" },
+                    { 3, "#35ceceff", 1, "feature" },
+                    { 4, "#35ceceff", 2, "feature" },
+                    { 5, "#b14639ff", 2, "bug" },
+                    { 6, "#977FE4", 2, "refactor" }
                 });
 
             migrationBuilder.InsertData(
@@ -51,33 +51,33 @@ namespace Migrations
 
             migrationBuilder.InsertData(
                 table: "Bugs",
-                columns: new[] { "Id", "BugTypeId", "Created", "CreatedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
-                values: new object[] { 2, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", "Better domaine events pattern", null, null, "None", 1, "Open", "update project title" });
+                columns: new[] { "Id", "BugTypeId", "Created", "CreatedById", "Deleted", "DeletedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
+                values: new object[] { 2, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, "Better domaine events pattern", null, null, "None", 1, "Open", "update project title" });
 
             migrationBuilder.InsertData(
                 table: "Bugs",
-                columns: new[] { "Id", "BugTypeId", "Created", "CreatedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
-                values: new object[] { 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, null, "None", 2, "Open", "How you doing?" });
+                columns: new[] { "Id", "BugTypeId", "Created", "CreatedById", "Deleted", "DeletedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
+                values: new object[] { 3, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, null, null, null, "None", 2, "Open", "How you doing?" });
 
             migrationBuilder.InsertData(
                 table: "Bugs",
-                columns: new[] { "Id", "BugTypeId", "Created", "CreatedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
-                values: new object[] { 1, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, "None", 1, "Open", "Implement project controllers" });
+                columns: new[] { "Id", "BugTypeId", "Created", "CreatedById", "Deleted", "DeletedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "Status", "Title" },
+                values: new object[] { 1, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, null, null, "None", 1, "Open", "Implement project controllers" });
 
             migrationBuilder.InsertData(
                 table: "Comments",
-                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Modified", "ModifiedById", "Text" },
-                values: new object[] { 3, 2, new DateTime(2021, 11, 14, 8, 46, 26, 794, DateTimeKind.Utc).AddTicks(1273), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, "Any progress?" });
+                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Deleted", "DeletedById", "Modified", "ModifiedById", "Text" },
+                values: new object[] { 3, 2, new DateTime(2021, 11, 17, 22, 7, 27, 455, DateTimeKind.Utc).AddTicks(537), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, null, null, "Any progress?" });
 
             migrationBuilder.InsertData(
                 table: "Comments",
-                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Modified", "ModifiedById", "Text" },
-                values: new object[] { 1, 1, new DateTime(2021, 11, 14, 8, 46, 26, 794, DateTimeKind.Utc).AddTicks(44), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, "This has been implemented" });
+                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Deleted", "DeletedById", "Modified", "ModifiedById", "Text" },
+                values: new object[] { 1, 1, new DateTime(2021, 11, 17, 22, 7, 27, 454, DateTimeKind.Utc).AddTicks(9965), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, null, "This has been implemented" });
 
             migrationBuilder.InsertData(
                 table: "Comments",
-                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Modified", "ModifiedById", "Text" },
-                values: new object[] { 2, 1, new DateTime(2021, 11, 14, 8, 46, 26, 794, DateTimeKind.Utc).AddTicks(1271), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, "Nope" });
+                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Deleted", "DeletedById", "Modified", "ModifiedById", "Text" },
+                values: new object[] { 2, 1, new DateTime(2021, 11, 17, 22, 7, 27, 455, DateTimeKind.Utc).AddTicks(534), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, null, "Nope" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
