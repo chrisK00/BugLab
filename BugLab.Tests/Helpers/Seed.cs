@@ -66,9 +66,9 @@ namespace BugLab.Tests.Helpers
         public static void SeedBugTypes(this AppDbContext context)
         {
             context.BugTypes.AddRange(
-                new BugType {  ProjectId = 1, Title = "issue"},
-                new BugType {  ProjectId = 2, Title = "issue"},
-                new BugType {  ProjectId = 3, Title = "issue"}
+                new BugType {  ProjectId = 1, Title = "issue", Color ="#fff"},
+                new BugType {  ProjectId = 2, Title = "issue", Color ="rgb(255, 255, 255)"},
+                new BugType {  ProjectId = 3, Title = "issue", Color = "red"}
             );
         }
 

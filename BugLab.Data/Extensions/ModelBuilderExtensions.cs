@@ -46,12 +46,12 @@ namespace BugLab.Data.Extensions
                 );
 
             builder.Entity<BugType>().HasData(
-                new BugType { Id = 1, ProjectId = 1, Title = "refactor" },
-                new BugType { Id = 2, ProjectId = 1, Title = "bug" },
-                new BugType { Id = 3, ProjectId = 1, Title = "feature" },
-                new BugType { Id = 4, ProjectId = 2, Title = "feature" },
-                new BugType { Id = 5, ProjectId = 2, Title = "bug" },
-                new BugType { Id = 6, ProjectId = 2, Title = "refactor" }
+                new BugType { Id = 1, ProjectId = 1, Title = "refactor", Color = "#800080" },
+                new BugType { Id = 2, ProjectId = 1, Title = "bug", Color = "#FF0000" },
+                new BugType { Id = 3, ProjectId = 1, Title = "feature", Color = "#00FFFF" },
+                new BugType { Id = 4, ProjectId = 2, Title = "feature", Color = "#00FFFF" },
+                new BugType { Id = 5, ProjectId = 2, Title = "bug", Color = "#FF0000" },
+                new BugType { Id = 6, ProjectId = 2, Title = "refactor", Color = "#800080" }
                 );
         }
 

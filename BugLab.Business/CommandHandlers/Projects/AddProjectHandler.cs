@@ -29,9 +29,9 @@ namespace BugLab.Business.CommandHandlers.Projects
             await _context.SaveChangesAsync(cancellationToken);
 
             await _context.BugTypes.AddRangeAsync(
-                new BugType { ProjectId = projectToAdd.Id, Title = "refactor" },
-                new BugType { ProjectId = projectToAdd.Id, Title = "bug" },
-                new BugType { ProjectId = projectToAdd.Id, Title = "feature" }
+                new BugType { ProjectId = projectToAdd.Id, Title = "refactor", Color = "#800080" },
+                new BugType { ProjectId = projectToAdd.Id, Title = "bug", Color = "#FF0000" },
+                new BugType { ProjectId = projectToAdd.Id, Title = "feature", Color = "#00FFFF" }
                 );
             await _context.SaveChangesAsync(cancellationToken);
 

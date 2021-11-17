@@ -16,6 +16,10 @@ namespace BugLab.Data.EntityConfigs
             builder.Property(x => x.Title)
                 .HasMaxLength(255)
                 .IsRequired();
+
+            builder.Property(x => x.Color)
+                .HasMaxLength(25)
+                .IsRequired();
         }
     }
 }
