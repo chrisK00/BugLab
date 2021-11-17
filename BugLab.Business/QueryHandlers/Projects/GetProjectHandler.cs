@@ -24,7 +24,7 @@ namespace BugLab.Business.Queries.Projects
             var project = await _context.Projects.ProjectToType<ProjectResponse>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             if (project == null) return project;
 
-            var bugsCount = await _context.Bugs.AsNoTracking()
+            var relatedBugsCount = await _context.Bugs.AsNoTracking()
                 .Where(x => x.ProjectId == request.Id)
                 .GroupBy(bug => 1, (key, bugs) => new
                 {
@@ -32,8 +32,8 @@ namespace BugLab.Business.Queries.Projects
                     HighPrioritized = bugs.Count(x => x.Priority == BugPriority.High)
                 }).FirstOrDefaultAsync(cancellationToken);
 
-            project.TotalBugs = bugsCount.Total;
-            project.TotalHighPriorityBugs = bugsCount.HighPrioritized;
+            project.TotalBugs = relatedBugsCount.Total;
+            project.TotalHighPriorityBugs = relatedBugsCount.HighPrioritized;
             return project;
         }
     }

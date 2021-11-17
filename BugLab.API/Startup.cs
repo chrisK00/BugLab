@@ -1,4 +1,5 @@
 using BugLab.API.Extensions;
+using BugLab.API.Middlewares;
 using BugLab.Shared.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,7 @@ namespace BugLab.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BugLab.API v1"));
             }
 
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseCors();

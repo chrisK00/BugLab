@@ -27,7 +27,7 @@ namespace BugLab.Business.Queries.Projects
             int totalItems;
             (query, totalItems) = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
 
-            var bugsCounts = await _context.Bugs.AsNoTracking()
+            var relatedBugsCounts = await _context.Bugs.AsNoTracking()
                 .Where(b => query.Select(p => p.Id).Contains(b.ProjectId))
                 .GroupBy(b => b.ProjectId, (key, bugs) => new
                 {
@@ -39,7 +39,7 @@ namespace BugLab.Business.Queries.Projects
             var projects = await query.ProjectToType<ProjectResponse>().OrderBy(p => p.Title).ToListAsync(cancellationToken);
             projects = projects.Select(p =>
             {
-                var bugsCount = bugsCounts.FirstOrDefault(x => x.ProjectId == p.Id);
+                var bugsCount = relatedBugsCounts.FirstOrDefault(x => x.ProjectId == p.Id);
                 if (bugsCount == null) return p;
 
                 p.TotalBugs = bugsCount.Total;
