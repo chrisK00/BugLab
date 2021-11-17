@@ -17,7 +17,7 @@ namespace BugLab.Business.Helpers
             if (inputs == null || !inputs.Any()) throw new KeyNotFoundException(message);
         }
 
-        public static void NotFound<TInput, TId>(TInput input, string inputTitle)
+        public static void NotFound<TInput>(TInput input, string inputTitle)
         {
             _ = input ?? throw new KeyNotFoundException($"{inputTitle} was not found");
         }

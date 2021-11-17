@@ -21,7 +21,6 @@ namespace BugLab.Business.CommandHandlers.Bugs
         public async Task<Unit> Handle(UpdateBugCommand request, CancellationToken cancellationToken)
         {
             var bug = await _context.Bugs.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-            Guard.NotFound(bug, nameof(Bug), request.Id);
 
             bug.Title = request.Title;
             bug.Status = request.Status;
