@@ -38,21 +38,29 @@
 
 @if (_selectedProject != null)
 {
-    <MudContainer Class="d-flex mt-5 mb-5">
-        <MudItem id="project-card">
-            <ProjectCardComponent OnDelete="OnProjectDeleted" Project="_selectedProject" />
-        </MudItem>
+<MudContainer Class="d-flex mt-5 mb-5">
+    <MudItem id="project-card">
+        <ProjectCardComponent OnDelete="OnProjectDeleted" Project="_selectedProject" />
+    </MudItem>
+
+    <MudItem>
         <MudItem>
-            <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
-            <ProjectMembersListComponent Members="_selectedProject.Users" />
+            <MudButton Class="ml-5" OnClick="() => _showMembers = !_showMembers" Color="Color.Primary">@(_showMembers ? "Hide Members" : "Show Members")</MudButton>
         </MudItem>
-    </MudContainer>
+        @if (_showMembers)
+        {
+            <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
+            <ProjectMembersListComponent ProjectId="_selectedProject.Id" Members="@_selectedProject.Users" />
+        }
+    </MudItem>
+</MudContainer>
 }
 
 @code{
     private MudTable<ProjectResponse> _table;
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
     private bool _showAddProject;
+    private bool _showMembers = true;
     private ProjectResponse _selectedProject;
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
@@ -93,16 +101,17 @@
         Nav.NavigateTo($"/project/{projectId}/bugs");
     }
 
-    public async Task OnProjectAdded()
+    public async Task OnProjectAdded(int id)
     {
         _showAddProject = false;
+        _selectedProject = await Client.GetFromJsonAsync<ProjectResponse>($"{Endpoints.Projects}/{id}", JsonOptions.Defaults());
         await _table.ReloadServerData();
     }
 
     public async Task OpenAddMemberDialog()
     {
         var dialogParams = new DialogParameters
-        {
+{
             { nameof(AddProjectMemberDialog.ProjectId), _selectedProject.Id }
         };
 

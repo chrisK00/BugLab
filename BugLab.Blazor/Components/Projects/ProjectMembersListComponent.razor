@@ -1,23 +1,38 @@
-﻿
+﻿@inject HttpClient Client
+@inject ISnackbar Snackbar
+
 <MudContainer Class="ml-5">
     <MudText>@Members.Count() Members</MudText>
     <MudList>
         @foreach (var member in Members)
         {
-        <MudCard Class="d-flex member mb-2">
-            <MudCardContent>
-                <MudText Color="Color.Primary">@member.Email</MudText>
-            </MudCardContent>
+            <MudCard Class="d-flex member mb-2">
+                <MudCardContent>
+                    <MudText Color="Color.Primary">@member.Email</MudText>
+                </MudCardContent>
                 <MudCardActions>
-                    <MudIconButton Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
+                    <MudIconButton OnClick="async() => await RemoveMember(member.Id)" Icon="@Icons.Filled.DeleteForever" Color="Color.Error">Delete</MudIconButton>
                 </MudCardActions>
-        </MudCard>
+            </MudCard>
         }
     </MudList>
 </MudContainer>
 
 @code{
-    [Parameter]
-    public IEnumerable<UserResponse> Members { get; set; }
+    [Parameter] public IEnumerable<UserResponse> Members { get; set; }
+    [Parameter] public int ProjectId { get; set; }
+
+    public async Task RemoveMember(string id)
+    {
+        if (Members.Count() == 1) { Snackbar.Add("Removing the last user on the project gives no one access to it", Severity.Error); return; }
+
+        var uri = new StringBuilder()
+        .Append(Endpoints.Projects).Append('/').Append(ProjectId).Append('/')
+        .Append(nameof(Endpoints.Users)).Append('/').Append(id).ToString();
+
+        await Client.DeleteAsync(uri);
+
+        Members = Members.Where(u => u.Id != id).ToList();
+    }
 
 }

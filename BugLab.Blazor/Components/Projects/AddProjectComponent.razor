@@ -19,15 +19,14 @@
     private AddProjectRequest _model = new();
     private AddProjectValidator _validator = new();
 
-    [Parameter]
-    public EventCallback OnAdd { get; set; }
+    [Parameter] public EventCallback<int> OnAdd { get; set; }
 
     public async Task OnSubmit()
     {
         var response = await Client.PostAsJsonAsync<AddProjectRequest>(Endpoints.Projects, _model);
-        // Can make sure we get a valid id back
-        // TODO: show error msg in a div or snackbar
-        await OnAdd.InvokeAsync(/*await response.Content.ReadFromJsonAsync<int>()*/);
+        var id = await response.Content.ReadFromJsonAsync<int>();
+
+        await OnAdd.InvokeAsync(id);
     }
 }
 
