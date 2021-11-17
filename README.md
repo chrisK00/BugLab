@@ -6,11 +6,11 @@ Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-
 
 My projects page [![myprojects.png](https://i.postimg.cc/rs5YyxZw/myprojects.png)](https://postimg.cc/zHXk0b1s)
 
-My Bugs page [![mybugs.png](https://i.postimg.cc/FFS6xXFX/mybugs.png)](https://postimg.cc/yWVnV5SL)
+My Bugs page [![mybugs.png](https://i.postimg.cc/BvnhvqjL/mybugs.png)](https://postimg.cc/5XD57Wqb)
 
-Add bug to project [![addbug.png](https://i.postimg.cc/fThr2qkt/addbug.png)](https://postimg.cc/6TYcT0rt)
+Add a new bug or a bug type to a project [![addbug.png](https://i.postimg.cc/fThr2qkt/addbug.png)](https://postimg.cc/6TYcT0rt)
 
-Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.cc/MHBmQySh/msedge-s-Rxd-ELn30-T.png)](https://postimg.cc/bSznXSdT)
+Give a user access to a project [![new-bug-or-bug-type.png](https://i.postimg.cc/Xv1sGT52/new-bug-or-bug-type.png)](https://postimg.cc/d7d2gN4d)
 
 ## What this project has/makes use of
 ### Blazor
