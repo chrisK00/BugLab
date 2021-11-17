@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using BugLab.Shared.Responses;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -40,9 +41,9 @@ namespace BugLab.API.Middlewares
                     _ => StatusCodes.Status500InternalServerError
                 };
 
-                var result = _env.IsDevelopment() 
-                    ? JsonSerializer.Serialize(new { message = ex.Message, stackTrace = ex?.StackTrace })
-                    : JsonSerializer.Serialize(new { message = ex.Message });
+                var result = JsonSerializer.Serialize(_env.IsDevelopment()
+                    ? new ApiError(ex.Message, ex?.StackTrace)
+                    : new ApiError(ex.Message));
 
                 await context.Response.WriteAsync(result);
             }

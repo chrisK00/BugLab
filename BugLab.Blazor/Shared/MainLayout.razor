@@ -1,5 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using BugLab.Blazor.Interceptors
+ 
+@inherits LayoutComponentBase
+
 @inject AuthState AuthState
+@inject ExceptionInterceptor ExceptionInterceptor 
 
 <MudThemeProvider />
 <MudDialogProvider />
