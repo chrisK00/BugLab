@@ -1,9 +1,6 @@
 ﻿using BugLab.Data;
-using BugLab.Data.Entities;
-using BugLab.Shared.Enums;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TestSupport.EfHelpers;
@@ -14,17 +11,19 @@ namespace BugLab.Tests.Helpers
     {
         public static string CurrentUserId { get; private set; }
 
-        public static async Task<AppDbContext> CreateAsync(string currentUserId = "1")
+        public static async Task<AppDbContext> CreateAsync(string currentUserId = "757b2158-40c3-4917-9523-5861973a4d2e")
         {
             CurrentUserId = currentUserId;
             var options = SqliteInMemory.CreateOptions<AppDbContext>();
-            await InitSeed(options);
 
             var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.NameIdentifier, currentUserId) }));
             var mockHttpAccessor = new Mock<IHttpContextAccessor>();
             mockHttpAccessor.Setup(_ => _.HttpContext.User).Returns(claimsPrincipal);
 
             var context = new AppDbContext(options, mockHttpAccessor.Object);
+            context.Database.EnsureCreated();
+
+            context.SeedUsers();
             context.SeedProjects();
             context.SeedBugTypes();
             context.SeedBugs();
@@ -32,15 +31,6 @@ namespace BugLab.Tests.Helpers
             await context.SaveChangesAsync();
 
             return context;
-        }
-
-        private static async Task InitSeed(DbContextOptionsDisposable<AppDbContext> options)
-        {
-            var context = new AppDbContext(options);
-            context.Database.EnsureCreated();
-            context.SeedUsers();
-
-            await context.SaveChangesAsync();
         }
     }
 }

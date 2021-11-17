@@ -36,16 +36,16 @@ namespace BugLab.Tests.Helpers
             {
                 new IdentityUser {
                     Id = "1",
-                    Email = "chris@gmail.com",
-                    NormalizedEmail = "CHRIS@GMAIL.COM",
-                    UserName = "chris2@gmail.com",
-                    NormalizedUserName = "CHRIS2@GMAIL.COM"
+                    Email = "temp@gmail.com",
+                    NormalizedEmail = "TEMP@GMAIL.COM",
+                    UserName = "TEMPP@gmail.com",
+                    NormalizedUserName = "TEMPP@GMAIL.COM"
                 },new IdentityUser {
                     Id = "2",
-                    Email = "chrisk@gmail.com",
-                    NormalizedEmail = "CHRISK@GMAIL.COM",
-                    UserName = "chris2K@gmail.com",
-                    NormalizedUserName = "CHRIS2K@GMAIL.COM"
+                    Email = "tempp2@gmail.com",
+                    NormalizedEmail = "TEMPP2@GMAIL.COM",
+                    UserName = "tempp22@gmail.com",
+                    NormalizedUserName = "TEMPP22@GMAIL.COM"
                 }
             }.AddPasswordHash();
 

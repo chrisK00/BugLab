@@ -1,4 +1,5 @@
 ﻿using BugLab.Business.Queries.Projects;
+using BugLab.Data.Entities;
 using BugLab.Tests.Helpers;
 using FluentAssertions;
 using System.Linq;

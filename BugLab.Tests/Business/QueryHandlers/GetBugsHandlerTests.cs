@@ -1,7 +1,9 @@
 ﻿using BugLab.Business.Queries.Bugs;
+using BugLab.Data.Entities;
 using BugLab.Tests.Helpers;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;

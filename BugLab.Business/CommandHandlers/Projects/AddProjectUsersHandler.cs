@@ -29,7 +29,7 @@ namespace BugLab.Business.CommandHandlers.Projects
 
             Guard.NotFound(usersAndProject, "project", request.ProjectId);
 
-            var usersToAdd = await _context.Users.Where(x => request.UserIds.Contains(x.Id)).ToListAsync(cancellationToken);
+            var usersToAdd = await _context.Users.Where(u => request.UserIds.Contains(u.Id)).ToListAsync(cancellationToken);
             Guard.NotFound(usersToAdd, nameof(usersToAdd));
 
             IReadOnlyCollection<IdentityUser> notAlreadyMembersUsers = usersToAdd.Where(u => !usersAndProject.Users.Any(pu => pu.Id == u.Id)).ToList();
