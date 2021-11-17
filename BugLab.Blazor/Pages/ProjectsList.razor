@@ -40,7 +40,7 @@
 {
 <MudContainer Class="d-flex mt-5 mb-5">
     <MudItem id="project-card">
-        <ProjectCardComponent OnDelete="OnProjectDeleted" Project="_selectedProject" />
+        <ProjectCardComponent OnUpdate="OnProjectUpdated" OnDelete="OnProjectDeleted" Project="_selectedProject" />
     </MudItem>
 
     <MudItem>
@@ -130,6 +130,11 @@
     public async Task OnProjectDeleted()
     {
         _selectedProject = null;
+        await _table.ReloadServerData();
+    }
+
+    public async Task OnProjectUpdated()
+    {
         await _table.ReloadServerData();
     }
 }

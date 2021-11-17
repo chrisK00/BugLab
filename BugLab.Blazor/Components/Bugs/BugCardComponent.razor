@@ -90,7 +90,6 @@
     public async Task OnSubmit()
     {
         var response = await Client.PutAsJsonAsync<UpdateBugRequest>($"{Endpoints.Bugs}/{_model.Id}", _model);
-
         await OnUpdate.InvokeAsync();
     }
 }

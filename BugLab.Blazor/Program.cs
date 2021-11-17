@@ -7,8 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
+using MediatR;
 
 namespace BugLab.Blazor
 {

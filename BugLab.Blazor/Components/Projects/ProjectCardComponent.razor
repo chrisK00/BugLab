@@ -2,25 +2,45 @@
 @inject HttpClient Client
 
 <MudCard>
-    <MudCardHeader>
-        <CardHeaderContent>
-            <MudText Typo="Typo.h6" Color="Color.Primary">@Project.Title</MudText>
-        </CardHeaderContent>
-    </MudCardHeader>
-    <MudCardContent>
-        <MudText>@Project.Description</MudText>
-        <MudText Typo="Typo.body2">Total high prioritized bugs: @Project.TotalHighPriorityBugs</MudText>
-        <MudText Typo="Typo.body2">Total bugs: @Project.TotalBugs</MudText>
-    </MudCardContent>
-    <MudCardActions>
-        <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error" />
-    </MudCardActions>
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
+        <FluentValidationValidator />
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                              Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTextField Lines="5" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
+                          Variant="Variant.Filled" For="() => _model.Description" Label="Description" @bind-Value="_model.Description" />
+            <MudText Typo="Typo.body2">Total high prioritized bugs: @Project.TotalHighPriorityBugs</MudText>
+            <MudText Typo="Typo.body2">Total bugs: @Project.TotalBugs</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error" />
+            @if (context.IsModified())
+            {
+                <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.Update" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+            }
+        </MudCardActions>
+    </EditForm>
 </MudCard>
 
 @code {
-    [Parameter]
-    public ProjectResponse Project { get; set; }
+
+    private UpdateProjectRequest _model;
+    private UpdateProjectValidator _validator = new();
+
+
+    [Parameter] public ProjectResponse Project { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
+    [Parameter] public EventCallback OnUpdate { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _model = Project.Adapt<UpdateProjectRequest>();
+    }
 
     private async Task ConfirmDelete()
     {
@@ -29,5 +49,13 @@
 
         var response = await Client.DeleteAsync($"{Endpoints.Projects}/{Project.Id}");
         await OnDelete.InvokeAsync();
+    }
+
+    private async Task OnSubmit()
+    {
+        await Client.PutAsJsonAsync<UpdateProjectRequest>($"{Endpoints.Projects}/{_model.Id}", _model);
+
+        _model.Adapt(Project);
+        await OnUpdate.InvokeAsync();
     }
 }
