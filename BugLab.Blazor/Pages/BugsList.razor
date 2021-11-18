@@ -92,6 +92,7 @@
     {
         var bugType = await Client.GetFromJsonAsync<BugTypeResponse>($"{Endpoints.BugTypes(ProjectId.Value)}/{id}");
         _bugTypes.Add(bugType);
+        _showAddBugType = false;
     }
 
     public async Task SelectedBugChanged(BugResponse bug)

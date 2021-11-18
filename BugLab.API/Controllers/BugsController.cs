@@ -36,7 +36,7 @@ namespace BugLab.API.Controllers
         public async Task<ActionResult<IEnumerable<BugResponse>>> GetBugs([FromQuery] BugParams queryParams, CancellationToken cancellationToken)
         {
             var query = new GetBugsQuery(User.UserId());
-            
+
             var bugs = await _mediator.Send(queryParams.Adapt(query), cancellationToken);
             Response.AddPaginationHeader(bugs.PageNumber, bugs.PageSize, bugs.TotalPages, bugs.TotalItems);
 
@@ -62,10 +62,11 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBug(UpdateBugRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateBug(int id, UpdateBugRequest request, CancellationToken cancellationToken)
         {
-            await _authService.HasAccessToBug(User.UserId(), request.Id);
-            await _mediator.Send(request.Adapt<UpdateBugCommand>(), cancellationToken);
+            await _authService.HasAccessToBug(User.UserId(), id);
+            var command = new UpdateBugCommand(id, request.Title, request.Description, request.Priority, request.Status, request.TypeId);
+            await _mediator.Send(command, cancellationToken);
 
             return NoContent();
         }

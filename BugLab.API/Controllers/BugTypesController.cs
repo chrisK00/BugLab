@@ -32,12 +32,13 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBugType(AddBugTypeRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddBugType(int projectId, AddBugTypeRequest request, CancellationToken cancellationToken)
         {
-            await _authService.HasAccessToProject(User.UserId(), request.ProjectId);
-            var id = await _mediator.Send(request.Adapt<AddBugTypeCommand>(), cancellationToken);
+            await _authService.HasAccessToProject(User.UserId(), projectId);
+            var command = new AddBugTypeCommand(projectId, request.Color, request.Title);
+            var id = await _mediator.Send(command, cancellationToken);
 
-            return CreatedAtRoute(nameof(GetBugType), new { request.ProjectId, id }, id);
+            return CreatedAtRoute(nameof(GetBugType), new { projectId, id }, id);
         }
 
         [HttpGet("{id}", Name = nameof(GetBugType))]

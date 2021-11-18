@@ -53,7 +53,7 @@
 
     private async Task OnSubmit()
     {
-        await Client.PutAsJsonAsync<UpdateProjectRequest>($"{Endpoints.Projects}/{_model.Id}", _model);
+        await Client.PutAsJsonAsync<UpdateProjectRequest>($"{Endpoints.Projects}/{Project.Id}", _model);
 
         _model.Adapt(Project);
         await OnUpdate.InvokeAsync();

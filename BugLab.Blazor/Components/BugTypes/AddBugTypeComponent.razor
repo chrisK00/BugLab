@@ -15,16 +15,11 @@
 </MudCard>
 
 @code {
-    private AddBugTypeRequest _model;
+    private AddBugTypeRequest _model = new();
     private AddBugTypeValidator _validator = new();
 
     [Parameter] public int ProjectId { get; set; }
     [Parameter] public EventCallback<int> OnAdd { get; set; }
-
-    protected override void OnParametersSet()
-    {
-        _model = new() { ProjectId = ProjectId };
-    }
 
     public async Task OnSubmit()
     {

@@ -10,9 +10,6 @@ namespace BugLab.Shared.Validators
             RuleFor(x => x.Color)
                 .NotEmpty();
 
-            RuleFor(x => x.ProjectId)
-                .NotEmpty();
-
             RuleFor(x => x.Title)
                 .NotEmpty();
         }

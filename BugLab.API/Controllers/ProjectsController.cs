@@ -53,10 +53,10 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProject(UpdateProjectRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateProject(int id, UpdateProjectRequest request, CancellationToken cancellationToken)
         {
-            await _authService.HasAccessToProject(User.UserId(), request.Id);
-            await _mediator.Send(new UpdateProjectCommand(request.Id, request.Title, request.Description), cancellationToken);
+            await _authService.HasAccessToProject(User.UserId(), id);
+            await _mediator.Send(new UpdateProjectCommand(id, request.Title, request.Description), cancellationToken);
 
             return NoContent();
         }
