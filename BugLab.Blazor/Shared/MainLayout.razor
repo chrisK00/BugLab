@@ -1,9 +1,9 @@
 ﻿@using BugLab.Blazor.Interceptors
- 
+
 @inherits LayoutComponentBase
 
 @inject AuthState AuthState
-@inject ExceptionInterceptor ExceptionInterceptor 
+@inject ExceptionInterceptor ExceptionInterceptor
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -13,39 +13,30 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="DrawerToggle" />
         <MudSpacer />
-        @if (LoggedInUser != null)
-        {
-            <MudText>Logged in as @LoggedInUser</MudText>
-            <MudIconButton id="logout" Icon="@Icons.Material.Filled.Logout" OnClick="async () => await AuthState.LogoutAsync()"></MudIconButton>
-        }
+        <AuthorizeView>
+            <Authorized>
+                <MudText>Logged in as @context.User.FindFirst(ClaimTypes.Email).Value</MudText>
+                <MudIconButton id="logout" Icon="@Icons.Material.Filled.Logout" OnClick="async () => await AuthState.LogoutAsync()"></MudIconButton>
+            </Authorized>
+        </AuthorizeView>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
         <MudDrawerHeader>
             <MudLink Typo="Typo.h5" Href="/home" Class="mt-1">Bug Lab</MudLink>
         </MudDrawerHeader>
-        @if (LoggedInUser != null)
-        {
+        <AuthorizeView>
             <NavMenu />
-        }
+        </AuthorizeView>
     </MudDrawer>
     <MudMainContent>
         <MudContainer Class="mt-5">
-            <CascadingValue Value="LoggedInUser">
                 @Body
-            </CascadingValue>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
 
 @code {
     bool _drawerOpen = true;
-
-    public string LoggedInUser { get; set; }
-
-    protected override void OnInitialized()
-    {
-        AuthState.AuthenticationStateChanged += async (e) => { LoggedInUser = await AuthState.GetUserEmail(); StateHasChanged(); };
-    }
 
     void DrawerToggle()
     {

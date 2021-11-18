@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using BugLab.Shared.Responses;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -12,15 +13,15 @@ namespace BugLab.Blazor.Helpers
     {
         private readonly HttpClient _client;
         private readonly ILocalStorageService _localStorage;
+        private readonly NavigationManager _nav;
         private readonly string _userKey = "user";
-        private readonly AuthenticationState _anonymous = new(new ClaimsPrincipal(new ClaimsIdentity()));
+        private readonly AuthenticationState _anonymous = new(new ClaimsPrincipal());
 
-        public async Task<string> GetUserEmail() => (await _localStorage.GetItemAsync<LoginResponse>(_userKey))?.Email;
-
-        public AuthState(HttpClient client, ILocalStorageService localStorage)
+        public AuthState(HttpClient client, ILocalStorageService localStorage, NavigationManager Nav)
         {
             _client = client;
             _localStorage = localStorage;
+            _nav = Nav;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -32,26 +33,35 @@ namespace BugLab.Blazor.Helpers
             }
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", user.Token);
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Email, user.Email)
+            }, "Bearer")));
         }
 
         public async Task LogoutAsync()
         {
             await _localStorage.RemoveItemAsync(_userKey);
-            var authState = Task.FromResult<AuthenticationState>(_anonymous);
+            var authState = Task.FromResult(_anonymous);
             _client.DefaultRequestHeaders.Authorization = null;
 
             NotifyAuthenticationStateChanged(authState);
+            _nav.NavigateTo("/home");
         }
 
         public async Task LogInAsync(LoginResponse user)
         {
-            var authUser = new ClaimsPrincipal(new ClaimsIdentity());
-            var authState = Task.FromResult(new AuthenticationState(authUser));
+            var state = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Email, user.Email)
+            }, "Bearer")));
+
+            var authStateTask = Task.FromResult(state);
             await _localStorage.SetItemAsync(_userKey, user);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", user.Token);
 
-            NotifyAuthenticationStateChanged(authState);
+            NotifyAuthenticationStateChanged(authStateTask);
         }
     }
 }
