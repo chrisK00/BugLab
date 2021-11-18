@@ -52,20 +52,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - Attachments (f.e image, gif)
 - Home page can have a dashboard
 - Background service that sends a weekly stats mail regarding for example the project with most completed bugs, the project with most high prioritized bugs, how many bugs you have completed
-- Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, I could not find many code benefits with manually creating a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment and that there is a performance boost because we don't have to do a join but at the same time it requires more code, management and performance is not an issue right now), here are some things you'll need for the first alternative: 
-
-`Add a ProjectUser class with ProjectId, UserId and User.`
-
-`Configure the relationship for UserEntityConfig:  builder.HasMany<ProjectUser>()
-                .WithOne()
-                .HasForeignKey(x => x.UserId);`
-
-`Configure the ProjectEntityConfig  builder.HasMany(x => x.ProjectUsers)
-                .WithOne();`
-
-`Configure ProjectUser entity config builder.HasKey(x => new { x.ProjectId, x.UserId });`
-
-`Call .Include() and .ThenInclude() where project are being referenced but replace them with _context.ProjectUsers where possible in order to prevent unnecessary items loaded`
-
+- Using the users nav entity on the projects can be tricky due to EF does not have support for including many to many unidirectional relationships. I could not find many code benefits with manually creating a join table and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment and that there is a small performance boost because we don't have to do a join sometimes but at the same time it requires more code, management and performance is not an issue right now)
+- The idea is that we give all users in a project read/write permissions to all items. If you are a performance freak you could change our urls to almost always start with projects/projectId f.e getting a comment would then be projects/projectId/bugs/bugId/comments/id, not the fanciest but since we don't need to fetch the bug in order to get the projectId to see if the user is in it we boost performance a bit but as i said there's no point in changing the code base for a little performance boost unless necessary. One great point is that it makes accessing items in the Api consistent but it also means that we need two endpoints for getting bugs. right now: api/bugs - my bugs and api/bugs?projectId=1 - project's bugs VS api/users/1/bugs and api/projects/1/bugs
 
 
