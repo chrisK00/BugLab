@@ -51,7 +51,6 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - Integration tests and more unit tests!
 - Attachments (f.e image, gif)
 - Home page can have a dashboard
-- Color property on bugtypes
 - Background service that sends a weekly stats mail regarding for example the project with most completed bugs, the project with most high prioritized bugs, how many bugs you have completed
 - Using the users nav entity on the projects can be a little bit tricky due to EF does not have support for including many to many unidirectional relationships using the `.Include()`, I could not find many code benefits with manually creating a join table and have a user prop in there, userid prop, projectId prop and then do Include().ThenInclude() (alt make use of reference by id and then the Project entity wont even need to directly have a list of Users/ProjectUsers). It seems to be something that is coming soon for EF6 though: https://github.com/dotnet/efcore/issues/3864 . This issue will require a lot of refactoring existing code but if you would like to give it a try and convince me that it improves the app code significally (I'm aware of it having a little readability improvment and that there is a performance boost because we don't have to do a join but at the same time it requires more code, management and performance is not an issue right now), here are some things you'll need for the first alternative: 
 
