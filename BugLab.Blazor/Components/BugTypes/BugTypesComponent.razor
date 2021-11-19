@@ -1,4 +1,5 @@
 ﻿@inject HttpClient Client
+@inject IDialogService Dialog
 
 <MudCard Style="width:50%">
     <MudContainer Class="d-flex">
@@ -17,7 +18,15 @@
             <MudColorPicker @bind-Text="_model.Color" Variant="Variant.Filled" Label="Color" />
         </MudCardContent>
         <MudCardActions>
-            <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+            @if (_bugtypeId.HasValue)
+            {
+                <MudIconButton Class="ml-2" Color="Color.Primary" Icon="@Icons.Material.Filled.Update" ButtonType="ButtonType.Submit"/>
+                <MudIconButton Class="ml-2" Color="Color.Error" OnClick="async () => await DeleteBugType()" Icon="@Icons.Material.Filled.DeleteForever" />
+            }
+            else
+            {
+                <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+            }
         </MudCardActions>
     </EditForm>
 
@@ -70,6 +79,19 @@
         _bugtypeId = bugType.Id;
         _model.Title = bugType.Title;
         _model.Color = bugType.Color;
+    }
+
+    public async Task DeleteBugType()
+    {
+        var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {_model.Title}",
+            "You can only remove the bug type if it's not used by any bugs", "OK", "Cancel");
+
+        if (!result.HasValue || !result.Value) return;
+
+        await Client.DeleteAsync($"{Endpoints.BugTypes(ProjectId)}/{_bugtypeId.Value}");
+        BugTypes.Remove(BugTypes.First(bt => bt.Id == _bugtypeId.Value));
+        _bugtypeId = null;
+        _model = new();
     }
 
     public void NewBugType()

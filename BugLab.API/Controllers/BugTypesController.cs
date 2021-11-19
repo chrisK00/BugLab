@@ -50,6 +50,15 @@ namespace BugLab.API.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBugType(int projectId, int id, CancellationToken cancellationToken)
+        {
+            await _authService.HasAccessToProject(User.UserId(), projectId);
+            await _mediator.Send(new DeleteBugTypeCommand(id), cancellationToken);
+
+            return NoContent();
+        }
+
         [HttpGet("{id}", Name = nameof(GetBugType))]
         public async Task<ActionResult<BugTypeResponse>> GetBugType(int id, CancellationToken cancellationToken)
         {
