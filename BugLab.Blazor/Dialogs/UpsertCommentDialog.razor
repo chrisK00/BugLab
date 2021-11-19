@@ -1,0 +1,41 @@
+﻿@inject HttpClient Client
+
+<EditForm Model="_model" OnValidSubmit="OnSubmit">
+    <FluentValidationValidator />
+    <MudCardContent>
+        <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End" Variant="Variant.Filled"
+                      Label="Title" For="() => _model.Text" @bind-Value="_model.Text" />
+    </MudCardContent>
+    <MudCardActions>
+        @if (Comment == null)
+        {
+            <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Medium" Color="Color.Primary"
+                           ButtonType="ButtonType.Submit" />
+        }
+        else
+        {
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" />
+        }
+    </MudCardActions>
+</EditForm>
+@code{
+    private UpsertCommentRequest _model = new();
+    private UpsertCommentValidator _validator = new();
+
+    protected override void OnParametersSet()
+    {
+        if (Comment != null) _model.Text = Comment.Text;
+    }
+
+    [CascadingParameter] public MudDialogInstance MudDialog { get; set; }
+    [Parameter] public int BugId { get; set; }
+    [Parameter] public CommentResponse Comment { get; set; }
+
+    public async Task OnSubmit()
+    {
+        if (Comment == null) await Client.PostAsJsonAsync(Endpoints.Comments(BugId), _model);
+        else await Client.PutAsJsonAsync($"{Endpoints.Comments(BugId)}/{Comment.Id}", _model);
+
+        MudDialog.Close();
+    }
+}

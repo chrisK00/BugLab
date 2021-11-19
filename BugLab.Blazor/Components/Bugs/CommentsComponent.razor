@@ -2,40 +2,21 @@
 @inject IDialogService Dialog
 
 <MudContainer Class="ml-5">
-    <MudButton Color="Color.Primary" OnClick=" () => _showNewComment = true">@(_showNewComment ? string.Empty : "New Comment")</MudButton>
-    @if (_showNewComment || _commentId.HasValue)
-    {
-        <MudContainer Class="d-flex">
-            <MudButton Color="Color.Primary" OnClick="() => { _showNewComment = false; _commentId = null; }">Hide</MudButton>
-            @if (_commentId.HasValue)
-            {
-                <MudButton Class="ml-5" Color="Color.Success" OnClick="() => { _showNewComment = true; _commentId = null; _model = new(); }">New Comment</MudButton>
-            }
-        </MudContainer>
-
-        <EditForm Model="_model" OnValidSubmit="OnSubmit">
-            <FluentValidationValidator />
-            <MudCardContent>
-                <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End" Variant="Variant.Filled"
-                              Label="Title" For="() => _model.Text" @bind-Value="_model.Text" />
-            </MudCardContent>
-            <MudCardActions>
-                <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Medium" Color="Color.Primary"
-                               ButtonType="ButtonType.Submit" />
-            </MudCardActions>
-        </EditForm>
-    }
+    <MudButton Color="Color.Primary" OnClick="async () => await NewCommentDialog()">New Comment</MudButton>
 
     @foreach (var comment in Comments)
     {
         <MudCard Class="mb-5 comment-card">
             <MudCardContent>
                 <MudText Color="Color.Primary">Created on @comment.Created.ToLocalTime() by @comment.CreatedBy.Email</MudText>
-                <MudText>@comment.Modified?.ToLocalTime()</MudText>
+                @if (comment.Modified.HasValue)
+                {
+                    <MudText>Modified on @comment.Modified.Value.ToLocalTime() by @comment.ModifiedBy</MudText>
+                }
                 <MudText>@comment.Text</MudText>
             </MudCardContent>
             <MudCardActions>
-                <MudIconButton Size="Size.Small" OnClick="() => EditComment(comment)" Icon="@Icons.Material.Filled.Edit"
+                <MudIconButton Size="Size.Small" OnClick="async () => await EditCommentDialog(comment)" Icon="@Icons.Material.Filled.Edit"
                                Variant="Variant.Outlined" Color="Color.Primary" />
 
                 <MudIconButton OnClick="async () => await RemoveComment(comment.Id)" Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Error"
@@ -45,18 +26,26 @@
     }
 </MudContainer>
 @code {
-    private bool _showNewComment;
-    private int? _commentId;
-    private UpsertCommentRequest _model = new();
-    private UpsertCommentValidator _validator = new();
-
     [Parameter] public ICollection<CommentResponse> Comments { get; set; }
     [Parameter] public int BugId { get; set; }
 
-    public void EditComment(CommentResponse comment)
+    public async Task EditCommentDialog(CommentResponse comment)
     {
-        _commentId = comment.Id;
-        _model.Text = comment.Text;
+        var dialogParams = new DialogParameters
+{
+            { nameof(UpsertCommentDialog.Comment), comment },
+            { nameof(UpsertCommentDialog.BugId), BugId },
+        };
+
+        var dialog = Dialog.Show<UpsertCommentDialog>("Edit comment", dialogParams, new DialogOptions { CloseButton = true });
+
+        var result = await dialog.Result;
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        Comments = (await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{BugId}", JsonOptions.Defaults())).Comments;
     }
 
     public async Task RemoveComment(int id)
@@ -70,15 +59,23 @@
         Comments.Remove(Comments.First(c => c.Id == id));
     }
 
-    public async Task OnSubmit()
+    private async Task NewCommentDialog()
     {
-        if (!_commentId.HasValue) await Client.PostAsJsonAsync(Endpoints.Comments(BugId), _model);
-        else await Client.PutAsJsonAsync($"{Endpoints.Comments(BugId)}/{_commentId.Value}", _model);
+        var dialogParams = new DialogParameters
+{
+            { nameof(UpsertCommentDialog.BugId), BugId }
+        };
+
+        var dialog = Dialog.Show<UpsertCommentDialog>("New comment", dialogParams, new DialogOptions { CloseButton = true });
+
+        var result = await dialog.Result;
+        if (result.Cancelled)
+        {
+            return;
+        }
+
 
         Comments = (await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{BugId}", JsonOptions.Defaults())).Comments;
-        _model.Text = string.Empty;
-        _showNewComment = false;
-        _commentId = null;
     }
 }
 
