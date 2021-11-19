@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BugLab.Shared.Validators
 {
-    public class AddCommentValidator : AbstractValidator<AddCommentRequest>
+    public class UpsertCommentValidator : AbstractValidator<UpsertCommentRequest>
     {
-        public AddCommentValidator()
+        public UpsertCommentValidator()
         {
             RuleFor(x => x.Text)
                 .NotEmpty();

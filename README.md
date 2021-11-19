@@ -6,7 +6,7 @@ Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-
 
 My projects page [![myprojects.png](https://i.postimg.cc/rs5YyxZw/myprojects.png)](https://postimg.cc/zHXk0b1s)
 
-My Bugs page [![mybugs.png](https://i.postimg.cc/BvnhvqjL/mybugs.png)](https://postimg.cc/5XD57Wqb)
+My Bugs page [![msedge-JV42-Kj192e.png](https://i.postimg.cc/mk3CRfbd/msedge-JV42-Kj192e.png)](https://postimg.cc/0KQbd4Km)
 
 Add a new bug or a bug type to a project [![msedge-oox-CMYb-JFI.png](https://i.postimg.cc/T1dVQBPb/msedge-oox-CMYb-JFI.png)](https://postimg.cc/jw1nSgPq)
 

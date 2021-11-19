@@ -10,7 +10,7 @@
             <MudButton Color="Color.Success" OnClick="NewBugType">New Bug Type</MudButton>
         }
     </MudContainer>
-    <EditForm Model="_model" OnSubmit="OnSubmit">
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
         <FluentValidationValidator />
         <MudCardContent>
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"

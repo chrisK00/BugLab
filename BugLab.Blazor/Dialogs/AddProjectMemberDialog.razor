@@ -1,7 +1,6 @@
 ﻿@inject HttpClient Client
 @inject ISnackbar Snackbar
 
-
 <MudTable @bind-SelectedItems="_selectedUsers" MultiSelection="true" ServerData="@(new Func<TableState, Task<TableData<UserResponse>>>(GetUsers))"
           @ref="_table" RowsPerPage="10" Striped="true" Hover="true" Dense="true">
     <ToolBarContent>

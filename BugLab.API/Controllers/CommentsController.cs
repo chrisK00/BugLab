@@ -20,7 +20,7 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddComment(int bugId, AddCommentRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddComment(int bugId, UpsertCommentRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToBug(User.UserId(), bugId);
             await _mediator.Send(new AddCommentCommand(bugId, request.Text), cancellationToken);
@@ -28,11 +28,20 @@ namespace BugLab.API.Controllers
             return CreatedAtRoute(nameof(BugsController.GetBug), new { id = bugId }, new { bugId });
         }
 
-        [HttpDelete("{commentId}")]
-        public async Task<IActionResult> DeleteComment(int bugId, int commentId, CancellationToken cancellationToken)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateComment(int bugId, int id, UpsertCommentRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToBug(User.UserId(), bugId);
-            await _mediator.Send(new DeleteCommentCommand(bugId, commentId), cancellationToken);
+            await _mediator.Send(new UpdateCommentCommand(id, bugId, request.Text), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteComment(int bugId, int id, CancellationToken cancellationToken)
+        {
+            await _authService.HasAccessToBug(User.UserId(), bugId);
+            await _mediator.Send(new DeleteCommentCommand(id, bugId), cancellationToken);
 
             return NoContent();
         }

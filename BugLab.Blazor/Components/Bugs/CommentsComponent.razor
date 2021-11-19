@@ -1,0 +1,89 @@
+﻿@inject HttpClient Client
+@inject IDialogService Dialog
+
+<MudContainer Class="ml-5">
+    <MudButton Color="Color.Primary" OnClick=" () => _showNewComment = true">@(_showNewComment ? string.Empty : "New Comment")</MudButton>
+    @if (_showNewComment || _commentId.HasValue)
+    {
+        <MudContainer Class="d-flex">
+            <MudButton Color="Color.Primary" OnClick="() => { _showNewComment = false; _commentId = null; }">Hide</MudButton>
+            @if (_commentId.HasValue)
+            {
+                <MudButton Class="ml-5" Color="Color.Success" OnClick="() => { _showNewComment = true; _commentId = null; _model = new(); }">New Comment</MudButton>
+            }
+        </MudContainer>
+
+        <EditForm Model="_model" OnValidSubmit="OnSubmit">
+            <FluentValidationValidator />
+            <MudCardContent>
+                <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End" Variant="Variant.Filled"
+                              Label="Title" For="() => _model.Text" @bind-Value="_model.Text" />
+            </MudCardContent>
+            <MudCardActions>
+                <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Medium" Color="Color.Primary"
+                               ButtonType="ButtonType.Submit" />
+            </MudCardActions>
+        </EditForm>
+    }
+
+    @foreach (var comment in Comments)
+    {
+        <MudCard Class="mb-5 comment-card">
+            <MudCardContent>
+                <MudText Color="Color.Primary">Created on @comment.Created.ToLocalTime() by @comment.CreatedBy.Email</MudText>
+                <MudText>@comment.Modified?.ToLocalTime()</MudText>
+                <MudText>@comment.Text</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudIconButton Size="Size.Small" OnClick="() => EditComment(comment)" Icon="@Icons.Material.Filled.Edit"
+                               Variant="Variant.Outlined" Color="Color.Primary" />
+
+                <MudIconButton OnClick="async () => await RemoveComment(comment.Id)" Icon="@Icons.Material.Filled.DeleteForever" Color="Color.Error"
+                               Class="ml-3" Variant="Variant.Outlined" Size="Size.Small" />
+            </MudCardActions>
+        </MudCard>
+    }
+</MudContainer>
+@code {
+    private bool _showNewComment;
+    private int? _commentId;
+    private UpsertCommentRequest _model = new();
+    private UpsertCommentValidator _validator = new();
+
+    [Parameter] public ICollection<CommentResponse> Comments { get; set; }
+    [Parameter] public int BugId { get; set; }
+
+    public void EditComment(CommentResponse comment)
+    {
+        _commentId = comment.Id;
+        _model.Text = comment.Text;
+    }
+
+    public async Task RemoveComment(int id)
+    {
+        var result = await Dialog.ShowMessageBox($"Deleting Comment",
+           "This cannot be undone", "OK", "Cancel");
+
+        if (!result.HasValue || !result.Value) return;
+
+        await Client.DeleteAsync($"{Endpoints.Comments(BugId)}/{id}");
+        Comments.Remove(Comments.First(c => c.Id == id));
+    }
+
+    public async Task OnSubmit()
+    {
+        if (!_commentId.HasValue) await Client.PostAsJsonAsync(Endpoints.Comments(BugId), _model);
+        else await Client.PutAsJsonAsync($"{Endpoints.Comments(BugId)}/{_commentId.Value}", _model);
+
+        Comments = (await Client.GetFromJsonAsync<BugResponse>($"{Endpoints.Bugs}/{BugId}", JsonOptions.Defaults())).Comments;
+        _model.Text = string.Empty;
+        _showNewComment = false;
+        _commentId = null;
+    }
+}
+
+<style>
+    .comment-card {
+        width: 100%
+    }
+</style>

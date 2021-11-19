@@ -67,7 +67,7 @@
         <MudItem id="bug-card">
             <BugCardComponent OnDelete="OnBugDeleted" BugTypes="_bugTypes" OnUpdate="OnBugUpdated" Bug="_selectedBug" />
         </MudItem>
-        <CommentsListComponent Comments="_selectedBug.Comments" />
+        <CommentsComponent BugId="_selectedBug.Id" Comments="_selectedBug.Comments" />
     </MudContainer>
 }
 
