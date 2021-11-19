@@ -24,8 +24,16 @@ namespace BugLab.Business.Queries.Bugs
             var query = _context.Bugs.OrderByDescending(x => x.Priority).AsNoTracking();
 
             query = request.ProjectId.HasValue
-                ? query.Where(x => x.ProjectId == request.ProjectId)
+                ? query.Where(b => b.ProjectId == request.ProjectId)
                 : query.Where(b => b.CreatedById == request.UserId);
+
+            if (!string.IsNullOrWhiteSpace(request.Title)) query = query.Where(b => b.Title.Contains(request.Title));
+
+            query = request.OrderBy switch
+            {
+                "title" => query.OrderBy(b => b.Status).ThenBy(b => b.Title),
+                _ => query.OrderBy(b => b.Status).ThenBy(b => b.Priority)
+            };
 
             return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(),
                 request.PageNumber, request.PageSize, cancellationToken);

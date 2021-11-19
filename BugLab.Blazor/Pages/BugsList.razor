@@ -27,26 +27,29 @@
           @ref="_table" Striped="true" Hover="true" RowsPerPage="6" Dense="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Bugs</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(async (titleSearch) => await OnSearch(titleSearch))"
+                 Clearable="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Title</MudTh>
+        <MudTh><MudTableSortLabel SortDirection="@SortDirection.Ascending" SortLabel="title" T="BugResponse">Title</MudTableSortLabel></MudTh>
         <MudTh>Type</MudTh>
         <MudTh>Status</MudTh>
-        <MudTh>Priority</MudTh>
+        <MudTh><MudTableSortLabel SortDirection="@SortDirection.Ascending" SortLabel="priority" T="BugResponse">Priority</MudTableSortLabel></MudTh>
         <MudTh>Created On</MudTh>
         <MudTh>Modified On</MudTh>
         <MudTh>Project</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd><MudButton Color="Color.Primary" @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
-        <MudTd>
+        <MudTd DataLabel="Title"><MudButton Color="Color.Primary" @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
+        <MudTd DataLabel="Type">
             <MudChip Style="@($"{Css.BgColor} {context.BugType.Color}; {Css.Color} #fff")">@context.BugType.Title</MudChip>
         </MudTd>
-        <MudTd>@context.Status</MudTd>
-        <MudTd>@context.Priority</MudTd>
-        <MudTd>@context.Created.ToLocalTime()</MudTd>
-        <MudTd>@context.Modified?.ToLocalTime()</MudTd>
-        <MudTd>@context.ProjectTitle</MudTd>
+        <MudTd DataLabel="Status">@context.Status</MudTd>
+        <MudTd DataLabel="Priority">@context.Priority</MudTd>
+        <MudTd DataLabel="Created">@context.Created.ToLocalTime()</MudTd>
+        <MudTd DataLabel="Modified">@context.Modified?.ToLocalTime()</MudTd>
+        <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Bugs per page" />
@@ -69,6 +72,7 @@
 }
 
 @code{
+    private string _titleSearch;
     private MudTable<BugResponse> _table;
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
     private BugResponse _selectedBug;
@@ -95,6 +99,12 @@
         _showAddBugType = false;
     }
 
+    public async Task OnSearch(string titleSearch)
+    {
+        _titleSearch = titleSearch;
+        await _table.ReloadServerData();
+    }
+
     public async Task SelectedBugChanged(BugResponse bug)
     {
         if (!ProjectId.HasValue)
@@ -109,7 +119,9 @@
     {
         var request = QueryBuilder.Use(Endpoints.Bugs)
             .WithParam(nameof(PaginationHeader.PageNumber), state.Page + 1)
-            .WithParam(nameof(state.PageSize), state.PageSize);
+            .WithParam(nameof(state.PageSize), state.PageSize)
+            .WithParam(nameof(BugParams.Title), _titleSearch)
+            .WithParam(nameof(BugParams.OrderBy), state.SortLabel);
 
         if (ProjectId != default) request.WithParam(nameof(ProjectId), ProjectId);
 
