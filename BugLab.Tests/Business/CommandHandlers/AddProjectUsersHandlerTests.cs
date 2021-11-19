@@ -3,7 +3,6 @@ using BugLab.Business.Commands.Projects;
 using BugLab.Tests.Helpers;
 using FluentAssertions;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
