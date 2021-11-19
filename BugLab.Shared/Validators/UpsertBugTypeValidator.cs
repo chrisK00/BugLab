@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace BugLab.Shared.Validators
 {
-    public class AddBugTypeValidator : AbstractValidator<AddBugTypeRequest>
+    public class UpsertBugTypeValidator : AbstractValidator<UpsertBugTypeRequest>
     {
-        public AddBugTypeValidator()
+        public UpsertBugTypeValidator()
         {
             RuleFor(x => x.Color)
                 .NotEmpty();

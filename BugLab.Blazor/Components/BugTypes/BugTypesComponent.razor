@@ -1,0 +1,91 @@
+﻿@inject HttpClient Client
+
+<MudCard Style="width:50%">
+    <MudContainer Class="d-flex">
+        <MudText Color="Color.Primary" Typo="Typo.h6">@(_bugtypeId.HasValue ? $"Editing {_model.Title}" : "New Bug Type")</MudText>
+        @if (_bugtypeId.HasValue)
+        {
+            <MudSpacer />
+            <MudButton Color="Color.Success" OnClick="NewBugType">New Bug Type</MudButton>
+        }
+    </MudContainer>
+    <EditForm Model="_model" OnSubmit="OnSubmit">
+        <FluentValidationValidator />
+        <MudCardContent>
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                          Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            <MudColorPicker @bind-Text="_model.Color" Variant="Variant.Filled" Label="Color" />
+        </MudCardContent>
+        <MudCardActions>
+            <MudIconButton Class="ml-2" Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+        </MudCardActions>
+    </EditForm>
+
+    <MudContainer Class="mt-2">
+        <MudText Color="Color.Primary" Typo="Typo.h6">Existing Types</MudText>
+        <MudGrid Spacing="0">
+            @foreach (var bugType in BugTypes)
+            {
+                <MudItem xs="12" sm="3">
+                    <MudButton OnClick="() => EditBugType(bugType)" Size="Size.Small">
+                        <MudChip Style="@($"{Css.BgColor} {bugType.Color}; {Css.Color} #fff")">@bugType.Title</MudChip>
+                    </MudButton>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+</MudCard>
+
+@code {
+    private UpsertBugTypeRequest _model = new();
+    private UpsertBugTypeValidator _validator = new();
+    private int? _bugtypeId;
+
+    [Parameter] public int ProjectId { get; set; }
+    [Parameter] public EventCallback<int> OnAdd { get; set; }
+    [Parameter] public EventCallback OnUpdate { get; set; }
+    [Parameter] public List<BugTypeResponse> BugTypes { get; set; }
+
+    public async Task OnSubmit()
+    {
+        if (!_bugtypeId.HasValue)
+        {
+            var response = await Client.PostAsJsonAsync(Endpoints.BugTypes(ProjectId), _model);
+            var id = await response.Content.ReadFromJsonAsync<int>();
+
+            await OnAdd.InvokeAsync(id);
+            return;
+        }
+
+        await Client.PutAsJsonAsync($"{Endpoints.BugTypes(ProjectId)}/{_bugtypeId.Value}", _model);
+        var bugType = BugTypes.First(b => b.Id == _bugtypeId.Value);
+        bugType.Title = _model.Title;
+        bugType.Color = _model.Color;
+
+        await OnUpdate.InvokeAsync();
+    }
+
+    public void EditBugType(BugTypeResponse bugType)
+    {
+        _bugtypeId = bugType.Id;
+        _model.Title = bugType.Title;
+        _model.Color = bugType.Color;
+    }
+
+    public void NewBugType()
+    {
+        _bugtypeId = null;
+        _model = new();
+    }
+}
+
+<style>
+    .mud-card {
+        width: 75%
+    }
+
+    .mud-chip-content {
+        cursor: pointer;
+        font-size: 10px
+    }
+</style>

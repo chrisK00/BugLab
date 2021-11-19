@@ -7,8 +7,8 @@
 @if (ProjectId.HasValue)
 {
     <MudContainer Class="d-flex">
-        <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide" : "New bug")</MudButton>
-        <MudButton Class="mb-5 ml-5" OnClick="() => _showAddBugType = !_showAddBugType" Color="Color.Primary">@(_showAddBugType ? "Hide" : "New bug type")</MudButton>
+        <MudButton Class="mb-5" OnClick="() => _showAddBug = !_showAddBug" Color="Color.Primary">@(_showAddBug ? "Hide New Bug" : "New bug")</MudButton>
+        <MudButton Class="mb-5 ml-5" OnClick="() => _showBugTypes = !_showBugTypes" Color="Color.Primary">@(_showBugTypes ? "Hide bug Types" : "Bug Types")</MudButton>
     </MudContainer>
     <MudContainer Class="mb-5 d-flex">
         @if (_showAddBug)
@@ -16,9 +16,9 @@
             <AddBugComponent BugTypes="_bugTypes" OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
         }
 
-        @if (_showAddBugType)
+        @if (_showBugTypes)
         {
-            <AddBugTypeComponent ProjectId="ProjectId.Value" OnAdd="OnBugTypeAdded" />
+            <BugTypesComponent OnUpdate="async () => await _table.ReloadServerData()" BugTypes="_bugTypes" ProjectId="ProjectId.Value" OnAdd="OnBugTypeAdded" />
         }
     </MudContainer>
 }
@@ -77,7 +77,7 @@
     private int[] _pageSizeOptions = { 2, 4, 6, 8, 10, 15, 20 };
     private BugResponse _selectedBug;
     private bool _showAddBug;
-    private bool _showAddBugType;
+    private bool _showBugTypes;
 
     [Parameter] public int? ProjectId { get; set; }
     private List<BugTypeResponse> _bugTypes;
@@ -96,7 +96,7 @@
     {
         var bugType = await Client.GetFromJsonAsync<BugTypeResponse>($"{Endpoints.BugTypes(ProjectId.Value)}/{id}");
         _bugTypes.Add(bugType);
-        _showAddBugType = false;
+        _showBugTypes = false;
     }
 
     public async Task OnSearch(string titleSearch)

@@ -4,7 +4,6 @@ using BugLab.Business.Queries.BugTypes;
 using BugLab.Data.Extensions;
 using BugLab.Shared.Requests.BugTypes;
 using BugLab.Shared.Responses;
-using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -32,13 +31,23 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBugType(int projectId, AddBugTypeRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddBugType(int projectId, UpsertBugTypeRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToProject(User.UserId(), projectId);
             var command = new AddBugTypeCommand(projectId, request.Color, request.Title);
             var id = await _mediator.Send(command, cancellationToken);
 
             return CreatedAtRoute(nameof(GetBugType), new { projectId, id }, id);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBugType(int projectId, int id, UpsertBugTypeRequest request, CancellationToken cancellationToken)
+        {
+            await _authService.HasAccessToProject(User.UserId(), projectId);
+            var command = new UpdateBugTypeCommand(id, request.Title, request.Color);
+            await _mediator.Send(command, cancellationToken);
+
+            return NoContent();
         }
 
         [HttpGet("{id}", Name = nameof(GetBugType))]
