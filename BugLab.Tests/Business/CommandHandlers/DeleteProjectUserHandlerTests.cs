@@ -14,7 +14,7 @@ namespace BugLab.Tests.Business.CommandHandlers
         private DeleteProjectUserCommand _command;
 
         [Fact]
-        public async Task DeleteProjectUser_RemovesUser_FromListOfUsers()
+        public async Task RemovesUser_FromListOfUsers()
         {
             int projectId = 1;
             using var context = await DbContextHelpers.CreateAsync();

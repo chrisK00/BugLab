@@ -15,7 +15,7 @@ namespace BugLab.Tests.Business.CommandHandlers
         private readonly AddCommentCommand _command = new(1, Guid.NewGuid().ToString());
 
         [Fact]
-        public async Task AddComment_AddsCommentToBug()
+        public async Task AddsCommentToBug()
         {
             using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);

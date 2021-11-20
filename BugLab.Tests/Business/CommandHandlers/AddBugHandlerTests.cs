@@ -15,7 +15,7 @@ namespace BugLab.Tests.Business.CommandHandlers
         private AddBugHandler _sut;
 
         [Fact]
-        public async Task AddBug_SetsCreatedTime_ToCurrentTime()
+        public async Task SetsCreatedTime_ToCurrentTime()
         {
             using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);

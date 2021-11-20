@@ -14,7 +14,7 @@ namespace BugLab.Tests.Business.CommandHandlers
         private AddProjectUsersCommand _command;
 
         [Fact]
-        public async Task AddProjectUsers_ThrowsException_WhenTryingToAdd_AlreadyExistingUser()
+        public async Task ThrowsException_WhenTryingToAdd_AlreadyExistingUser()
         {
             using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);
