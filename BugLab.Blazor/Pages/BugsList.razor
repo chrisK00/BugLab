@@ -1,6 +1,8 @@
 ﻿@page "/project/{projectId:int}/bugs"
 @page "/my-bugs"
 
+@attribute [Authorize]
+
 @inject NavigationManager Nav
 @inject HttpClient Client
 

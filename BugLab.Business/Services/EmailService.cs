@@ -13,12 +13,12 @@ namespace BugLab.Business.Services
     public class EmailService : IEmailService
     {
         private readonly EmailOptions _emailOptions;
-        private readonly ApiOptions _apiOptions;
+        private readonly ClientOptions _clientOptions;
 
-        public EmailService(IOptions<EmailOptions> emailOptions, IOptions<ApiOptions> apiOptions)
+        public EmailService(IOptions<EmailOptions> emailOptions, IOptions<ClientOptions> clientOptions)
         {
             _emailOptions = emailOptions.Value;
-            _apiOptions = apiOptions.Value;
+            _clientOptions = clientOptions.Value;
         }
 
         public async Task SendAsync(string subject, string body, string to)
@@ -42,7 +42,7 @@ namespace BugLab.Business.Services
             // TODO: use template from file 
             var body = new StringBuilder().Append("<h3>Welcome to BugLab!<h3>")
                 .Append("<a href=\"")
-                .Append($"{_apiOptions.Uri}/auth/{userId}/confirm-email?token={encodedToken}\">")
+                .Append($"{_clientOptions.Uri}/confirm-email/{userId}/token/{encodedToken}\">")
                 .Append("Click to confirm your email")
                 .Append("</a>").ToString();
 

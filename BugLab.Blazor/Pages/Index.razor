@@ -1,5 +1,7 @@
 ﻿@page "/"
 @page "/home"
+@page "/index"
+
     <AuthorizeView>
         <Authorized>
             <MudText Typo="Typo.h5">Welcome @context.User.FindFirst(ClaimTypes.Email).Value</MudText>

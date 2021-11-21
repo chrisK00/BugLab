@@ -1,6 +1,6 @@
 ﻿namespace BugLab.Business.Options
 {
-    public class ApiOptions
+    public class ClientOptions
     {
         public string Uri { get; set; }
     }

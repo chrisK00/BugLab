@@ -1,5 +1,7 @@
 ﻿@page "/projects"
 
+@attribute [Authorize]
+
 @inject HttpClient Client
 @inject NavigationManager Nav
 @inject IDialogService DialogService
@@ -38,22 +40,22 @@
 
 @if (_selectedProject != null)
 {
-<MudContainer Class="d-flex mt-5 mb-5">
-    <MudItem id="project-card">
-        <ProjectCardComponent OnUpdate="OnProjectUpdated" OnDelete="OnProjectDeleted" Project="_selectedProject" />
-    </MudItem>
-
-    <MudItem>
-        <MudItem>
-            <MudButton Class="ml-5" OnClick="() => _showMembers = !_showMembers" Color="Color.Primary">@(_showMembers ? "Hide Members" : "Show Members")</MudButton>
+    <MudContainer Class="d-flex mt-5 mb-5">
+        <MudItem id="project-card">
+            <ProjectCardComponent OnUpdate="OnProjectUpdated" OnDelete="OnProjectDeleted" Project="_selectedProject" />
         </MudItem>
-        @if (_showMembers)
-        {
-            <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
-            <ProjectMembersListComponent ProjectId="_selectedProject.Id" Members="@_selectedProject.Users" />
-        }
-    </MudItem>
-</MudContainer>
+
+        <MudItem>
+            <MudItem>
+                <MudButton Class="ml-5" OnClick="() => _showMembers = !_showMembers" Color="Color.Primary">@(_showMembers ? "Hide Members" : "Show Members")</MudButton>
+            </MudItem>
+            @if (_showMembers)
+            {
+                <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
+                <ProjectMembersListComponent ProjectId="_selectedProject.Id" Members="@_selectedProject.Users" />
+            }
+        </MudItem>
+    </MudContainer>
 }
 
 @code{

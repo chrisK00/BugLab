@@ -1,0 +1,27 @@
+﻿@page "/confirm-email/{userId}/token/{token}"
+@inject HttpClient Client
+
+<MudText Typo="Typo.h6">@_message</MudText>
+<MudLink Href="/home"><MudButton>Home</MudButton></MudLink>
+
+@code{
+    private string _message = "Confirming....";
+
+    [Parameter] public string UserId { get; set; }
+    [Parameter] public string Token { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Token))
+        {
+            _message = "The link was broken. Please try again";
+            return;
+        }
+
+        var uri = QueryBuilder.Use($"{Endpoints.Auth}/{UserId}/confirm-email")
+            .WithParam(nameof(Token), Token).Build();
+
+        await Client.PostAsync(uri, null);
+        _message = "Good job! It's time to resolve some bugs";
+    }
+}

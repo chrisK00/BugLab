@@ -34,14 +34,14 @@ namespace BugLab.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("{userId}/confirm-email")]
+        [HttpPost("{userId}/confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string userId)
         {
             if (string.IsNullOrWhiteSpace(token)) return BadRequest("Invalid Confirmation Token");
 
             await _mediator.Send(new ConfirmEmailCommand(userId, token));
 
-            return Ok("Email confirmed");
+            return NoContent();
         }
     }
 }

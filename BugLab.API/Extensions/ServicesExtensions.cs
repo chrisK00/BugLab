@@ -24,7 +24,7 @@ namespace BugLab.API.Extensions
             services.AddAuth(config, environment);
 
             services.Configure<EmailOptions>(config.GetSection(nameof(EmailOptions)));
-            services.Configure<ApiOptions>(config.GetSection(nameof(ApiOptions)));
+            services.Configure<ClientOptions>(config.GetSection(nameof(ClientOptions)));
         }
 
         public static void AddSwagger(this IServiceCollection services)
