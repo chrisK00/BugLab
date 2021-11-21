@@ -12,6 +12,17 @@ Add a new bug or a bug type to a project [![msedge-oox-CMYb-JFI.png](https://i.p
 
 Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.cc/MHBmQySh/msedge-s-Rxd-ELn30-T.png)](https://postimg.cc/bSznXSdT)
 
+### Images
+Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-Gv-K0-Kr2w.png)](https://postimg.cc/GHgLrTHp)
+
+My projects page [![msedge-v-Q8988e-ASJ.png](https://i.postimg.cc/jjj29tL5/msedge-v-Q8988e-ASJ.png)](https://postimg.cc/ZW1JvkPt)
+
+My Bugs page [![msedge-GTR9-WM7r1m.png](https://i.postimg.cc/nh2M0CVg/msedge-GTR9-WM7r1m.png)](https://postimg.cc/TKyRP2DJ)
+
+Add bug to project [![msedge-z2v-E1h-Srab.png](https://i.postimg.cc/4NzYHWDJ/msedge-z2v-E1h-Srab.png)](https://postimg.cc/XpYjTkNh)
+
+Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.cc/MHBmQySh/msedge-s-Rxd-ELn30-T.png)](https://postimg.cc/bSznXSdT)
+
 ## What this project has/makes use of
 ### Blazor
 - Mudblazor - instead of bootstrap, let's us focus more on code and less on design/reponsivness
