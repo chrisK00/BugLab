@@ -2,7 +2,6 @@
 @inject AuthState AuthState
 @inject NavigationManager Nav
 
-<MudText Typo="Typo.h6" Color="Color.Error">@_errorMessage</MudText>
 <EditForm Model="_model" OnValidSubmit="OnSubmit">
     <FluentValidationValidator />
     <MudTextField @bind-Value="_model.Email" InputType="InputType.Email" Label="Email" For="() => _model.Email"
@@ -18,7 +17,6 @@
 @code{
     private LoginRequest _model = new();
     private LoginValidator _validator = new();
-    private string _errorMessage = string.Empty;
 
     public async Task OnSubmit()
     {

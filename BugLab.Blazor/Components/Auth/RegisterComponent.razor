@@ -1,5 +1,25 @@
-﻿<h1>Register</h1>
+﻿@inject HttpClient Client
+@inject ISnackbar Snackbar
+
+<EditForm Model="_model" OnValidSubmit="OnSubmit">
+    <FluentValidationValidator />
+    <MudTextField @bind-Value="_model.Email" InputType="InputType.Email" Label="Email" For="() => _model.Email"
+                  AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Email" Adornment="Adornment.End" Variant="Variant.Filled">
+    </MudTextField>
+    <MudTextField @bind-Value="_model.Password" InputType="InputType.Password" Label="Password" For="() => _model.Password"
+                  AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Password" Adornment="Adornment.End" Variant="Variant.Filled">
+    </MudTextField>
+    <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Register</MudButton>
+</EditForm>
 
 @code{
+    private RegisterRequest _model = new();
+    private RegisterValidator _validator = new();
 
+    public async Task OnSubmit()
+    {
+        await Client.PostAsJsonAsync($"{Endpoints.Auth}/register", _model);
+        Snackbar.Add("Check your inbox to confirm your email", Severity.Success);
+        _model = new();
+    }
 }
