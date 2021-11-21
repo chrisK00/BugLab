@@ -4,6 +4,7 @@ using BugLab.Business.Interfaces;
 using BugLab.Business.Services;
 using Mapster;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BugLab.Business.Extensions
@@ -17,7 +18,8 @@ namespace BugLab.Business.Extensions
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
-
+            services.AddScoped<IEmailService, EmailService>();
+           
             services.AddHostedService<RemoveDeletedBugsService>();
         }
     }

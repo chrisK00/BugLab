@@ -22,6 +22,9 @@ namespace BugLab.API.Extensions
             services.AddDataServices(config);
             services.AddSwagger();
             services.AddAuth(config, environment);
+
+            services.Configure<EmailOptions>(config.GetSection(nameof(EmailOptions)));
+            services.Configure<ApiOptions>(config.GetSection(nameof(ApiOptions)));
         }
 
         public static void AddSwagger(this IServiceCollection services)
@@ -57,7 +60,7 @@ namespace BugLab.API.Extensions
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<AppDbContext>();
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
             var jwtOptions = config.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
             services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));

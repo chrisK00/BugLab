@@ -26,6 +26,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 - DTO's - models for transfering data
 - Multi/N-tier architecture
 - Background services
+- Mailkit for modern mailing
 
 ### Test
 - Fluentassertions - asserts with better error logs
@@ -42,6 +43,14 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 
 ## Using the project
 - The app uses a local connection string SQL server connection string so you don't have to deal with that part and the token key is just a hard coded string in appsettings. You just need to run update-database so that the database gets created
+- You need an account that can be used for mailing, I prefer [ether](https://ethereal.email/) which generates an account for you and will send all emails to the created account. Then you can configure the options inside user secrets for the Email options (right click the API project and then manage user secrets).
+```"EmailOptions": {
+    "Port": 587,
+    "Host": "smtp.ethereal.email",
+    "Password": "yourPassword",
+    "From": "yourMail@gmail.com",
+    "Name": "your friendly neighbor"
+  }```
 - Right click the solution and press properties, then select multiple startup projects. After that you can choose to have BugLab.Blazor and BugLab.API to start when you run the app
 
 ### Here are some things Todo:
