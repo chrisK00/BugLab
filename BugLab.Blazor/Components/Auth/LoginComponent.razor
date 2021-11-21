@@ -23,13 +23,7 @@
     public async Task OnSubmit()
     {
         var response = await Client.PostAsJsonAsync($"{Endpoints.Auth}/login", _model);
-        if (!response.IsSuccessStatusCode)
-        {
-            // TODO: use the apis error response model once a global exc handler is in place
-            _errorMessage = await response.Content.ReadAsStringAsync();
-            return;
-        }
-
+       
         var user = await response.Content.ReadFromJsonAsync<LoginResponse>();
         await AuthState.LogInAsync(user);
         Nav.NavigateTo("/");

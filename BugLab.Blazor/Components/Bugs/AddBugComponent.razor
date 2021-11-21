@@ -51,8 +51,6 @@
     {
         var response = await Client.PostAsJsonAsync(Endpoints.Bugs, _model);
 
-        // TODO: show error msg in a div or snackbar if id is default,
-        // could use the httpinterceptor for this whenever a post request is made
         var id = await response.Content.ReadFromJsonAsync<int>();
         await OnAdd.InvokeAsync(id);
     }
