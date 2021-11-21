@@ -5,6 +5,7 @@ using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +41,7 @@ namespace BugLab.API.Controllers
 
             await _mediator.Send(new ConfirmEmailCommand(userId, token));
 
-            return NoContent();
+            return Ok("Email confirmed");
         }
     }
 }
