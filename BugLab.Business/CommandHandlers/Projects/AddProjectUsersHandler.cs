@@ -1,6 +1,7 @@
 ﻿using BugLab.Business.Commands.Projects;
 using BugLab.Business.Helpers;
 using BugLab.Data;
+using BugLab.Shared.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace BugLab.Business.CommandHandlers.Projects
 
         public async Task<Unit> Handle(AddProjectUsersCommand request, CancellationToken cancellationToken)
         {
+            // TODO: refactor to a join table instead and do include, theninclude or use ref by id so wont need to have the nav property on project.
             var usersAndProject = await _context.Projects.Where(x => x.Id == request.ProjectId)
                 .Select(x => new { x.Users, Project = x })
                 .FirstOrDefaultAsync(cancellationToken);
