@@ -11,7 +11,7 @@
                 <MudText Color="Color.Primary">Created on @comment.Created.ToLocalTime() by @comment.CreatedBy.Email</MudText>
                 @if (comment.Modified.HasValue)
                 {
-                    <MudText>Modified on @comment.Modified.Value.ToLocalTime() by @comment.ModifiedBy</MudText>
+                    <MudText>Modified on @comment.Modified.Value.ToLocalTime() by @comment.ModifiedBy.Email</MudText>
                 }
                 <MudText>@comment.Text</MudText>
             </MudCardContent>
