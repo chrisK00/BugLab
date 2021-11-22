@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,12 +40,9 @@ namespace BugLab.Business.Services
         {
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(confirmationToken));
 
-            // TODO: use template from file 
-            var body = new StringBuilder().Append("<h3>Welcome to BugLab!<h3>")
-                .Append("<a href=\"")
-                .Append($"{_clientOptions.Uri}/confirm-email/{userId}/token/{encodedToken}\">")
-                .Append("Click to confirm your email")
-                .Append("</a>").ToString();
+            var template = await File.ReadAllTextAsync(@"Assets\email-template.html");
+            var link = $"{_clientOptions.Uri}/confirm-email/{userId}/token/{encodedToken}";
+            var body = template.Replace("{link}", link);
 
             await SendAsync("Confirm your email", body, to);
         }
