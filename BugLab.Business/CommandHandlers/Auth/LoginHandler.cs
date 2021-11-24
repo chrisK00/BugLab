@@ -37,6 +37,7 @@ namespace BugLab.Business.CommandHandlers.Auth
                 Roles = roles,
                 Email = user.Email,
                 Id = user.Id,
+                EmailConfirmed = user.EmailConfirmed
             };
 
             userResponse.Token = _tokenService.CreateToken(userResponse);

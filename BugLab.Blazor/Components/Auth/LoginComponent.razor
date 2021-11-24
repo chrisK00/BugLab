@@ -1,6 +1,7 @@
 ﻿@inject HttpClient Client
 @inject AuthState AuthState
 @inject NavigationManager Nav
+@inject ISnackbar Snackbar
 
 <EditForm Model="_model" OnValidSubmit="OnSubmit">
     <FluentValidationValidator />
@@ -23,6 +24,7 @@
         var response = await Client.PostAsJsonAsync($"{Endpoints.Auth}/login", _model);
        
         var user = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        if (!user.EmailConfirmed) Snackbar.Add("Confirm your email and then login again", Severity.Warning);
         await AuthState.LogInAsync(user);
         Nav.NavigateTo("/");
     }
