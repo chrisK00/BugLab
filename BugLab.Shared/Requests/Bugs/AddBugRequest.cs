@@ -10,5 +10,6 @@ namespace BugLab.Shared.Requests.Bugs
         public BugStatus Status { get; set; }
         public int TypeId { get; set; }
         public int ProjectId { get; set; }
+        public string AssignedToId { get; set; }
     }
 }

@@ -41,6 +41,7 @@
         <MudTh>Created On</MudTh>
         <MudTh>Modified On</MudTh>
         <MudTh>Project</MudTh>
+        <MudTh>Assigned dev</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Title"><MudButton Color="Color.Primary" @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
@@ -52,6 +53,7 @@
         <MudTd DataLabel="Created">@context.Created.ToLocalTime()</MudTd>
         <MudTd DataLabel="Modified">@context.Modified?.ToLocalTime()</MudTd>
         <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
+        <MudTd DataLabel="Assigned Dev">@context.AssignedTo?.Email</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Bugs per page" />

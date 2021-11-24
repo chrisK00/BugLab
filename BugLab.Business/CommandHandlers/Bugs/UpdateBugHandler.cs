@@ -28,6 +28,7 @@ namespace BugLab.Business.CommandHandlers.Bugs
             bug.Priority = request.Priority;
             bug.Description = request.Description;
             bug.BugTypeId = request.TypeId;
+            bug.AssignedToId = request.AssignedToId;
 
             await _context.SaveChangesAsync(cancellationToken);
 

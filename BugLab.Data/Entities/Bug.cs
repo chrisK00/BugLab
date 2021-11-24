@@ -1,5 +1,5 @@
 ﻿using BugLab.Shared.Enums;
-using System;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
 namespace BugLab.Data.Entities
@@ -17,6 +17,9 @@ namespace BugLab.Data.Entities
 
         public int BugTypeId { get; set; }
         public BugType BugType { get; private set; }
+
+        public string AssignedToId { get; set; }
+        public IdentityUser AssignedTo { get; private set; }
 
         public ICollection<Comment> Comments { get; init; } = new List<Comment>();
     }
