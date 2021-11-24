@@ -22,9 +22,20 @@
     public async Task OnSubmit()
     {
         var response = await Client.PostAsJsonAsync($"{Endpoints.Auth}/login", _model);
-       
+
         var user = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        if (!user.EmailConfirmed) Snackbar.Add("Confirm your email and then login again", Severity.Warning);
+        if (!user.EmailConfirmed)
+        {
+            Snackbar.Add("Confirm your email! Click here to resend the confirmation mail", Severity.Warning, opt =>
+            {
+                opt.VisibleStateDuration = 10000;
+                opt.Onclick = async (e) =>
+                {
+                    await Client.PostAsync($"{Endpoints.Auth}/{user.Id}/resend-confirm-email", null);
+                };
+            });
+        }
+
         await AuthState.LogInAsync(user);
         Nav.NavigateTo("/");
     }

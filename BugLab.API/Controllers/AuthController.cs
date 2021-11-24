@@ -34,6 +34,14 @@ namespace BugLab.API.Controllers
             return NoContent();
         }
 
+        [HttpPost("{userId}/resend-confirm-email")]
+        public async Task<IActionResult> ResendConfirmEmail(string userId)
+        {
+            await _mediator.Send(new ResendEmailConfirmationCommand(userId));
+
+            return NoContent();
+        }
+
         [HttpPost("{userId}/confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string userId)
         {

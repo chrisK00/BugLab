@@ -12,12 +12,12 @@ namespace BugLab.Business.CommandHandlers.Auth
     public class RegisterHandler : IRequestHandler<RegisterCommand>
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly IEmailService _mailService;
+        private readonly ITokenService _tokenService;
 
-        public RegisterHandler(UserManager<IdentityUser> userManager, IEmailService mailService)
+        public RegisterHandler(UserManager<IdentityUser> userManager, ITokenService tokenService)
         {
             _userManager = userManager;
-            _mailService = mailService;
+            _tokenService = tokenService;
         }
 
         public async Task<Unit> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -37,8 +37,7 @@ namespace BugLab.Business.CommandHandlers.Auth
                 throw new InvalidOperationException(sb.ToString());
             }
 
-            var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            await _mailService.SendEmailConfirmationAsync(confirmationToken, user.Id, user.Email);
+            await _tokenService.SendEmailConfirmationAsync(user);
 
             return Unit.Value;
         }

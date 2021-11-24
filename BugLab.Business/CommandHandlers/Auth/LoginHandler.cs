@@ -40,7 +40,7 @@ namespace BugLab.Business.CommandHandlers.Auth
                 EmailConfirmed = user.EmailConfirmed
             };
 
-            userResponse.Token = _tokenService.CreateToken(userResponse);
+            userResponse.Token = _tokenService.CreateJwtToken(userResponse);
             return userResponse;
         }
     }
