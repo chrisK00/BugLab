@@ -97,8 +97,7 @@
     public async Task SelectedProjectChanged(ProjectResponse projectResponse)
     {
         _selectedProject = projectResponse;
-        var projectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_selectedProject.Id));
-        _selectedProjectMembers = projectMembers ?? new List<UserResponse>();
+        _selectedProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_selectedProject.Id));
     }
 
     public void OnProjectClick(string projectTitle, int projectId)
@@ -110,6 +109,7 @@
     {
         _showAddProject = false;
         _selectedProject = await Client.GetFromJsonAsync<ProjectResponse>($"{Endpoints.Projects}/{id}", JsonOptions.Defaults());
+        _selectedProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_selectedProject.Id));
         await _table.ReloadServerData();
     }
 

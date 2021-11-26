@@ -19,9 +19,6 @@ namespace BugLab.Tests.Helpers
                 new Project { Title = "project3"},
             };
 
-            var user = context.Users.Find(DbContextHelpers.CurrentUserId);
-            var user2 = context.Users.First(x => x.Id != user.Id);
-
             context.Projects.AddRange(projects);
         }
 
