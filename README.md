@@ -8,7 +8,7 @@ My projects page [![myprojects.png](https://i.postimg.cc/rs5YyxZw/myprojects.png
 
 My Bugs page [![msedge-JV42-Kj192e.png](https://i.postimg.cc/mk3CRfbd/msedge-JV42-Kj192e.png)](https://postimg.cc/0KQbd4Km)
 
-Add a new bug or a bug type to a project [![msedge-oox-CMYb-JFI.png](https://i.postimg.cc/T1dVQBPb/msedge-oox-CMYb-JFI.png)](https://postimg.cc/jw1nSgPq)
+Add a new bug or a bug type to a project [![msedge-Q0wz-O90-Ju-H.png](https://i.postimg.cc/Z5LbB4yv/msedge-Q0wz-O90-Ju-H.png)](https://postimg.cc/HrVDFGzT)
 
 Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.cc/MHBmQySh/msedge-s-Rxd-ELn30-T.png)](https://postimg.cc/bSznXSdT)
 
