@@ -27,10 +27,10 @@ namespace BugLab.Data.Extensions
                     new Project { Id = 3, Title = "SweatSpace" }
                 );
 
-            builder.Entity("IdentityUserProject").HasData(
-                new { ProjectsId = 1, UsersId = userId },
-                new { ProjectsId = 2, UsersId = userId },
-                new { ProjectsId = 3, UsersId = userId2 }
+            builder.Entity<ProjectUser>().HasData(
+                new ProjectUser { ProjectId = 1, UserId = userId },
+                new ProjectUser { ProjectId = 2, UserId = userId },
+                new ProjectUser { ProjectId = 3, UserId = userId2 }
                 );
 
             builder.Entity<Bug>().HasData(

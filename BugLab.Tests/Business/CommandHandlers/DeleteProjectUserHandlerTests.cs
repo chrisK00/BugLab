@@ -14,7 +14,7 @@ namespace BugLab.Tests.Business.CommandHandlers
         private DeleteProjectUserCommand _command;
 
         [Fact]
-        public async Task RemovesUser_FromListOfUsers()
+        public async Task RemovesUser_FromProject()
         {
             int projectId = 1;
             using var context = await DbContextHelpers.CreateAsync();
@@ -23,8 +23,7 @@ namespace BugLab.Tests.Business.CommandHandlers
 
             await _sut.Handle(_command, default);
 
-            context.Projects.Where(x => x.Id == projectId).Select(x => x.Users)
-                .Should().NotContain(p => p.Any(x => x.Id == DbContextHelpers.CurrentUserId));
+            context.ProjectUsers.Should().NotContain(pu => pu.UserId == DbContextHelpers.CurrentUserId && pu.ProjectId == projectId);
         }
     }
 }

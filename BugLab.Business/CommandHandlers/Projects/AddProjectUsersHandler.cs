@@ -1,8 +1,8 @@
 ﻿using BugLab.Business.Commands.Projects;
 using BugLab.Business.Helpers;
 using BugLab.Data;
+using BugLab.Data.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,21 +23,21 @@ namespace BugLab.Business.CommandHandlers.Projects
 
         public async Task<Unit> Handle(AddProjectUsersCommand request, CancellationToken cancellationToken)
         {
-            var usersAndProject = await _context.Projects.Where(x => x.Id == request.ProjectId)
-                .Select(x => new { x.Users, Project = x })
-                .FirstOrDefaultAsync(cancellationToken);
+            var projectUsers = await _context.ProjectUsers.Where(x => x.ProjectId == request.ProjectId).ToListAsync(cancellationToken);
 
-            Guard.NotFound(usersAndProject, "project", request.ProjectId);
+            Guard.NotFound(projectUsers, "project", request.ProjectId);
 
-            var usersToAdd = await _context.Users.Where(u => request.UserIds.Contains(u.Id)).ToListAsync(cancellationToken);
-            Guard.NotFound(usersToAdd, nameof(usersToAdd));
+            var users = await _context.Users.Where(u => request.UserIds.Contains(u.Id)).ToListAsync(cancellationToken);
+            Guard.NotFound(users, nameof(users));
 
-            IReadOnlyCollection<IdentityUser> notAlreadyMembersUsers = usersToAdd.Where(u => !usersAndProject.Users.Any(pu => pu.Id == u.Id)).ToList();
+            IReadOnlyCollection<ProjectUser> projectUsersToAdd = users.Where(u => !projectUsers.Any(pu => pu.UserId == u.Id))
+                .Select(u => new ProjectUser { UserId = u.Id, ProjectId = request.ProjectId})
+                .ToList();
 
-            usersAndProject.Project.Users.AddRange(notAlreadyMembersUsers);
+            await _context.ProjectUsers.AddRangeAsync(projectUsersToAdd, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return notAlreadyMembersUsers.Count != usersToAdd.Count
+            return projectUsersToAdd.Count != users.Count
                 ? throw new InvalidOperationException("Some users were not added because they could not be found or they are already members of this project")
                 : Unit.Value;
         }

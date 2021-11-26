@@ -21,9 +21,10 @@ namespace BugLab.Business.QueryHandlers.Projects
 
         public async Task<IEnumerable<UserResponse>> Handle(GetProjectUsersQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Projects.AsNoTracking().Where(p => p.Id == request.ProjectId)
-                .Select(p => p.Users.Select(u => new UserResponse { Email = u.Email, Id = u.Id }))
-                .FirstOrDefaultAsync(cancellationToken);
+            return await _context.ProjectUsers.Include(pu => pu.User).AsNoTracking()
+                .Where(pu => pu.ProjectId == request.ProjectId)
+                .Select(pu => new UserResponse { Email = pu.User.Email, Id = pu.User.Id })
+                .ToListAsync(cancellationToken);
         }
     }
 }

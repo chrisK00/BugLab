@@ -23,7 +23,11 @@ namespace BugLab.Business.Queries.Projects
 
         public async Task<PagedList<ProjectResponse>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Projects.AsNoTracking().Where(x => x.Users.Any(u => u.Id == request.UserId));
+            var query = _context.Projects.AsNoTracking()
+                .Where(x => _context.ProjectUsers.Where(pu => pu.UserId == request.UserId)
+                                                 .Select(pu => pu.ProjectId)
+                                                 .Contains(x.Id));
+
             int totalItems;
             (query, totalItems) = await query.PaginateAsync(request.PageNumber, request.PageSize, cancellationToken);
 

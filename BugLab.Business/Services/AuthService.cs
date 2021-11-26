@@ -18,8 +18,7 @@ namespace BugLab.Business.Services
 
         public async Task HasAccessToProject(string userId, int projectId)
         {
-            var userIsInProject = await _context.Projects.Where(x => x.Id == projectId)
-                .AnyAsync(x => x.Users.Any(x => x.Id == userId));
+            var userIsInProject = await _context.ProjectUsers.AnyAsync(pu => pu.ProjectId == projectId && pu.UserId == userId);
 
             if (!userIsInProject)
             {
@@ -29,8 +28,8 @@ namespace BugLab.Business.Services
 
         public async Task HasAccessToBug(string userId, int bugId)
         {
-            var userIsInProject = await _context.Projects.Where(x => x.Id == _context.Bugs.AsNoTracking().FirstOrDefault(x => x.Id == bugId).ProjectId)
-             .AnyAsync(x => x.Users.Any(x => x.Id == userId));
+            var userIsInProject = await _context.ProjectUsers.AnyAsync(pu => pu.UserId == userId
+                                                                             && pu.ProjectId == _context.Bugs.FirstOrDefault(b => b.Id == bugId).ProjectId);
 
             if (!userIsInProject)
             {

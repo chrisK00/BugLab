@@ -22,11 +22,6 @@ namespace BugLab.Tests.Helpers
             var user = context.Users.Find(DbContextHelpers.CurrentUserId);
             var user2 = context.Users.First(x => x.Id != user.Id);
 
-            projects[0].Users.Add(user);
-            projects[1].Users.Add(user);
-            projects[1].Users.Add(user2);
-            projects[2].Users.Add(user2);
-
             context.Projects.AddRange(projects);
         }
 

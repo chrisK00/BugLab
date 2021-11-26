@@ -28,9 +28,7 @@ namespace BugLab.Business.Queries.Users
 
             if (request.NotInProjectId.HasValue)
             {
-                query = query.Where(u =>
-                !_context.Projects.Where(p => p.Id == request.NotInProjectId.Value)
-                .Any(x => x.Users.Any(pu => pu.Id == u.Id)));
+                query = query.Where(u => !_context.ProjectUsers.Any(pu => pu.ProjectId == request.NotInProjectId && pu.UserId == u.Id));
             }
 
             return await PagedList<UserResponse>.CreateAsync(query.ProjectToType<UserResponse>(),

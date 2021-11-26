@@ -4,14 +4,16 @@ using BugLab.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211126172438_ProjectUser")]
+    partial class ProjectUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,7 +248,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4356),
+                            Created = new DateTime(2021, 11, 26, 17, 24, 37, 866, DateTimeKind.Utc).AddTicks(7304),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -254,7 +256,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4935),
+                            Created = new DateTime(2021, 11, 26, 17, 24, 37, 866, DateTimeKind.Utc).AddTicks(7915),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -262,7 +264,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4938),
+                            Created = new DateTime(2021, 11, 26, 17, 24, 37, 866, DateTimeKind.Utc).AddTicks(7918),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -318,22 +320,37 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectUsers");
+                });
+
+            modelBuilder.Entity("IdentityUserProject", b =>
+                {
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ProjectsId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("IdentityUserProject");
 
                     b.HasData(
                         new
                         {
-                            UserId = "757b2158-40c3-4917-9523-5861973a4d2e",
-                            ProjectId = 1
+                            ProjectsId = 1,
+                            UsersId = "757b2158-40c3-4917-9523-5861973a4d2e"
                         },
                         new
                         {
-                            UserId = "757b2158-40c3-4917-9523-5861973a4d2e",
-                            ProjectId = 2
+                            ProjectsId = 2,
+                            UsersId = "757b2158-40c3-4917-9523-5861973a4d2e"
                         },
                         new
                         {
-                            UserId = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
-                            ProjectId = 3
+                            ProjectsId = 3,
+                            UsersId = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62"
                         });
                 });
 
@@ -457,15 +474,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7c0506c-d414-4132-83e2-4e39635e21b6",
+                            ConcurrencyStamp = "ca10ad6a-7b2d-4257-aba8-9c053b11f3dc",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECubHHakqqtrEPwAkm4u8JVOjnKcQtg9Z1+jsPbzbhushIKHqJZhr2rAqmOcqczEvw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMU5WL5+FMiBB/C2mqP9r+4xxF//5pCOjSXs01YRRnH76DuMCesd+gIrp2BEes7/Pg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "40b30d42-6b5b-43b3-8827-86e563d97ab7",
+                            SecurityStamp = "e04c9725-1613-4d09-b521-b68d56eaf678",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -473,15 +490,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d84a70f4-f849-4a98-a871-63f3683ecaa0",
+                            ConcurrencyStamp = "cbb2c297-6f8d-42a4-9654-5f8e535a25c1",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPnq9OviTZIHvhd7TbV6E2yD9SLur2/DNLE1V0EAyL1AFQB0FWfNXJybWv83wqqVzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECJF6h3jAGoeU6DA4OXrvvxanPjzrFcl71Yt05+5ug++6YGz9LgxLLyX+wTm/zLoDA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f6886cd2-0824-485b-ae38-c5c3c44dc8f0",
+                            SecurityStamp = "f2b0c232-3a99-45b7-8cb7-518d92936e82",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });
@@ -665,6 +682,21 @@ namespace Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IdentityUserProject", b =>
+                {
+                    b.HasOne("BugLab.Data.Entities.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
