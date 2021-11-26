@@ -28,6 +28,14 @@
                 }
             </MudSelect>
 
+            <MudSelect For="() => _model.AssignedToId" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.CardMembership" Variant="Variant.Filled"
+                       Label="Assigned To" @bind-Value="_model.AssignedToId">
+                @foreach (var member in Members)
+                {
+                    <MudSelectItem Value="member.Id">@member.Email</MudSelectItem>
+                }
+            </MudSelect>
+
             <MudSelect For="() => _model.TypeId" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled"
                        Label="Bug Type" @bind-Value="_model.TypeId">
                 @foreach (var bugType in BugTypes)
@@ -62,6 +70,7 @@
 
     [Parameter] public BugResponse Bug { get; set; }
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
+    [Parameter] public IEnumerable<UserResponse> Members { get; set; }
     [Parameter] public EventCallback OnUpdate { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
 
@@ -69,6 +78,7 @@
     {
         _model = Bug.Adapt<UpdateBugRequest>();
         _model.TypeId = Bug.BugType.Id;
+        _model.AssignedToId = Bug.AssignedTo?.Id;
     }
 
     private async Task ConfirmDelete()

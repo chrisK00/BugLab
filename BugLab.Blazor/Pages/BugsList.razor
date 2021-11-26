@@ -15,7 +15,7 @@
     <MudContainer Class="mb-5 d-flex">
         @if (_showAddBug)
         {
-            <AddBugComponent BugTypes="_bugTypes" OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
+            <AddBugComponent Members="_selectedBugProjectMembers" BugTypes="_bugTypes" OnAdd="OnBugAdded" ProjectId="ProjectId.Value" />
         }
 
         @if (_showBugTypes)
@@ -31,7 +31,7 @@
         <MudText Typo="Typo.h6">Bugs</MudText>
         <MudSpacer />
         <MudTextField T="string" ValueChanged="@(async (titleSearch) => await OnSearch(titleSearch))"
-                 Clearable="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+                      Clearable="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel SortDirection="@SortDirection.Ascending" SortLabel="title" T="BugResponse">Title</MudTableSortLabel></MudTh>
@@ -69,7 +69,7 @@
 {
     <MudContainer Class="d-flex mt-5 mb-5">
         <MudItem id="bug-card">
-            <BugCardComponent OnDelete="OnBugDeleted" BugTypes="_bugTypes" OnUpdate="OnBugUpdated" Bug="_selectedBug" />
+            <BugCardComponent Members="_selectedBugProjectMembers" OnDelete="OnBugDeleted" BugTypes="_bugTypes" OnUpdate="OnBugUpdated" Bug="_selectedBug" />
         </MudItem>
         <CommentsComponent BugId="_selectedBug.Id" Comments="_selectedBug.Comments" />
     </MudContainer>
@@ -82,18 +82,24 @@
     private BugResponse _selectedBug;
     private bool _showAddBug;
     private bool _showBugTypes;
+    private IEnumerable<UserResponse> _selectedBugProjectMembers = new List<UserResponse>();
 
     [Parameter] public int? ProjectId { get; set; }
     private List<BugTypeResponse> _bugTypes;
 
     protected override async Task OnParametersSetAsync()
     {
-        if (ProjectId.HasValue) await LoadBugTypes(ProjectId.Value);
+        if (ProjectId.HasValue) { await LoadBugTypes(ProjectId.Value); await LoadProjectMembers(ProjectId.Value); }
     }
 
     private async Task LoadBugTypes(int projectId)
     {
         _bugTypes = (await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(projectId))).ToList();
+    }
+
+    private async Task LoadProjectMembers(int projectId)
+    {
+        _selectedBugProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(projectId));
     }
 
     private async Task OnBugTypeAdded(int id)
@@ -116,7 +122,9 @@
             await LoadBugTypes(bug.ProjectId);
         }
 
-        _selectedBug = bug;
+        if (_selectedBug?.ProjectId != bug.ProjectId || _selectedBugProjectMembers?.Count() < 1) await LoadProjectMembers(bug.ProjectId);
+
+            _selectedBug = bug;
     }
 
     public async Task<TableData<BugResponse>> GetBugs(TableState state)

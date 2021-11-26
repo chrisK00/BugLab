@@ -23,7 +23,8 @@ namespace BugLab.Tests.Business.CommandHandlers
 
             await _sut.Handle(_command, default);
 
-            context.Projects.Where(p => p.Id == projectId).Should().NotContain(p => p.Users.Any(u => u.Id == DbContextHelpers.CurrentUserId));
+            context.Projects.Where(x => x.Id == projectId).Select(x => x.Users)
+                .Should().NotContain(p => p.Any(x => x.Id == DbContextHelpers.CurrentUserId));
         }
     }
 }
