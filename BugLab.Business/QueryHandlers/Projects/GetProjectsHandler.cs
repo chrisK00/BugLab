@@ -23,7 +23,7 @@ namespace BugLab.Business.Queries.Projects
 
         public async Task<PagedList<ProjectResponse>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Projects.AsNoTracking()
+            var query = _context.Projects.OrderBy(p => p.Title).AsNoTracking()
                 .Where(x => _context.ProjectUsers.Where(pu => pu.UserId == request.UserId)
                                                  .Select(pu => pu.ProjectId)
                                                  .Contains(x.Id));
@@ -40,7 +40,7 @@ namespace BugLab.Business.Queries.Projects
                     HighPrioritized = bugs.Count(x => x.Priority == BugPriority.High)
                 }).ToListAsync(cancellationToken);
 
-            var projects = await query.ProjectToType<ProjectResponse>().OrderBy(p => p.Title).ToListAsync(cancellationToken);
+            var projects = await query.ProjectToType<ProjectResponse>().ToListAsync(cancellationToken);
             projects = projects.Select(p =>
             {
                 var bugsCount = relatedBugsCounts.FirstOrDefault(x => x.ProjectId == p.Id);
