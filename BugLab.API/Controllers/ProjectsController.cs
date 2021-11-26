@@ -61,17 +61,6 @@ namespace BugLab.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{id}/users")]
-        public async Task<IActionResult> AddUsersToProject(int id, [FromQuery] IEnumerable<string> userIds, CancellationToken cancellationToken)
-        {
-            if (!userIds.Any()) return NoContent();
-
-            await _authService.HasAccessToProject(User.UserId(), id);
-            await _mediator.Send(new AddProjectUsersCommand(id, userIds), cancellationToken);
-
-            return NoContent();
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id, CancellationToken cancellationToken)
         {
@@ -80,15 +69,5 @@ namespace BugLab.API.Controllers
 
             return NoContent();
         }
-
-        [HttpDelete("{id}/users/{userId}")]
-        public async Task<IActionResult> DeleteProjectUser(int id, string userId, CancellationToken cancellationToken)
-        {
-            await _authService.HasAccessToProject(User.UserId(), id);
-            await _mediator.Send(new DeleteProjectUserCommand(id, userId), cancellationToken);
-
-            return NoContent();
-        }
-
     }
 }

@@ -16,5 +16,10 @@
         {
             return $"{Projects}/{projectId}/bugTypes";
         }
+
+        public static string ProjectUsers(int projectId)
+        {
+            return $"{Projects}/{projectId}/projectUsers";
+        }
     }
 }

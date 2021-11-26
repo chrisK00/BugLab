@@ -62,7 +62,7 @@
 
     private async Task AddUsersToProject()
     {
-        var request = QueryBuilder.Use($"{Endpoints.Projects}/{ProjectId}/users");
+        var request = QueryBuilder.Use(Endpoints.ProjectUsers(ProjectId));
         foreach (var user in _selectedUsers)
         {
             request.WithParam("userIds", user.Id);

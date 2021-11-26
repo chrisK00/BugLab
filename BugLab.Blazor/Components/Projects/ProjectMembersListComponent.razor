@@ -26,12 +26,7 @@
     {
         if (Members.Count() == 1) { Snackbar.Add("Removing the last user on the project gives no one access to it", Severity.Error); return; }
 
-        var uri = new StringBuilder()
-        .Append(Endpoints.Projects).Append('/').Append(ProjectId).Append('/')
-        .Append(nameof(Endpoints.Users)).Append('/').Append(id).ToString();
-
-        await Client.DeleteAsync(uri);
-
+        await Client.DeleteAsync($"{Endpoints.ProjectUsers(ProjectId)}/{id}");
         Members = Members.Where(u => u.Id != id).ToList();
     }
 

@@ -26,7 +26,7 @@
         <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Title" id="title"><MudButton @onclick="() => SelectedProjectChanged(context)">@context.Title</MudButton></MudTd>
+        <MudTd DataLabel="Title" id="title"><MudButton @onclick="async () => await SelectedProjectChanged(context)">@context.Title</MudButton></MudTd>
         <MudTd DataLabel="High prioritized bugs">@context.TotalHighPriorityBugs</MudTd>
         <MudTd DataLabel="Total bugs">@context.TotalBugs</MudTd>
         <MudTd>
@@ -52,7 +52,7 @@
             @if (_showMembers)
             {
                 <MudButton Class="ml-5" OnClick="OpenAddMemberDialog">Add a new member</MudButton>
-                <ProjectMembersListComponent ProjectId="_selectedProject.Id" Members="@_selectedProject.Users" />
+                <ProjectMembersListComponent ProjectId="_selectedProject.Id" Members="@_selectedProjectMembers" />
             }
         </MudItem>
     </MudContainer>
@@ -64,6 +64,7 @@
     private bool _showAddProject;
     private bool _showMembers = true;
     private ProjectResponse _selectedProject;
+    private IEnumerable<UserResponse> _selectedProjectMembers = new List<UserResponse>();
 
     public async Task<TableData<ProjectResponse>> GetProjects(TableState state)
     {
@@ -93,9 +94,11 @@
         };
     }
 
-    public void SelectedProjectChanged(ProjectResponse projectResponse)
+    public async Task SelectedProjectChanged(ProjectResponse projectResponse)
     {
         _selectedProject = projectResponse;
+        var projectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_selectedProject.Id));
+        _selectedProjectMembers = projectMembers ?? new List<UserResponse>();
     }
 
     public void OnProjectClick(string projectTitle, int projectId)
