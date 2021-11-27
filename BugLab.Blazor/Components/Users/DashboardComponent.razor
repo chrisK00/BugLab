@@ -1,6 +1,5 @@
 ﻿@inject HttpClient Client
 
-
 <MudContainer>
     <MudCard>
         <MudCardContent>
@@ -8,27 +7,37 @@
         </MudCardContent>
     </MudCard>
 
-    <MudContainer Class="d-flex">
-        <MudContainer>
-            <MudText>Most recently created Bug</MudText>
-            <BugCardComponent Bug="_dashboard.LatestBug" />
-        </MudContainer>
-        <MudContainer>
-            <MudText>Most recently updated Bug</MudText>
-            <BugCardComponent Bug="_dashboard.LatestUpdatedBug" />
-        </MudContainer>
-        </MudContainer>
+    <MudContainer Class="d-flex mt-5">
+        @if (_latestBugTypes != null)
+        {
+            <MudContainer>
+                <MudText Color="Color.Primary" Typo="Typo.h6">Most recently created Bug</MudText>
+                <BugCardComponent Members="_latestBugProjectMembers" Bug="_dashboard.LatestBug" BugTypes="_latestBugTypes"
+                                  OnDelete="async () => await LoadData()" OnUpdate="async () => await LoadData()" />
+                <CommentsComponent BugId="_dashboard.LatestBug.Id" Comments="_dashboard.LatestBug.Comments" />
+            </MudContainer>
+        }
+
+        @if (_latestUpdatedBugTypes != null)
+        {
+            <MudContainer>
+                <MudText Color="Color.Primary" Typo="Typo.h6">Most recently updated Bug</MudText>
+                <BugCardComponent Members="_latestUpdatedBugProjectMembers" BugTypes="_latestUpdatedBugTypes" Bug="_dashboard.LatestUpdatedBug"
+                                  OnDelete="async () => await LoadData()" OnUpdate="async () => await LoadData()" />
+                <CommentsComponent BugId="_dashboard.LatestUpdatedBug.Id" Comments="_dashboard.LatestUpdatedBug.Comments" />
+            </MudContainer>
+        }
     </MudContainer>
+</MudContainer>
 
 @code{
-
-    private DashboardResponse _dashboard; //might not need this but rather want the props
+    private DashboardResponse _dashboard;
     private string[] _chartLabels = { };
     private double[] _chartData = { };
-    private IEnumerable<UserResponse> _latestBugProjectMembers = new List<UserResponse>();
-    private IEnumerable<UserResponse> _latestUpdatedBugProjectMembers = new List<UserResponse>();
-    private List<BugTypeResponse> _latestUpdatedBugTypes;
-    private List<BugTypeResponse> _latestBugTypes;
+    private IEnumerable<UserResponse> _latestBugProjectMembers;
+    private IEnumerable<UserResponse> _latestUpdatedBugProjectMembers;
+    private IEnumerable<BugTypeResponse> _latestUpdatedBugTypes;
+    private IEnumerable<BugTypeResponse> _latestBugTypes;
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,6 +50,11 @@
         _chartLabels = new string[] {$"Open {_dashboard.TotalOpenBugs}", $"In Progress {_dashboard.TotalInProgressBugs}",
             $"High Prioritized {_dashboard.TotalHighPrioritizedOpenBugs}", $"Assigned to me {_dashboard.TotalBugsAssignedToMe}"};
 
+        _latestUpdatedBugProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestUpdatedBug.ProjectId));
+        _latestBugProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestBug.ProjectId));
+
         _chartData = new double[] { _dashboard.TotalOpenBugs, _dashboard.TotalInProgressBugs, _dashboard.TotalHighPrioritizedOpenBugs, _dashboard.TotalBugsAssignedToMe };
+        _latestUpdatedBugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestUpdatedBug.ProjectId));
+        _latestBugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestBug.ProjectId));
     }
 }

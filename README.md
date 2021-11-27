@@ -4,6 +4,8 @@ A bug/issue tracker with .Net 5 using Blazor WASM and Web API that can be used i
 ### Images
 Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-Gv-K0-Kr2w.png)](https://postimg.cc/GHgLrTHp)
 
+Home page [![msedge-zzt-LLtm-U8-O.png](https://i.postimg.cc/m23wnMN0/msedge-zzt-LLtm-U8-O.png)](https://postimg.cc/6y3n28P0)
+
 My projects page [![myprojects.png](https://i.postimg.cc/rs5YyxZw/myprojects.png)](https://postimg.cc/zHXk0b1s)
 
 My Bugs page [![msedge-JV42-Kj192e.png](https://i.postimg.cc/mk3CRfbd/msedge-JV42-Kj192e.png)](https://postimg.cc/0KQbd4Km)
