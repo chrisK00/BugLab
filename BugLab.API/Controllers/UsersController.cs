@@ -1,6 +1,7 @@
 ﻿using BugLab.API.Extensions;
 using BugLab.Business.Helpers;
 using BugLab.Business.Queries.Users;
+using BugLab.Data.Extensions;
 using BugLab.Shared.QueryParams;
 using BugLab.Shared.Responses;
 using Mapster;
@@ -25,5 +26,14 @@ namespace BugLab.API.Controllers
 
             return users;
         }
+
+        [HttpGet("dashboard")]
+        public async Task<ActionResult<DashboardResponse>> GetDashboard(CancellationToken cancellationToken)
+        {
+            var dashboard = await _mediator.Send(new GetDashboardQuery(User.UserId()), cancellationToken);
+
+            return dashboard;
+        }
+
     }
 }

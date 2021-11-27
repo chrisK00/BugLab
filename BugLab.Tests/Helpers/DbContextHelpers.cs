@@ -23,9 +23,6 @@ namespace BugLab.Tests.Helpers
             var context = new AppDbContext(options, mockHttpAccessor.Object);
             context.Database.EnsureCreated();
 
-            context.SeedUsers();
-            context.SeedProjects();
-            context.SeedBugTypes();
             context.SeedBugs();
 
             await context.SaveChangesAsync();

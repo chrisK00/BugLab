@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BugLab.Data;
+using BugLab.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +26,13 @@ namespace BugLab.Business.Extensions
                 .Take(pageSize);
 
             return (query, totalItems);
+        }
+
+        public static IQueryable<Bug> GetBugsForUser(this IQueryable<Bug> source, DbSet<ProjectUser> projectUsers, string userId)
+        {
+            return source.Where(b => projectUsers.Where(pu => pu.UserId == userId)
+                                                                .Select(pu => pu.ProjectId)
+                                                                .Contains(b.ProjectId));
         }
     }
 }
