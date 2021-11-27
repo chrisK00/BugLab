@@ -1,5 +1,4 @@
-﻿using BugLab.Business.Extensions;
-using BugLab.Business.Queries.Users;
+﻿using BugLab.Business.Queries.Users;
 using BugLab.Data;
 using BugLab.Shared.Enums;
 using BugLab.Shared.Responses;
@@ -28,40 +27,35 @@ namespace BugLab.Business.QueryHandlers.Users
         {
             var dashboard = new DashboardResponse();
 
-            _logger.LogInformation("Getting latest bugs for dashboard");
-            var latestBugs = (await _context.Bugs.AsNoTracking()
-                .GetBugsForUser(_context.ProjectUsers, request.UserId)
-                .ProjectToType<BugResponse>().ToListAsync(cancellationToken))
-                .GroupBy(x => 1, (key, bugs) => new
-                {
-                    latestBug = bugs.OrderByDescending(b => b.Created).FirstOrDefault(),
-                    latestUpdatedBug = bugs.OrderByDescending(b => b.Modified).FirstOrDefault()
-                }).FirstOrDefault();
+            _logger.LogInformation("Getting project ids for dashboard");
+            var projectIds = await _context.ProjectUsers.Where(pu => pu.UserId == request.UserId)
+                                                        .Select(pu => pu.ProjectId).ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Getting latest comment");
-            var latestComment = await _context.Bugs.AsNoTracking()
-                .Include(b => b.Comments).ThenInclude(c => c.CreatedBy)
-                .Include(b => b.Comments).ThenInclude(c => c.ModifiedBy)
+            _logger.LogInformation("Getting latest bugs");
+            dashboard.LatestBug = await _context.Bugs.AsNoTracking()
+                .Where(b => projectIds.Contains(b.ProjectId))
+                .OrderByDescending(b => b.Created)
+                .ProjectToType<BugResponse>()
+                .FirstOrDefaultAsync(cancellationToken);
+
+            dashboard.LatestUpdatedBug = await _context.Bugs.AsNoTracking()
+                .Where(b => projectIds.Contains(b.ProjectId))
                 .OrderByDescending(b => b.Modified)
-                .GetBugsForUser(_context.ProjectUsers, request.UserId)
-                .Select(b => b.Comments.OrderByDescending(c => c.Created).FirstOrDefault().Adapt<CommentResponse>())
+                .ProjectToType<BugResponse>()
                 .FirstOrDefaultAsync(cancellationToken);
 
             _logger.LogInformation("Getting bugs counts");
             var bugsCounts = await _context.Bugs.AsNoTracking()
-                  .GetBugsForUser(_context.ProjectUsers, request.UserId)
+                  .Where(b => projectIds.Contains(b.ProjectId))
                   .GroupBy(x => 1, (key, bugs) => new
                   {
                       TotalOpenBugs = bugs.Count(b => b.Status == BugStatus.Open),
                       TotalInProgressBugs = bugs.Count(b => b.Status == BugStatus.InProgress),
                       TotalHighPrioritizedOpenBugs = bugs.Count(b => b.Priority == BugPriority.High),
-                      TotalAssignedBugs = bugs.Count(b => b.AssignedToId == request.UserId)
+                      TotalBugsAssignedToMe = bugs.Count(b => b.AssignedToId == request.UserId)
                   }).FirstOrDefaultAsync(cancellationToken);
 
             bugsCounts.Adapt(dashboard);
-            dashboard.LatestComment = latestComment;
-            dashboard.LatestUpdatedBug = latestBugs.latestUpdatedBug;
-            dashboard.LatestBug = latestBugs.latestBug;
 
             return dashboard;
         }

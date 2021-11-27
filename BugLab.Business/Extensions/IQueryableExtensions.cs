@@ -27,12 +27,5 @@ namespace BugLab.Business.Extensions
 
             return (query, totalItems);
         }
-
-        public static IQueryable<Bug> GetBugsForUser(this IQueryable<Bug> source, DbSet<ProjectUser> projectUsers, string userId)
-        {
-            return source.Where(b => projectUsers.Where(pu => pu.UserId == userId)
-                                                                .Select(pu => pu.ProjectId)
-                                                                .Contains(b.ProjectId));
-        }
     }
 }

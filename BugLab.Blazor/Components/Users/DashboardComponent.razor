@@ -1,0 +1,46 @@
+﻿@inject HttpClient Client
+
+
+<MudContainer>
+    <MudCard>
+        <MudCardContent>
+            <MudChart ChartType="ChartType.Donut" Width="200px" Height="200px" InputData="_chartData" InputLabels="_chartLabels" />
+        </MudCardContent>
+    </MudCard>
+
+    <MudContainer Class="d-flex">
+        <MudContainer>
+            <MudText>Most recently created Bug</MudText>
+            <BugCardComponent Bug="_dashboard.LatestBug" />
+        </MudContainer>
+        <MudContainer>
+            <MudText>Most recently updated Bug</MudText>
+            <BugCardComponent Bug="_dashboard.LatestUpdatedBug" />
+        </MudContainer>
+        </MudContainer>
+    </MudContainer>
+
+@code{
+
+    private DashboardResponse _dashboard; //might not need this but rather want the props
+    private string[] _chartLabels = { };
+    private double[] _chartData = { };
+    private IEnumerable<UserResponse> _latestBugProjectMembers = new List<UserResponse>();
+    private IEnumerable<UserResponse> _latestUpdatedBugProjectMembers = new List<UserResponse>();
+    private List<BugTypeResponse> _latestUpdatedBugTypes;
+    private List<BugTypeResponse> _latestBugTypes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        _dashboard = await Client.GetFromJsonAsync<DashboardResponse>($"{Endpoints.Users}/dashboard", JsonOptions.Defaults());
+        _chartLabels = new string[] {$"Open {_dashboard.TotalOpenBugs}", $"In Progress {_dashboard.TotalInProgressBugs}",
+            $"High Prioritized {_dashboard.TotalHighPrioritizedOpenBugs}", $"Assigned to me {_dashboard.TotalBugsAssignedToMe}"};
+
+        _chartData = new double[] { _dashboard.TotalOpenBugs, _dashboard.TotalInProgressBugs, _dashboard.TotalHighPrioritizedOpenBugs, _dashboard.TotalBugsAssignedToMe };
+    }
+}

@@ -1,14 +1,16 @@
 ﻿@page "/"
 @page "/home"
 @page "/index"
+@page "/dashboard"
 
     <AuthorizeView>
         <Authorized>
             <MudText Typo="Typo.h5">Welcome @context.User.FindFirst(ClaimTypes.Email).Value</MudText>
-            <MudNavMenu Class="d-flex">
-                <MudLink Icon="@Icons.Filled.Group" Href="/projects">Projects</MudLink>
-                <MudLink Class="ml-5" Icon="@Icons.Filled.BugReport" Href="/my-bugs">My Bugs</MudLink>
+            <MudNavMenu Class="d-flex mb-5">
+                <MudLink Href="/projects">Projects</MudLink>
+                <MudLink Class="ml-5" Href="/my-bugs">My Bugs</MudLink>
             </MudNavMenu>
+            <DashboardComponent />
         </Authorized>
         <NotAuthorized>
             <MudTabs>
