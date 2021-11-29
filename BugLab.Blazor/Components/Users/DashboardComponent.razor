@@ -50,8 +50,10 @@
         _chartLabels = new string[] {$"Open {_dashboard.TotalOpenBugs}", $"In Progress {_dashboard.TotalInProgressBugs}",
             $"High Prioritized {_dashboard.TotalHighPrioritizedOpenBugs}", $"Assigned to me {_dashboard.TotalBugsAssignedToMe}"};
 
-        _latestUpdatedBugProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestUpdatedBug.ProjectId));
-        _latestBugProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestBug.ProjectId));
+        var latestUpdatedBugProjectMembersTask = Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestUpdatedBug.ProjectId));
+        var latestBugProjectMembersTask = Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestBug.ProjectId));
+        _latestUpdatedBugProjectMembers = await latestUpdatedBugProjectMembersTask;
+        _latestBugProjectMembers = await latestBugProjectMembersTask;
 
         _chartData = new double[] { _dashboard.TotalOpenBugs, _dashboard.TotalInProgressBugs, _dashboard.TotalHighPrioritizedOpenBugs, _dashboard.TotalBugsAssignedToMe };
         _latestUpdatedBugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestUpdatedBug.ProjectId));
