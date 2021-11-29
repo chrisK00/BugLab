@@ -41,8 +41,9 @@ namespace BugLab.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BugLab.API v1"));
             }
-            
+
             app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseCors();
@@ -51,6 +52,7 @@ namespace BugLab.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<DemoUserMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
