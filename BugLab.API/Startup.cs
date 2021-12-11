@@ -16,7 +16,7 @@ namespace BugLab.API
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment  environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _config = configuration;
             _environment = environment;
@@ -45,14 +45,13 @@ namespace BugLab.API
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
-
             app.UseCors();
-
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseMiddleware<DemoUserMiddleware>();
+
+            if (!env.IsDevelopment()) app.UseMiddleware<DemoUserMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
