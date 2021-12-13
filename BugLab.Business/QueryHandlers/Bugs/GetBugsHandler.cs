@@ -21,7 +21,7 @@ namespace BugLab.Business.Queries.Bugs
 
         public async Task<PagedList<BugResponse>> Handle(GetBugsQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Bugs.OrderByDescending(x => x.Priority).AsNoTracking();
+            var query = _context.Bugs.AsNoTracking();
 
             query = request.ProjectId.HasValue
                 ? query.Where(b => b.ProjectId == request.ProjectId)
