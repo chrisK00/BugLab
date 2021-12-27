@@ -6,7 +6,7 @@ namespace BugLab.Shared.QueryParams
     {
         public int? ProjectId { get; set; }
         public BugSortBy SortBy { get; set; }
-        public SortDirection Sort { get; set; }
+        public SortOrder SortOrder { get; set; }
         public string Title { get; set; }
     }
 }

@@ -35,8 +35,8 @@ namespace BugLab.Business.Queries.Bugs
 
             query = request.SortBy switch
             {
-                BugSortBy.Title => defaultOrder.ThenSortBy(b => b.Title, request.Sort),
-                _ => defaultOrder.ThenSortBy(b => b.Priority, request.Sort)
+                BugSortBy.Title => defaultOrder.ThenSortBy(b => b.Title, request.SortOrder),
+                _ => defaultOrder.ThenSortBy(b => b.Priority, request.SortOrder)
             };
 
             return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(),

@@ -30,15 +30,15 @@ namespace BugLab.Business.Extensions
         }
 
         public static IOrderedQueryable<T> SortBy<T, TKey>(this IQueryable<T> source,
-            Expression<Func<T, TKey>> sortOn, SortDirection sortDirection = SortDirection.Asc)
+            Expression<Func<T, TKey>> sortOn, SortOrder sortOrder = SortOrder.Ascending)
         {
-            return sortDirection == SortDirection.Asc ? source.OrderBy(sortOn) : source.OrderByDescending(sortOn);
+            return sortOrder == SortOrder.Ascending ? source.OrderBy(sortOn) : source.OrderByDescending(sortOn);
         }
 
         public static IOrderedQueryable<T> ThenSortBy<T, TKey>(this IOrderedQueryable<T> source,
-            Expression<Func<T, TKey>> sortOn, SortDirection sortDirection = SortDirection.Asc)
+            Expression<Func<T, TKey>> sortOn, SortOrder sortOrder = SortOrder.Ascending)
         {
-            return sortDirection == SortDirection.Asc ? source.ThenBy(sortOn) : source.ThenByDescending(sortOn);
+            return sortOrder == SortOrder.Ascending ? source.ThenBy(sortOn) : source.ThenByDescending(sortOn);
         }
     }
 }
