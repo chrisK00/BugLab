@@ -14,4 +14,10 @@
         InProgress,
         Resolved
     }
+
+    public enum BugSortBy
+    {
+        Priority,
+        Title
+    }
 }

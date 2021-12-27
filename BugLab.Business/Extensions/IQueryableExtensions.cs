@@ -1,7 +1,8 @@
-﻿using BugLab.Data;
-using BugLab.Data.Entities;
+﻿using BugLab.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +27,18 @@ namespace BugLab.Business.Extensions
                 .Take(pageSize);
 
             return (query, totalItems);
+        }
+
+        public static IOrderedQueryable<T> SortBy<T, TKey>(this IQueryable<T> source,
+            Expression<Func<T, TKey>> sortOn, SortDirection sortDirection = SortDirection.Asc)
+        {
+            return sortDirection == SortDirection.Asc ? source.OrderBy(sortOn) : source.OrderByDescending(sortOn);
+        }
+
+        public static IOrderedQueryable<T> ThenSortBy<T, TKey>(this IOrderedQueryable<T> source,
+            Expression<Func<T, TKey>> sortOn, SortDirection sortDirection = SortDirection.Asc)
+        {
+            return sortDirection == SortDirection.Asc ? source.ThenBy(sortOn) : source.ThenByDescending(sortOn);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Extensions;
+using BugLab.Business.Helpers;
 using BugLab.Data;
+using BugLab.Shared.Enums;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
@@ -29,10 +31,12 @@ namespace BugLab.Business.Queries.Bugs
 
             if (!string.IsNullOrWhiteSpace(request.Title)) query = query.Where(b => b.Title.Contains(request.Title));
 
-            query = request.OrderBy switch
+            var defaultOrder = query.OrderBy(b => b.Status);
+
+            query = request.SortBy switch
             {
-                "title" => query.OrderBy(b => b.Status).ThenBy(b => b.Title),
-                _ => query.OrderBy(b => b.Status).ThenBy(b => b.Priority)
+                BugSortBy.Title => defaultOrder.ThenSortBy(b => b.Title, request.Sort),
+                _ => defaultOrder.ThenSortBy(b => b.Priority, request.Sort)
             };
 
             return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(),
