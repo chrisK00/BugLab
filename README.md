@@ -1,5 +1,5 @@
 # BugLab
-A bug/issue tracker with .Net 5 using Blazor WASM and Web API that can be used internally to manage different projects and see what needs to be done. It started out with only the necessary features and code in order to practice a more Agile approach and lots of refactoring. The app will be published later on
+A bug/issue tracker with .Net 5 using Blazor WASM and Web API that can be used internally to manage different projects and see what needs to be done. It started out with only the necessary features and code in order to practice a more Agile approach and lots of refactoring. If I had the opportunity to change one thing without any consequences it would be the fact that I did not opt in for the identity template since it comes with many things out of the box and adding things on to that such as google sign in would be simple and auth on the Blazor side would've been simplified + more robust.
 
 ### Images
 Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-Gv-K0-Kr2w.png)](https://postimg.cc/GHgLrTHp)
