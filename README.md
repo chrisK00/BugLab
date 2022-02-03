@@ -22,7 +22,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 ### API
 - EF core, audit tracking, SQL server
 - Authentication and Authorization using ASP identity and JWT tokens
-- CQRS with MediatR - SRP and maintainability
+- CQRS with MediatR - SRP and maintainability. Has a auto caching pipeline behavior for queries implementing ICacheable such as the ProjectUsersQuery which are fetched many times but not changed as often
 - Mapster - a faster mapper
 - Fluentvalidation - Clean validation instead of polluting models with data annotations
 - Pagination 
