@@ -47,7 +47,7 @@ namespace BugLab.Business.QueryHandlers.Users
             _logger.LogInformation("Getting bugs counts");
             var bugsCounts = await _context.Bugs.AsNoTracking()
                   .Where(b => projectIds.Contains(b.ProjectId))
-                  .GroupBy(x => 1, (key, bugs) => new
+                  .GroupBy(_ => 1, (_, bugs) => new
                   {
                       TotalOpenBugs = bugs.Count(b => b.Status == BugStatus.Open),
                       TotalInProgressBugs = bugs.Count(b => b.Status == BugStatus.InProgress),

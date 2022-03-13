@@ -3,7 +3,9 @@ using BugLab.Data.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,29 +37,46 @@ namespace BugLab.Data
         /// </summary>
         /// <inheritdoc cref="DbContext.SaveChangesAsync(CancellationToken)"/>
         /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            CreateAuditTrail();
+            try
+            {
+                ChangeTracker.AutoDetectChangesEnabled = false;
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+            finally
+            {
+                ChangeTracker.AutoDetectChangesEnabled = true;
+            }
+        }
+
+        private void CreateAuditTrail()
         {
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
+                var currentTime = DateTime.UtcNow;
+
                 switch (entry.State)
                 {
                     case EntityState.Modified:
-                        entry.Entity.Modified = DateTime.UtcNow;
-                        entry.Entity.ModifiedById = _currentUserId;
-                        if (entry.Entity.Deleted.HasValue) entry.Entity.DeletedById = _currentUserId;
+                        entry.SetProperty(x => x.Modified, currentTime);
+                        entry.SetProperty(x => x.ModifiedById, _currentUserId);
+
+                        if (entry.Entity.Deleted?.AddMinutes(5) > currentTime)
+                        {
+                            entry.SetProperty(x => x.DeletedById, _currentUserId);
+                        }
+
                         break;
 
                     case EntityState.Added:
-                        entry.Entity.Created = DateTime.UtcNow;
-                        entry.Entity.CreatedById = _currentUserId;
-                        break;
-                    default:
+
+                        entry.SetProperty(x => x.Created, currentTime);
+                        entry.SetProperty(x => x.CreatedById, _currentUserId);
                         break;
                 }
             }
-
-            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
