@@ -25,7 +25,7 @@ namespace BugLab.Business.BackgroundServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogWarning($"Removing deleted bugs");
+                _logger.LogWarning("Removing deleted bugs");
                 using var scope = _serviceScopeFactory.CreateScope();
 
                 try
@@ -38,7 +38,7 @@ namespace BugLab.Business.BackgroundServices
                     context.Bugs.RemoveRange(deletedBugs);
                     await context.SaveChangesAsync(stoppingToken);
 
-                    _logger.LogInformation($"Finished removing {deletedBugs.Count} deleted bugs");
+                    _logger.LogInformation("Finished removing {Count} deleted bugs", deletedBugs.Count);
                     await Task.Delay(TimeSpan.FromDays(14), stoppingToken);
                 }
                 catch (OperationCanceledException)

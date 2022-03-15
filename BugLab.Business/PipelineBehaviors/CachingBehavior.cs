@@ -26,14 +26,14 @@ namespace BugLab.Business.PipelineBehaviors
             
             if (_cache.TryGetValue(request.Key, out response))
             {
-                _logger.LogInformation($"Returning cached value for {requestName}");
+                _logger.LogInformation("Returning cached value for {requestName}", requestName);
                 return response;
             }
 
             response = await next();
             if (response == null) return response;
 
-            _logger.LogInformation($"Caching {requestName} response with Cache Key: {request.Key}");
+            _logger.LogInformation("Caching {requestName} response with Cache Key: {Key}", requestName, request.Key);
             var cacheOptions = new MemoryCacheEntryOptions()
                 .SetSlidingExpiration(TimeSpan.FromSeconds(3))
                 .SetAbsoluteExpiration(TimeSpan.FromSeconds(10));
