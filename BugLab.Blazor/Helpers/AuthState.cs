@@ -27,17 +27,14 @@ namespace BugLab.Blazor.Helpers
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var user = await _localStorage.GetItemAsync<LoginResponse>(_userKey);
-            if (string.IsNullOrWhiteSpace(user?.Token))
+            if (string.IsNullOrWhiteSpace(user?.Token) || TokenHelper.ParseClaims(user.Token).HasExpired())
             {
                 return _anonymous;
             }
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", user.Token);
 
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.Email, user.Email)
-            }, "Bearer")));
+            return CreateAuthenticationState(user);
         }
 
         public async Task LogoutAsync()
@@ -52,16 +49,20 @@ namespace BugLab.Blazor.Helpers
 
         public async Task LogInAsync(LoginResponse user)
         {
-            var state = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.Email, user.Email)
-            }, "Bearer")));
-
+            var state = CreateAuthenticationState(user);
             var authStateTask = Task.FromResult(state);
             await _localStorage.SetItemAsync(_userKey, user);
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", user.Token);
 
             NotifyAuthenticationStateChanged(authStateTask);
+        }
+
+        private AuthenticationState CreateAuthenticationState(LoginResponse user)
+        {
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Email, user.Email)
+            }, "Bearer")));
         }
     }
 }
