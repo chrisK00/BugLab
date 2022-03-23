@@ -1,5 +1,7 @@
-﻿using BugLab.Business.Helpers;
+﻿using BugLab.Business.Extensions;
+using BugLab.Business.Helpers;
 using BugLab.Data;
+using BugLab.Shared.Enums;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
@@ -21,7 +23,7 @@ namespace BugLab.Business.Queries.Bugs
 
         public async Task<PagedList<BugResponse>> Handle(GetBugsQuery request, CancellationToken cancellationToken)
         {
-            var query = _context.Bugs.OrderByDescending(x => x.Priority).AsNoTracking();
+            var query = _context.Bugs.AsNoTracking();
 
             query = request.ProjectId.HasValue
                 ? query.Where(b => b.ProjectId == request.ProjectId)
@@ -29,10 +31,12 @@ namespace BugLab.Business.Queries.Bugs
 
             if (!string.IsNullOrWhiteSpace(request.Title)) query = query.Where(b => b.Title.Contains(request.Title));
 
-            query = request.OrderBy switch
+            var defaultOrder = query.OrderBy(b => b.Status);
+
+            query = request.SortBy switch
             {
-                "title" => query.OrderBy(b => b.Status).ThenBy(b => b.Title),
-                _ => query.OrderBy(b => b.Status).ThenBy(b => b.Priority)
+                BugSortBy.Title => defaultOrder.ThenSortBy(b => b.Title, request.SortOrder),
+                _ => defaultOrder.ThenSortBy(b => b.Priority, request.SortOrder)
             };
 
             return await PagedList<BugResponse>.CreateAsync(query.ProjectToType<BugResponse>(),

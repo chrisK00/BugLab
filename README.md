@@ -1,5 +1,5 @@
 # BugLab
-A bug/issue tracker with .Net 5 using Blazor WASM and Web API that can be used internally to manage different projects and see what needs to be done. It started out with only the necessary features and code in order to practice a more Agile approach and lots of refactoring. The app will be published later on
+A bug/issue tracker with .Net 5 using Blazor WASM and Web API that can be used internally to manage different projects and see what needs to be done. It started out with only the necessary features and code in order to practice a more Agile approach and lots of refactoring.
 
 ### Images
 Login page [![msedge-Dx-Gv-K0-Kr2w.png](https://i.postimg.cc/8zNjRhGL/msedge-Dx-Gv-K0-Kr2w.png)](https://postimg.cc/GHgLrTHp)
@@ -22,7 +22,7 @@ Give a user access to a project [![msedge-s-Rxd-ELn30-T.png](https://i.postimg.c
 ### API
 - EF core, audit tracking, SQL server
 - Authentication and Authorization using ASP identity and JWT tokens
-- CQRS with MediatR - SRP and maintainability
+- CQRS with MediatR - SRP and maintainability. Has a auto caching pipeline behavior for queries implementing ICacheable such as the ProjectUsersQuery which are fetched many times but not changed as often
 - Mapster - a faster mapper
 - Fluentvalidation - Clean validation instead of polluting models with data annotations
 - Pagination 

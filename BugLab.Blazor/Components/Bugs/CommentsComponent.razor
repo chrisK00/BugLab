@@ -25,6 +25,7 @@
         </MudCard>
     }
 </MudContainer>
+
 @code {
     [Parameter] public ICollection<CommentResponse> Comments { get; set; }
     [Parameter] public int BugId { get; set; }
@@ -32,7 +33,7 @@
     public async Task EditCommentDialog(CommentResponse comment)
     {
         var dialogParams = new DialogParameters
-{
+        {
             { nameof(UpsertCommentDialog.Comment), comment },
             { nameof(UpsertCommentDialog.BugId), BugId },
         };
@@ -62,7 +63,7 @@
     private async Task NewCommentDialog()
     {
         var dialogParams = new DialogParameters
-{
+        {
             { nameof(UpsertCommentDialog.BugId), BugId }
         };
 
