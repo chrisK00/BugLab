@@ -1,14 +1,18 @@
 ﻿using BugLab.Business.Queries.Users;
 using BugLab.Data;
+using BugLab.Data.Entities;
 using BugLab.Shared.Enums;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace BugLab.Business.QueryHandlers.Users
 {
@@ -32,17 +36,8 @@ namespace BugLab.Business.QueryHandlers.Users
                                                         .Select(pu => pu.ProjectId).ToListAsync(cancellationToken);
 
             _logger.LogInformation("Getting latest bugs");
-            dashboard.LatestBug = await _context.Bugs.AsNoTracking()
-                .Where(b => projectIds.Contains(b.ProjectId))
-                .OrderByDescending(b => b.Created)
-                .ProjectToType<BugResponse>()
-                .FirstOrDefaultAsync(cancellationToken);
-
-            dashboard.LatestUpdatedBug = await _context.Bugs.AsNoTracking()
-                .Where(b => projectIds.Contains(b.ProjectId))
-                .OrderByDescending(b => b.Modified)
-                .ProjectToType<BugResponse>()
-                .FirstOrDefaultAsync(cancellationToken);
+            dashboard.LatestBug = await GetLatestBug(b => b.Created, projectIds, cancellationToken);
+            dashboard.LatestUpdatedBug = await GetLatestBug(b => b.Modified, projectIds, cancellationToken);
 
             _logger.LogInformation("Getting bugs counts");
             var bugsCounts = await _context.Bugs.AsNoTracking()
@@ -58,6 +53,16 @@ namespace BugLab.Business.QueryHandlers.Users
             bugsCounts.Adapt(dashboard);
 
             return dashboard;
+        }
+
+        private async Task<BugResponse> GetLatestBug<TKey>(Expression<Func<Bug, TKey>> latestSelector, IEnumerable<int> projectIds
+            , CancellationToken cancellationToken)
+        {
+            return await _context.Bugs.AsNoTracking()
+               .Where(b => projectIds.Contains(b.ProjectId))
+               .OrderByDescending(latestSelector)
+               .ProjectToType<BugResponse>()
+               .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

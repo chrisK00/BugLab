@@ -31,15 +31,19 @@ namespace BugLab.Business.CommandHandlers.Projects
             Guard.NotFound(users, nameof(users));
 
             IReadOnlyCollection<ProjectUser> projectUsersToAdd = users.Where(u => !projectUsers.Any(pu => pu.UserId == u.Id))
-                .Select(u => new ProjectUser { UserId = u.Id, ProjectId = request.ProjectId})
+                .Select(u => new ProjectUser { UserId = u.Id, ProjectId = request.ProjectId })
                 .ToList();
 
             await _context.ProjectUsers.AddRangeAsync(projectUsersToAdd, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return projectUsersToAdd.Count != users.Count
-                ? throw new InvalidOperationException("Some users were not added because they could not be found or they are already members of this project")
-                : Unit.Value;
+            if (projectUsersToAdd.Count != users.Count)
+            {
+                throw new InvalidOperationException("Some users were not added because they could not be found" +
+                    " or they are already members of this project");
+            }
+
+            return Unit.Value;
         }
     }
 }
