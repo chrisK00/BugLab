@@ -54,18 +54,14 @@ namespace Migrations
                     b.Property<string>("ModifiedById")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -95,9 +91,9 @@ namespace Migrations
                             BugTypeId = 3,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 1,
-                            Status = "Open",
+                            Status = 0,
                             Title = "Implement project controllers"
                         },
                         new
@@ -107,9 +103,9 @@ namespace Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Description = "Better domaine events pattern",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 1,
-                            Status = "Open",
+                            Status = 0,
                             Title = "update project title"
                         },
                         new
@@ -118,9 +114,9 @@ namespace Migrations
                             BugTypeId = 1,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 2,
-                            Status = "Open",
+                            Status = 0,
                             Title = "How you doing?"
                         });
                 });
@@ -246,7 +242,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4356),
+                            Created = new DateTime(2022, 3, 24, 7, 49, 32, 75, DateTimeKind.Utc).AddTicks(1694),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -254,7 +250,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4935),
+                            Created = new DateTime(2022, 3, 24, 7, 49, 32, 75, DateTimeKind.Utc).AddTicks(2287),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -262,7 +258,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4938),
+                            Created = new DateTime(2022, 3, 24, 7, 49, 32, 75, DateTimeKind.Utc).AddTicks(2291),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -457,15 +453,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7c0506c-d414-4132-83e2-4e39635e21b6",
+                            ConcurrencyStamp = "3829ec37-3b44-49a0-9dd3-186638bd48c7",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECubHHakqqtrEPwAkm4u8JVOjnKcQtg9Z1+jsPbzbhushIKHqJZhr2rAqmOcqczEvw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKF92QNc18qicu8l/pTja/J1ztX2aBdZcXZTFpin4c86WnRoRZgfEGyzVInmJfKiUg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "40b30d42-6b5b-43b3-8827-86e563d97ab7",
+                            SecurityStamp = "1e4468c4-fdf0-4f90-9643-8ed4e9a31cd6",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -473,15 +469,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d84a70f4-f849-4a98-a871-63f3683ecaa0",
+                            ConcurrencyStamp = "b9f4c02b-c257-4277-ab42-25e3142336e3",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPnq9OviTZIHvhd7TbV6E2yD9SLur2/DNLE1V0EAyL1AFQB0FWfNXJybWv83wqqVzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGLXRN1EB4OhgrScaj4pOaVdBwMUxCK/KuiD1bLZrf0Heah4Cu+GCPBUIBl/Vpufjg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f6886cd2-0824-485b-ae38-c5c3c44dc8f0",
+                            SecurityStamp = "ac6a4862-4dff-4519-85c3-05e2ebc2335c",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });

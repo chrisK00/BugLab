@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211126175528_RemoveNavProp")]
-    partial class RemoveNavProp
+    [Migration("20220324074932_Seed")]
+    partial class Seed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,18 +56,14 @@ namespace Migrations
                     b.Property<string>("ModifiedById")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -89,6 +85,42 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Bugs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BugTypeId = 3,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            Priority = 0,
+                            ProjectId = 1,
+                            Status = 0,
+                            Title = "Implement project controllers"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BugTypeId = 1,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            Description = "Better domaine events pattern",
+                            Priority = 0,
+                            ProjectId = 1,
+                            Status = 0,
+                            Title = "update project title"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BugTypeId = 1,
+                            Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
+                            Priority = 0,
+                            ProjectId = 2,
+                            Status = 0,
+                            Title = "How you doing?"
+                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.BugType", b =>
@@ -116,6 +148,50 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("BugTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Color = "#977FE4",
+                            ProjectId = 1,
+                            Title = "refactor"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Color = "#b14639ff",
+                            ProjectId = 1,
+                            Title = "bug"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Color = "#35ceceff",
+                            ProjectId = 1,
+                            Title = "feature"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Color = "#35ceceff",
+                            ProjectId = 2,
+                            Title = "feature"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Color = "#b14639ff",
+                            ProjectId = 2,
+                            Title = "bug"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Color = "#977FE4",
+                            ProjectId = 2,
+                            Title = "refactor"
+                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Comment", b =>
@@ -162,6 +238,32 @@ namespace Migrations
                     b.HasIndex("ModifiedById");
 
                     b.ToTable("Comments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BugId = 1,
+                            Created = new DateTime(2022, 3, 24, 7, 49, 32, 75, DateTimeKind.Utc).AddTicks(1694),
+                            CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            Text = "This has been implemented"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            BugId = 1,
+                            Created = new DateTime(2022, 3, 24, 7, 49, 32, 75, DateTimeKind.Utc).AddTicks(2287),
+                            CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            Text = "Nope"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BugId = 2,
+                            Created = new DateTime(2022, 3, 24, 7, 49, 32, 75, DateTimeKind.Utc).AddTicks(2291),
+                            CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
+                            Text = "Any progress?"
+                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.Project", b =>
@@ -182,6 +284,23 @@ namespace Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "BugLab"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Title = "Plannial"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Title = "SweatSpace"
+                        });
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.ProjectUser", b =>
@@ -197,6 +316,23 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            ProjectId = 1
+                        },
+                        new
+                        {
+                            UserId = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            ProjectId = 2
+                        },
+                        new
+                        {
+                            UserId = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
+                            ProjectId = 3
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -313,6 +449,40 @@ namespace Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3829ec37-3b44-49a0-9dd3-186638bd48c7",
+                            Email = "chris@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CHRIS@GMAIL.COM",
+                            NormalizedUserName = "CHRIS@GMAIL.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKF92QNc18qicu8l/pTja/J1ztX2aBdZcXZTFpin4c86WnRoRZgfEGyzVInmJfKiUg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1e4468c4-fdf0-4f90-9643-8ed4e9a31cd6",
+                            TwoFactorEnabled = false,
+                            UserName = "chris@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b9f4c02b-c257-4277-ab42-25e3142336e3",
+                            Email = "chrisk@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CHRISK@GMAIL.COM",
+                            NormalizedUserName = "CHRISK@GMAIL.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGLXRN1EB4OhgrScaj4pOaVdBwMUxCK/KuiD1bLZrf0Heah4Cu+GCPBUIBl/Vpufjg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ac6a4862-4dff-4519-85c3-05e2ebc2335c",
+                            TwoFactorEnabled = false,
+                            UserName = "chrisk@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
