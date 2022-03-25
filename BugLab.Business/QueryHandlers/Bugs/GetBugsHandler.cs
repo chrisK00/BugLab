@@ -27,7 +27,7 @@ namespace BugLab.Business.Queries.Bugs
 
             query = request.ProjectId.HasValue
                 ? query.Where(b => b.ProjectId == request.ProjectId)
-                : query.Where(b => b.CreatedById == request.UserId);
+                : query.Where(b => b.CreatedById == request.UserId || b.AssignedToId == request.UserId);
 
             if (!string.IsNullOrWhiteSpace(request.Title)) query = query.Where(b => b.Title.Contains(request.Title));
 
