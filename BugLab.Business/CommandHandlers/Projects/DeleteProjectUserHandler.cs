@@ -3,7 +3,6 @@ using BugLab.Business.Helpers;
 using BugLab.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
