@@ -20,10 +20,4 @@
         Priority,
         Title
     }
-
-    public enum BugSortBy
-    {
-        Priority,
-        Title
-    }
 }
