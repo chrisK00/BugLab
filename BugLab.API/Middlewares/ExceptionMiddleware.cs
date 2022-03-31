@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -36,7 +37,7 @@ namespace BugLab.API.Middlewares
                 context.Response.StatusCode = ex switch
                 {
                     KeyNotFoundException => StatusCodes.Status404NotFound,
-                    InvalidOperationException => StatusCodes.Status400BadRequest,
+                    InvalidOperationException or SecurityTokenException => StatusCodes.Status400BadRequest,
                     UnauthorizedAccessException => StatusCodes.Status403Forbidden,
                     _ => StatusCodes.Status500InternalServerError
                 };

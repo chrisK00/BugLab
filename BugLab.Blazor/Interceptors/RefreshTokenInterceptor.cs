@@ -1,9 +1,11 @@
 ﻿using Blazored.LocalStorage;
 using BugLab.Blazor.Helpers;
+using BugLab.Shared.Requests.Auth;
 using BugLab.Shared.Responses;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Toolbelt.Blazor;
 
@@ -31,9 +33,10 @@ namespace BugLab.Blazor.Interceptors
             var user = await _localStorage.GetItemAsync<LoginResponse>("user");
             var claims = TokenHelper.ParseClaims(user.Token);
             var expirationDate = claims.GetExpirationDate();
-            if (expirationDate > DateTime.UtcNow.AddMinutes(15)) return;
+            if (expirationDate > DateTime.UtcNow.AddMinutes(10)) return;
 
-            var result = await _client.PostAsync(Endpoints.Token(user.RefreshToken), null);
+            var request = new RefreshTokenRequest { AccessToken = user.Token, RefreshToken = user.RefreshToken };
+            var result = await _client.PostAsJsonAsync(Endpoints.Token, request);
             result.EnsureSuccessStatusCode();
 
             user.Token = await result.Content.ReadAsStringAsync();
@@ -43,7 +46,6 @@ namespace BugLab.Blazor.Interceptors
 
         public void Dispose()
         {
-            Console.WriteLine("disposed");
             _interceptor.BeforeSendAsync -= InterceptRequestAsync;
         }
     }
