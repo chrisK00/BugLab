@@ -18,10 +18,15 @@ namespace BugLab.Blazor.Helpers
 
         public static bool HasExpired(this IEnumerable<Claim> claims)
         {
-            var expirationClaim = claims.First(x => x.Type == "exp");
-            var expirationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirationClaim.Value));
+            var expirationDate = GetExpirationDate(claims);
 
-            return expirationDate.UtcDateTime <= DateTime.UtcNow;
+            return expirationDate <= DateTime.UtcNow;
+        }
+
+        public static DateTime GetExpirationDate(this IEnumerable<Claim> claims)
+        {
+            var expirationClaim = claims.First(x => x.Type == "exp");
+            return DateTimeOffset.FromUnixTimeSeconds(long.Parse(expirationClaim.Value)).UtcDateTime;
         }
 
         private static byte[] ParseBase64WithoutPadding(string base64)

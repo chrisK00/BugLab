@@ -9,5 +9,6 @@ namespace BugLab.Shared.Responses
         public IEnumerable<string> Roles { get; init; } = new List<string>();
         public string Token { get; set; }
         public bool EmailConfirmed { get; init; }
+        public string RefreshToken { get; set; }
     }
 }

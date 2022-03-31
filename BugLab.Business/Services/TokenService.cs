@@ -40,7 +40,7 @@ namespace BugLab.Business.Services
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenOptions = new JwtSecurityToken(_jwtOptions.ValidIssuer, _jwtOptions.ValidAudience, claims,
-                expires: DateTime.UtcNow.AddHours(12), signingCredentials: credentials);
+                expires: DateTime.UtcNow.AddMinutes(30), signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         }
