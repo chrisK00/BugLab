@@ -22,11 +22,11 @@ namespace BugLab.Tests.Helpers
 
             var context = new AppDbContext(options, mockHttpAccessor.Object);
             context.Database.EnsureCreated();
-
             context.SeedBugs();
 
             await context.SaveChangesAsync();
 
+            context.ChangeTracker.Clear();
             return context;
         }
     }

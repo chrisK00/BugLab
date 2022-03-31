@@ -2,24 +2,15 @@
 {
     public static class Endpoints
     {
-        public const string Projects = "/api/projects";
-        public const string Bugs = "/api/bugs";
         public const string Auth = "/api/auth";
+        public const string Bugs = "/api/bugs";
+        public const string Projects = "/api/projects";
+        public const string Token = "/api/token";
         public const string Users = "/api/users";
 
-        public static string Comments(int bugId)
-        {
-            return $"{Bugs}/{bugId}/comments";
-        }
+        public static string BugTypes(int projectId) => $"{Projects}/{projectId}/bugTypes";
 
-        public static string BugTypes(int projectId)
-        {
-            return $"{Projects}/{projectId}/bugTypes";
-        }
-
-        public static string ProjectUsers(int projectId)
-        {
-            return $"{Projects}/{projectId}/projectUsers";
-        }
+        public static string Comments(int bugId) => $"{Bugs}/{bugId}/comments";
+        public static string ProjectUsers(int projectId) => $"{Projects}/{projectId}/projectUsers";
     }
 }

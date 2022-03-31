@@ -20,6 +20,7 @@ namespace BugLab.Data
             _currentUserId = httpContext?.HttpContext?.User?.UserId();
         }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Bug> Bugs { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<BugType> BugTypes { get; set; }

@@ -6,20 +6,26 @@
         <MudCardContent>
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
                           Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
-            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority" @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
+
+            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
+                       @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
+
                 @foreach (var priority in Enum.GetValues<BugPriority>())
                 {
                     <MudSelectItem Value="priority">@priority</MudSelectItem>
                 }
             </MudSelect>
-            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled" Label="Status" @bind-Value="_model.Status">
+
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.Pending" Variant="Variant.Filled"
+                       Label="Status" @bind-Value="_model.Status">
                 @foreach (var status in Enum.GetValues<BugStatus>())
                 {
                     <MudSelectItem Value="status">@status</MudSelectItem>
                 }
             </MudSelect>
 
-            <MudSelect For="() => _model.AssignedToId" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.CardMembership" Variant="Variant.Filled"
+            <MudSelect For="() => _model.AssignedToId" AdornmentColor="@Color.Primary"
+                       OpenIcon="@Icons.Material.Filled.CardMembership" Variant="Variant.Filled"
                        Label="Assigned To" @bind-Value="_model.AssignedToId">
                 @foreach (var member in Members)
                 {
@@ -27,18 +33,20 @@
                 }
             </MudSelect>
 
-            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled" Label="Bug Type"
-                       @bind-Value="_model.TypeId">
+            <MudSelect AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.BugReport" Variant="Variant.Filled"
+                       Label="Bug Type" @bind-Value="_model.TypeId">
                 @foreach (var bugType in BugTypes)
                 {
                     <MudSelectItem Value="bugType.Id">@bugType.Title</MudSelectItem>
                 }
             </MudSelect>
+
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
                           Lines="10" Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
         </MudCardContent>
         <MudCardActions>
-            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" 
+                           Color="Color.Primary" ButtonType="ButtonType.Submit" />
         </MudCardActions>
     </EditForm>
 </MudCard>

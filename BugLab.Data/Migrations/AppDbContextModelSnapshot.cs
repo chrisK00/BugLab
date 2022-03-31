@@ -54,18 +54,14 @@ namespace Migrations
                     b.Property<string>("ModifiedById")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -95,9 +91,9 @@ namespace Migrations
                             BugTypeId = 3,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 1,
-                            Status = "Open",
+                            Status = 0,
                             Title = "Implement project controllers"
                         },
                         new
@@ -107,9 +103,9 @@ namespace Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Description = "Better domaine events pattern",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 1,
-                            Status = "Open",
+                            Status = 0,
                             Title = "update project title"
                         },
                         new
@@ -118,9 +114,9 @@ namespace Migrations
                             BugTypeId = 1,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 2,
-                            Status = "Open",
+                            Status = 0,
                             Title = "How you doing?"
                         });
                 });
@@ -246,7 +242,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4356),
+                            Created = new DateTime(2022, 3, 31, 17, 26, 56, 343, DateTimeKind.Utc).AddTicks(3097),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -254,7 +250,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4935),
+                            Created = new DateTime(2022, 3, 31, 17, 26, 56, 343, DateTimeKind.Utc).AddTicks(3433),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -262,7 +258,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2021, 11, 26, 18, 1, 45, 272, DateTimeKind.Utc).AddTicks(4938),
+                            Created = new DateTime(2022, 3, 31, 17, 26, 56, 343, DateTimeKind.Utc).AddTicks(3435),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -335,6 +331,29 @@ namespace Migrations
                             UserId = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             ProjectId = 3
                         });
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -457,15 +476,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a7c0506c-d414-4132-83e2-4e39635e21b6",
+                            ConcurrencyStamp = "530223b3-ed1a-4b17-b834-3b3ee167f26d",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECubHHakqqtrEPwAkm4u8JVOjnKcQtg9Z1+jsPbzbhushIKHqJZhr2rAqmOcqczEvw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAnsXsh+Cs/vtb5i36/kY2WBvDus5YdueNm7zpi+nAaeb79rl/KCx5zpzl+2A+E3EQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "40b30d42-6b5b-43b3-8827-86e563d97ab7",
+                            SecurityStamp = "0294c916-29e1-4c13-ae23-b6ab6fc6d11e",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -473,15 +492,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d84a70f4-f849-4a98-a871-63f3683ecaa0",
+                            ConcurrencyStamp = "4d507f49-52bb-400c-86dc-2dcbc9b4105f",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPnq9OviTZIHvhd7TbV6E2yD9SLur2/DNLE1V0EAyL1AFQB0FWfNXJybWv83wqqVzA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL57E0d3Y34SaL2s/ZYMGDXmVHJASdS3EiCJWNY0SH1ktLuYm2J83gguSxSz4I4lwA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f6886cd2-0824-485b-ae38-c5c3c44dc8f0",
+                            SecurityStamp = "50ab8697-9bd8-43e6-8d47-0aaf0775fdff",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });
@@ -663,6 +682,15 @@ namespace Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Migrations
 {
-    public partial class Init : Migration
+    public partial class EnumsSort : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -188,24 +188,24 @@ namespace Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IdentityUserProject",
+                name: "ProjectUsers",
                 columns: table => new
                 {
-                    ProjectsId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IdentityUserProject", x => new { x.ProjectsId, x.UsersId });
+                    table.PrimaryKey("PK_ProjectUsers", x => new { x.UserId, x.ProjectId });
                     table.ForeignKey(
-                        name: "FK_IdentityUserProject_AspNetUsers_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_ProjectUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_IdentityUserProject_Projects_ProjectsId",
-                        column: x => x.ProjectsId,
+                        name: "FK_ProjectUsers_Projects_ProjectId",
+                        column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -219,10 +219,11 @@ namespace Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Priority = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     BugTypeId = table.Column<int>(type: "int", nullable: false),
+                    AssignedToId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Deleted = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -233,6 +234,12 @@ namespace Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bugs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bugs_AspNetUsers_AssignedToId",
+                        column: x => x.AssignedToId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Bugs_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
@@ -349,6 +356,11 @@ namespace Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bugs_AssignedToId",
+                table: "Bugs",
+                column: "AssignedToId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bugs_BugTypeId",
                 table: "Bugs",
                 column: "BugTypeId");
@@ -399,9 +411,9 @@ namespace Migrations
                 column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IdentityUserProject_UsersId",
-                table: "IdentityUserProject",
-                column: "UsersId");
+                name: "IX_ProjectUsers_ProjectId",
+                table: "ProjectUsers",
+                column: "ProjectId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -425,7 +437,7 @@ namespace Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "IdentityUserProject");
+                name: "ProjectUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

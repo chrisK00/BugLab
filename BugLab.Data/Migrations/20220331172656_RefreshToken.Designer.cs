@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211126172438_ProjectUser")]
-    partial class ProjectUser
+    [Migration("20220331172656_RefreshToken")]
+    partial class RefreshToken
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,18 +56,14 @@ namespace Migrations
                     b.Property<string>("ModifiedById")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -97,9 +93,9 @@ namespace Migrations
                             BugTypeId = 3,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 1,
-                            Status = "Open",
+                            Status = 0,
                             Title = "Implement project controllers"
                         },
                         new
@@ -109,9 +105,9 @@ namespace Migrations
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Description = "Better domaine events pattern",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 1,
-                            Status = "Open",
+                            Status = 0,
                             Title = "update project title"
                         },
                         new
@@ -120,9 +116,9 @@ namespace Migrations
                             BugTypeId = 1,
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
-                            Priority = "None",
+                            Priority = 0,
                             ProjectId = 2,
-                            Status = "Open",
+                            Status = 0,
                             Title = "How you doing?"
                         });
                 });
@@ -248,7 +244,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 17, 24, 37, 866, DateTimeKind.Utc).AddTicks(7304),
+                            Created = new DateTime(2022, 3, 31, 17, 26, 56, 343, DateTimeKind.Utc).AddTicks(3097),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -256,7 +252,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2021, 11, 26, 17, 24, 37, 866, DateTimeKind.Utc).AddTicks(7915),
+                            Created = new DateTime(2022, 3, 31, 17, 26, 56, 343, DateTimeKind.Utc).AddTicks(3433),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -264,7 +260,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2021, 11, 26, 17, 24, 37, 866, DateTimeKind.Utc).AddTicks(7918),
+                            Created = new DateTime(2022, 3, 31, 17, 26, 56, 343, DateTimeKind.Utc).AddTicks(3435),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -320,38 +316,46 @@ namespace Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectUsers");
-                });
-
-            modelBuilder.Entity("IdentityUserProject", b =>
-                {
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProjectsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("IdentityUserProject");
 
                     b.HasData(
                         new
                         {
-                            ProjectsId = 1,
-                            UsersId = "757b2158-40c3-4917-9523-5861973a4d2e"
+                            UserId = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            ProjectId = 1
                         },
                         new
                         {
-                            ProjectsId = 2,
-                            UsersId = "757b2158-40c3-4917-9523-5861973a4d2e"
+                            UserId = "757b2158-40c3-4917-9523-5861973a4d2e",
+                            ProjectId = 2
                         },
                         new
                         {
-                            ProjectsId = 3,
-                            UsersId = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62"
+                            UserId = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
+                            ProjectId = 3
                         });
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -474,15 +478,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ca10ad6a-7b2d-4257-aba8-9c053b11f3dc",
+                            ConcurrencyStamp = "530223b3-ed1a-4b17-b834-3b3ee167f26d",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMU5WL5+FMiBB/C2mqP9r+4xxF//5pCOjSXs01YRRnH76DuMCesd+gIrp2BEes7/Pg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAnsXsh+Cs/vtb5i36/kY2WBvDus5YdueNm7zpi+nAaeb79rl/KCx5zpzl+2A+E3EQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e04c9725-1613-4d09-b521-b68d56eaf678",
+                            SecurityStamp = "0294c916-29e1-4c13-ae23-b6ab6fc6d11e",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -490,15 +494,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cbb2c297-6f8d-42a4-9654-5f8e535a25c1",
+                            ConcurrencyStamp = "4d507f49-52bb-400c-86dc-2dcbc9b4105f",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAECJF6h3jAGoeU6DA4OXrvvxanPjzrFcl71Yt05+5ug++6YGz9LgxLLyX+wTm/zLoDA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEL57E0d3Y34SaL2s/ZYMGDXmVHJASdS3EiCJWNY0SH1ktLuYm2J83gguSxSz4I4lwA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f2b0c232-3a99-45b7-8cb7-518d92936e82",
+                            SecurityStamp = "50ab8697-9bd8-43e6-8d47-0aaf0775fdff",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });
@@ -684,19 +688,13 @@ namespace Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("IdentityUserProject", b =>
+            modelBuilder.Entity("BugLab.Data.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("BugLab.Data.Entities.Project", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

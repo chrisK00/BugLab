@@ -31,14 +31,9 @@ namespace BugLab.Business.BackgroundServices
                 try
                 {
                     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                    var deletedBugs = await context.Bugs.IgnoreQueryFilters()
-                        .Where(x => x.Deleted.HasValue && x.Deleted.Value < DateTime.UtcNow.AddDays(-30))
-                        .ToListAsync(stoppingToken);
+                    var deletedBugsCount = await RemoveDeletedBugs(context, stoppingToken);
 
-                    context.Bugs.RemoveRange(deletedBugs);
-                    await context.SaveChangesAsync(stoppingToken);
-
-                    _logger.LogInformation("Finished removing {Count} deleted bugs", deletedBugs.Count);
+                    _logger.LogInformation("Finished removing {Count} deleted bugs", deletedBugsCount);
                     await Task.Delay(TimeSpan.FromDays(14), stoppingToken);
                 }
                 catch (OperationCanceledException)
@@ -46,6 +41,18 @@ namespace BugLab.Business.BackgroundServices
                     return;
                 }
             }
+        }
+
+        private async Task<int> RemoveDeletedBugs(AppDbContext context, CancellationToken stoppingToken)
+        {
+            var deletedBugs = await context.Bugs.IgnoreQueryFilters()
+                       .Where(x => x.Deleted.HasValue && x.Deleted.Value < DateTime.UtcNow.AddDays(-30))
+                       .ToListAsync(stoppingToken);
+
+            context.Bugs.RemoveRange(deletedBugs);
+            await context.SaveChangesAsync(stoppingToken);
+
+            return deletedBugs.Count;
         }
     }
 }

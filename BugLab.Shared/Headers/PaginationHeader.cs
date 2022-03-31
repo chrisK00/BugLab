@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace BugLab.Shared.Headers
+﻿namespace BugLab.Shared.Headers
 {
     public class PaginationHeader
     {

@@ -26,6 +26,7 @@ namespace BugLab.Blazor
             }.EnableIntercept(sp));
 
             builder.Services.AddScoped<ExceptionInterceptor>();
+            builder.Services.AddScoped<RefreshTokenInterceptor>();
 
             builder.Services.AddMudServices().AddMudBlazorSnackbar(cfg =>
             {

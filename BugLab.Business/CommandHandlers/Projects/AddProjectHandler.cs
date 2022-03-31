@@ -28,16 +28,21 @@ namespace BugLab.Business.CommandHandlers.Projects
 
             await _context.ProjectUsers.AddAsync(new ProjectUser { UserId = request.UserId, ProjectId = projectToAdd.Id }, cancellationToken);
 
-            await _context.BugTypes.AddRangeAsync(
-                new BugType { ProjectId = projectToAdd.Id, Title = "refactor", Color = "#977FE4" },
-                new BugType { ProjectId = projectToAdd.Id, Title = "bug", Color = "#b14639ff" },
-                new BugType { ProjectId = projectToAdd.Id, Title = "feature", Color = "#35ceceff" }
-                );
+            await AddDefaultBugTypes(projectToAdd.Id);
 
             await _context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
 
             return projectToAdd.Id;
+        }
+
+        private async Task AddDefaultBugTypes(int projectId)
+        {
+            await _context.BugTypes.AddRangeAsync(
+              new BugType { ProjectId = projectId, Title = "refactor", Color = "#977FE4" },
+              new BugType { ProjectId = projectId, Title = "bug", Color = "#b14639ff" },
+              new BugType { ProjectId = projectId, Title = "feature", Color = "#35ceceff" }
+              );
         }
     }
 }

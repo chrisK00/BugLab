@@ -45,9 +45,6 @@ namespace BugLab.Blazor.Interceptors
                     break;
 
                 case HttpStatusCode.Forbidden:
-                    _snackbar.Add(response.Message, Severity.Error);
-                    break;
-
                 case HttpStatusCode.BadRequest:
                     _snackbar.Add(response.Message, Severity.Error);
                     break;

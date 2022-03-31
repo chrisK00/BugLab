@@ -65,7 +65,11 @@ namespace BugLab.API.Extensions
             var jwtOptions = config.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
             services.Configure<JwtOptions>(config.GetSection(nameof(JwtOptions)));
 
-            services.AddCors(opt => opt.AddDefaultPolicy(builder => builder.WithOrigins(jwtOptions.ValidAudience).AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+            services.AddCors(opt => opt.AddDefaultPolicy(builder => builder
+                .WithOrigins(jwtOptions.ValidAudience)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()));
 
             services.AddAuthentication(opt =>
             {
