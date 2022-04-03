@@ -8,6 +8,8 @@ namespace BugLab.Data.Extensions
     {
         public static void ConfigureAudit<TEntity>(this EntityTypeBuilder<TEntity> builder) where TEntity : AuditableEntity
         {
+            builder.HasIndex(x => x.Deleted);
+
             builder.HasOne(x => x.CreatedBy)
                 .WithMany()
                 .IsRequired()

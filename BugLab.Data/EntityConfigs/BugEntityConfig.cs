@@ -11,6 +11,10 @@ namespace BugLab.Data.EntityConfigs
         {
             builder.ConfigureAudit();
 
+            builder.HasIndex(x => x.Title);
+            builder.HasIndex(x => x.Status);
+            builder.HasIndex(x => x.Priority);
+
             builder.Property(x => x.Title)
                 .IsRequired()
                 .HasMaxLength(255);
