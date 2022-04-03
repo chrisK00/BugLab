@@ -1,11 +1,10 @@
 ﻿using BugLab.Data.Entities;
 using BugLab.Data.Extensions;
+using BugLab.Data.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,9 +13,11 @@ namespace BugLab.Data
     public class AppDbContext : IdentityDbContext
     {
         private readonly string _currentUserId;
+        private readonly IDateProvider _dateProvider;
 
-        public AppDbContext(DbContextOptions<AppDbContext> options, IHttpContextAccessor httpContext = null) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IDateProvider dateProvider, IHttpContextAccessor httpContext = null) : base(options)
         {
+            _dateProvider = dateProvider;
             _currentUserId = httpContext?.HttpContext?.User?.UserId();
         }
 
@@ -56,7 +57,7 @@ namespace BugLab.Data
         {
             foreach (var entry in ChangeTracker.Entries<AuditableEntity>())
             {
-                var currentTime = DateTime.UtcNow;
+                var currentTime = _dateProvider.UtcDate;
 
                 switch (entry.State)
                 {
