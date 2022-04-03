@@ -36,7 +36,7 @@ namespace BugLab.Business.Queries.Projects
                 .GroupBy(b => b.ProjectId, (key, bugs) => new
                 {
                     ProjectId = key,
-                    Total = bugs.Count(),
+                    Total = bugs.Count(x => x.Status != BugStatus.Resolved),
                     HighPrioritized = bugs.Count(x => x.Priority == BugPriority.High)
                 }).ToListAsync(cancellationToken);
 

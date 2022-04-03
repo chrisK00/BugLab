@@ -1,5 +1,6 @@
 ﻿@inject IDialogService Dialog
 @inject HttpClient Client
+@inject ISnackbar Toastr
 
 <MudCard>
     <EditForm Model="_model" OnValidSubmit="OnSubmit">
@@ -18,6 +19,7 @@
         </MudCardContent>
         <MudCardActions>
             <MudIconButton Icon="@Icons.Filled.DeleteForever" OnClick="ConfirmDelete" Color="Color.Error" />
+
             @if (context.IsModified())
             {
                 <MudText Class="ml-5 mr-2" Color="Color.Warning">You have unsaved changes</MudText>
@@ -32,7 +34,6 @@
     private UpdateProjectRequest _model;
     private UpdateProjectValidator _validator = new();
 
-
     [Parameter] public ProjectResponse Project { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
     [Parameter] public EventCallback OnUpdate { get; set; }
@@ -44,6 +45,12 @@
 
     private async Task ConfirmDelete()
     {
+        if (Project.TotalBugs != 0)
+        {
+            Toastr.Add($"delete or resolve any existing bugs before deleting {Project.Title}", Severity.Error);
+            return;
+        }
+
         var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {Project.Title}", "This cannot be undone", "OK", "Cancel");
         if (!result.HasValue || !result.Value) return;
 
