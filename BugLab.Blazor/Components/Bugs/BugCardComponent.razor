@@ -12,11 +12,11 @@
             <MudTextField For="() => _model.Description" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
                           Lines="10" Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
 
-            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
+            <MudSelect For="() => _model.Priority" AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
                        @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
                 @foreach (var priority in Enum.GetValues<BugPriority>())
                 {
-                    <MudSelectItem For="_model.Priority" Value="priority">@priority</MudSelectItem>
+                    <MudSelectItem Value="priority">@priority</MudSelectItem>
                 }
             </MudSelect>
 

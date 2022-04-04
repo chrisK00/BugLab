@@ -18,18 +18,67 @@
 
 @if (_selectedSprint != null)
 {
-    //TODO: show sprintkianban or details or component idk if want to include edit etc in the same but dont think so
-    <MudDropContainer></MudDropContainer>
+    <MudDropContainer T="BugResponse" Items="_selectedSprint.Bugs" ItemsSelector="@((b, dropzone) => b.Status.ToString() == dropzone)"
+                      Class="d-flex flex-wrap flex-grow-1" ItemDropped="async b => await ItemUpdated(b)">
+        <ChildContent>
+            <MudDropZone T="BugResponse" Identifier="@BugStatus.Open.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                <MudText Typo="Typo.h6" Class="mb-4">Open</MudText>
+            </MudDropZone>
+
+            <MudDropZone T="BugResponse" Identifier="@BugStatus.InProgress.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                <MudText Typo="Typo.h6" Class="mb-4">In Progress</MudText>
+            </MudDropZone>
+
+            <MudDropZone T="BugResponse" Identifier="@BugStatus.Resolved.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                <MudText Typo="Typo.h6" Class="mb-4">Resolved</MudText>
+            </MudDropZone>
+        </ChildContent>
+        <ItemRenderer>
+            <MudButton OnClick="@(async () => await SelectedBugChanged(context))" Class="pa-4 my-4" Elevation="25">
+                @context.Title
+                <MudChip Style="@($"{Css.BgColor} {context.BugType.Color}; {Css.Color} #fff")">@context.BugType.Title</MudChip>
+            </MudButton>
+        </ItemRenderer>
+    </MudDropContainer>
+
+    @if (_selectedBug != null)
+    {
+        <BugCardComponent Bug="_selectedBug" BugTypes="_bugTypes" Members="_projectMembers" Sprints="_sprints" OnDelete="OnBugDeleted" OnUpdate="@(() => { })" />
+    }
 }
 
 @code{
     [Parameter] public int ProjectId { get; set; }
     private SprintDetailsResponse _selectedSprint;
-    private ICollection<SprintForListResponse> _sprints = new List<SprintForListResponse>();
+    private BugResponse _selectedBug;
+
+    private ICollection<SprintForListResponse> _sprints;
+    private IEnumerable<UserResponse> _projectMembers = new List<UserResponse>();
+    private IEnumerable<BugTypeResponse> _bugTypes = new List<BugTypeResponse>();
 
     public async Task SelectedSprintChanged(SprintForListResponse sprint)
     {
-        _selectedSprint = await Http.GetFromJsonAsync<SprintDetailsResponse>($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}");
+        _selectedSprint = await Http.GetFromJsonAsync<SprintDetailsResponse>($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}", JsonOptions.Defaults());
+    }
+
+    private async Task SelectedBugChanged(BugResponse bug)
+    {
+        _selectedBug = bug;
+        if (_bugTypes != null) return;
+
+        _bugTypes = await Http.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(ProjectId));
+        _projectMembers = await Http.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(ProjectId));
+    }
+
+    public async Task OnBugDeleted()
+    {
+        _selectedSprint.Bugs = _selectedSprint.Bugs.Where(x => x.Id != _selectedBug.Id).ToArray();
+        _selectedBug = null;
+    }
+
+    private async Task ItemUpdated(MudItemDropInfo<BugResponse> mudDrop)
+    {
+        mudDrop.Item.Status = Enum.Parse<BugStatus>(mudDrop.DropzoneIdentifier);
     }
 
     protected override async Task OnInitializedAsync()
