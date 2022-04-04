@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.JsonPatch
 
 @inject HttpClient Http
+@inject IDialogService Dialog
 @inject NavigationManager Nav
 
 <MudButton Class="mb-5" OnClick="() => _showAddSprint = !_showAddSprint" Color="Color.Primary">@(_showAddSprint ? "Hide New Sprint" : "New Sprint")</MudButton>
@@ -20,6 +21,7 @@
         <MudTh>Project</MudTh>
         <MudTh>Start Date</MudTh>
         <MudTh>End Date</MudTh>
+        <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Title" id="title">
@@ -30,6 +32,9 @@
         <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
         <MudTd DataLabel="End Date">@context.StartDate</MudTd>
         <MudTd DataLabel="Start Date">@context.EndDate</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="async () => await DeleteSprint(context)"></MudIconButton>
+        </MudTd>
     </RowTemplate>
 </MudTable>
 <MudButton OnClick="@(() => Nav.NavigateTo($"/project/{ProjectId}/bugs"))">Project Bugs</MudButton>
@@ -77,6 +82,15 @@
     private ICollection<SprintForListResponse> _sprints;
     private IEnumerable<UserResponse> _projectMembers = new List<UserResponse>();
     private IEnumerable<BugTypeResponse> _bugTypes = new List<BugTypeResponse>();
+
+    private async Task DeleteSprint(SprintForListResponse sprint)
+    {
+        var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {sprint.Title}", "This cannot be undone", "OK", "Cancel");
+        if (!result.HasValue || !result.Value) return;
+
+        await Http.DeleteAsync($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}");
+        _sprints.Remove(sprint);
+    }
 
     public async Task SelectedSprintChanged(SprintForListResponse sprint)
     {

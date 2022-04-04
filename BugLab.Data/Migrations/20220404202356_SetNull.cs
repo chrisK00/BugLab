@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Migrations
+namespace BugLab.Data.Migrations
 {
-    public partial class EnumsSort : Migration
+    public partial class SetNull : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -167,6 +167,27 @@ namespace Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BugTypes",
                 columns: table => new
                 {
@@ -212,6 +233,28 @@ namespace Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sprints",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sprints", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sprints_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bugs",
                 columns: table => new
                 {
@@ -224,6 +267,7 @@ namespace Migrations
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     BugTypeId = table.Column<int>(type: "int", nullable: false),
                     AssignedToId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SprintId = table.Column<int>(type: "int", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Modified = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Deleted = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -270,6 +314,12 @@ namespace Migrations
                         principalTable: "Projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bugs_Sprints_SprintId",
+                        column: x => x.SprintId,
+                        principalTable: "Sprints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -315,6 +365,78 @@ namespace Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "757b2158-40c3-4917-9523-5861973a4d2e", 0, "e49be0c9-3654-4a6e-8daf-d2cd863ab7ad", "chris@gmail.com", false, false, null, "CHRIS@GMAIL.COM", "CHRIS@GMAIL.COM", "AQAAAAEAACcQAAAAELt8yjgK+/RmYjXghvGZ3Wl8fAqRo3htaWI/69lAa2cMeoBIXdfRJN/YSUjdxuqA2g==", null, false, "914b457a-4b14-4b15-8e66-888d89aea699", false, "chris@gmail.com" },
+                    { "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", 0, "408c1019-5cb5-4fce-93af-c2423d301d25", "chrisk@gmail.com", false, false, null, "CHRISK@GMAIL.COM", "CHRISK@GMAIL.COM", "AQAAAAEAACcQAAAAEIwy6eSagYeU7r/y4XhLGZMm9uYaYhqLB1fNP04+aQ+fG40NIZhcFYM8uwKNBvV2lw==", null, false, "6c810a9e-30f5-47f5-8f25-287b7e077629", false, "chrisk@gmail.com" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Projects",
+                columns: new[] { "Id", "Description", "Title" },
+                values: new object[,]
+                {
+                    { 1, null, "BugLab" },
+                    { 2, null, "Plannial" },
+                    { 3, null, "SweatSpace" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "BugTypes",
+                columns: new[] { "Id", "Color", "ProjectId", "Title" },
+                values: new object[,]
+                {
+                    { 1, "#977FE4", 1, "refactor" },
+                    { 2, "#b14639ff", 1, "bug" },
+                    { 3, "#35ceceff", 1, "feature" },
+                    { 4, "#35ceceff", 2, "feature" },
+                    { 5, "#b14639ff", 2, "bug" },
+                    { 6, "#977FE4", 2, "refactor" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ProjectUsers",
+                columns: new[] { "ProjectId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "757b2158-40c3-4917-9523-5861973a4d2e" },
+                    { 2, "757b2158-40c3-4917-9523-5861973a4d2e" },
+                    { 3, "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Bugs",
+                columns: new[] { "Id", "AssignedToId", "BugTypeId", "Created", "CreatedById", "Deleted", "DeletedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "SprintId", "Status", "Title" },
+                values: new object[] { 2, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, "Better domaine events pattern", null, null, 0, 1, null, 0, "update project title" });
+
+            migrationBuilder.InsertData(
+                table: "Bugs",
+                columns: new[] { "Id", "AssignedToId", "BugTypeId", "Created", "CreatedById", "Deleted", "DeletedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "SprintId", "Status", "Title" },
+                values: new object[] { 3, null, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, null, null, null, 0, 2, null, 0, "How you doing?" });
+
+            migrationBuilder.InsertData(
+                table: "Bugs",
+                columns: new[] { "Id", "AssignedToId", "BugTypeId", "Created", "CreatedById", "Deleted", "DeletedById", "Description", "Modified", "ModifiedById", "Priority", "ProjectId", "SprintId", "Status", "Title" },
+                values: new object[] { 1, null, 3, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, null, null, 0, 1, null, 0, "Implement project controllers" });
+
+            migrationBuilder.InsertData(
+                table: "Comments",
+                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Deleted", "DeletedById", "Modified", "ModifiedById", "Text" },
+                values: new object[] { 3, 2, new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7545), "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62", null, null, null, null, "Any progress?" });
+
+            migrationBuilder.InsertData(
+                table: "Comments",
+                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Deleted", "DeletedById", "Modified", "ModifiedById", "Text" },
+                values: new object[] { 1, 1, new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7200), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, null, "This has been implemented" });
+
+            migrationBuilder.InsertData(
+                table: "Comments",
+                columns: new[] { "Id", "BugId", "Created", "CreatedById", "Deleted", "DeletedById", "Modified", "ModifiedById", "Text" },
+                values: new object[] { 2, 1, new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7543), "757b2158-40c3-4917-9523-5861973a4d2e", null, null, null, null, "Nope" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -371,6 +493,11 @@ namespace Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bugs_Deleted",
+                table: "Bugs",
+                column: "Deleted");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bugs_DeletedById",
                 table: "Bugs",
                 column: "DeletedById");
@@ -381,9 +508,29 @@ namespace Migrations
                 column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Bugs_Priority",
+                table: "Bugs",
+                column: "Priority");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Bugs_ProjectId",
                 table: "Bugs",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bugs_SprintId",
+                table: "Bugs",
+                column: "SprintId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bugs_Status",
+                table: "Bugs",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bugs_Title",
+                table: "Bugs",
+                column: "Title");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BugTypes_ProjectId",
@@ -401,6 +548,11 @@ namespace Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_Deleted",
+                table: "Comments",
+                column: "Deleted");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_DeletedById",
                 table: "Comments",
                 column: "DeletedById");
@@ -413,6 +565,16 @@ namespace Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectUsers_ProjectId",
                 table: "ProjectUsers",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sprints_ProjectId",
+                table: "Sprints",
                 column: "ProjectId");
         }
 
@@ -440,6 +602,9 @@ namespace Migrations
                 name: "ProjectUsers");
 
             migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -450,6 +615,9 @@ namespace Migrations
 
             migrationBuilder.DropTable(
                 name: "BugTypes");
+
+            migrationBuilder.DropTable(
+                name: "Sprints");
 
             migrationBuilder.DropTable(
                 name: "Projects");

@@ -38,6 +38,15 @@ namespace BugLab.API.Controllers
             return Ok(sprint);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<SprintDetailsResponse>> DeleteSprint(int projectId, int id, CancellationToken cancellationToken)
+        {
+            await _authService.HasAccessToProject(User.UserId(), projectId);
+            await _mediator.Send(new DeleteSprintCommand(id), cancellationToken);
+
+            return NoContent();
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddSprint(int projectId, AddSprintRequest request, CancellationToken cancellationToken)
         {

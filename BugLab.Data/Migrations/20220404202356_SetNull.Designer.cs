@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Migrations
+namespace BugLab.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220404115734_SprintEntity")]
-    partial class SprintEntity
+    [Migration("20220404202356_SetNull")]
+    partial class SetNull
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -259,7 +259,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2022, 4, 4, 11, 57, 33, 984, DateTimeKind.Utc).AddTicks(1268),
+                            Created = new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7200),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -267,7 +267,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2022, 4, 4, 11, 57, 33, 984, DateTimeKind.Utc).AddTicks(1614),
+                            Created = new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7543),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -275,7 +275,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2022, 4, 4, 11, 57, 33, 984, DateTimeKind.Utc).AddTicks(1615),
+                            Created = new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7545),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -380,8 +380,14 @@ namespace Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -515,15 +521,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0c600761-3b81-46ca-a54d-6deecfeb2889",
+                            ConcurrencyStamp = "e49be0c9-3654-4a6e-8daf-d2cd863ab7ad",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGS0zp3+AhiBUU4Hv27HdlFmLFtZnD+WOT1C7p0mc1cy3X02jsbnEhb1nu71ZUJoEQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELt8yjgK+/RmYjXghvGZ3Wl8fAqRo3htaWI/69lAa2cMeoBIXdfRJN/YSUjdxuqA2g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "103352b2-388f-4c5e-ab8c-f31a1683fe65",
+                            SecurityStamp = "914b457a-4b14-4b15-8e66-888d89aea699",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -531,15 +537,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a3e27e7-9245-4bdf-b133-89f568afbadf",
+                            ConcurrencyStamp = "408c1019-5cb5-4fce-93af-c2423d301d25",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPix0HqC9KgQLjhH2bvFVnwDTDIXGc+r0oR9pSCtpEYhCzqdv9gYyZ/3ndxHdm37VA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIwy6eSagYeU7r/y4XhLGZMm9uYaYhqLB1fNP04+aQ+fG40NIZhcFYM8uwKNBvV2lw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8470c8b0-faa2-4b5c-90ec-91cd27cce36b",
+                            SecurityStamp = "6c810a9e-30f5-47f5-8f25-287b7e077629",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });
@@ -659,7 +665,8 @@ namespace Migrations
 
                     b.HasOne("BugLab.Data.Entities.Sprint", "Sprint")
                         .WithMany("Bugs")
-                        .HasForeignKey("SprintId");
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("AssignedTo");
 

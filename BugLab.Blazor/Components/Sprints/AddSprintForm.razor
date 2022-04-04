@@ -4,7 +4,7 @@
     <EditForm Model="_model" OnValidSubmit="OnSubmit">
         <MudCardContent>
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
-                         Required="true" Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+                          Required="true" Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
             <MudDateRangePicker Editable="true" Label="Expected Start and End date" @bind-DateRange="_dateRange">
             </MudDateRangePicker>
         </MudCardContent>
