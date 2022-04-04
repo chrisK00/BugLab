@@ -5,7 +5,8 @@ namespace BugLab.Business.Commands.Bugs
 {
     public class UpdateBugCommand : IRequest
     {
-        public UpdateBugCommand(int id, string title, string description, BugPriority priority, BugStatus status, int typeId, string assignedToId)
+        public UpdateBugCommand(int id, string title, string description, BugPriority priority, BugStatus status,
+            int typeId, string assignedToId, int? sprintId)
         {
             Id = id;
             Title = title;
@@ -14,6 +15,7 @@ namespace BugLab.Business.Commands.Bugs
             Status = status;
             TypeId = typeId;
             AssignedToId = assignedToId;
+            SprintId = sprintId;
         }
 
         public int Id { get; }
@@ -23,5 +25,6 @@ namespace BugLab.Business.Commands.Bugs
         public BugStatus Status { get; }
         public int TypeId { get; }
         public string AssignedToId { get; }
+        public int? SprintId { get; set; }
     }
 }

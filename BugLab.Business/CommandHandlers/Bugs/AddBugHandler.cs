@@ -1,9 +1,7 @@
 ﻿using BugLab.Business.Commands.Bugs;
-using BugLab.Business.Helpers;
 using BugLab.Data;
 using BugLab.Data.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 

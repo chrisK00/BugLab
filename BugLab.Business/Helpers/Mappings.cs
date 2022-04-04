@@ -10,6 +10,8 @@ namespace BugLab.Business.Helpers
         {
             config.NewConfig<Bug, BugResponse>()
                .Map(dest => dest.ProjectTitle, src => src.Project.Title);
+
+            config.Default.MapToConstructor(true);
         }
     }
 }

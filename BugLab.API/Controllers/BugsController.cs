@@ -65,8 +65,7 @@ namespace BugLab.API.Controllers
         public async Task<IActionResult> UpdateBug(int id, UpdateBugRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToBug(User.UserId(), id);
-            var command = new UpdateBugCommand(id, request.Title, request.Description, request.Priority, request.Status, request.TypeId, request.AssignedToId);
-            await _mediator.Send(command, cancellationToken);
+            await _mediator.Send(request.Adapt<UpdateBugCommand>(), cancellationToken);
 
             return NoContent();
         }
