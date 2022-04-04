@@ -1,5 +1,7 @@
 ﻿@page "/project/{projectId:int}/sprints"
 
+@using Microsoft.AspNetCore.JsonPatch
+
 @inject HttpClient Http
 @inject NavigationManager Nav
 
@@ -66,7 +68,7 @@
     private async Task SelectedBugChanged(BugResponse bug)
     {
         _selectedBug = bug;
-        if (_bugTypes != null) return;
+        if (_bugTypes.Any()) return;
 
         _bugTypes = await Http.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(ProjectId));
         _projectMembers = await Http.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(ProjectId));
@@ -81,10 +83,11 @@
     private async Task DropItemMoved(MudItemDropInfo<BugResponse> mudDrop)
     {
         mudDrop.Item.Status = Enum.Parse<BugStatus>(mudDrop.DropzoneIdentifier);
-        var updateRequest = mudDrop.Item.Adapt<UpdateBugRequest>();
-        updateRequest.TypeId = mudDrop.Item.BugType.Id;
-        var response = await Http.PutAsJsonAsync($"{Endpoints.Bugs}/{mudDrop.Item.Id}", updateRequest);
-        Console.WriteLine(response.StatusCode);
+
+        var patchDocument = new JsonPatchDocument<UpdateBugRequest>()
+            .Replace(b => b.Status, mudDrop.Item.Status);
+
+        await Http.NewtonsoftPatchAsync($"{Endpoints.Bugs}/{mudDrop.Item.Id}", patchDocument);
     }
 
     protected override async Task OnInitializedAsync()

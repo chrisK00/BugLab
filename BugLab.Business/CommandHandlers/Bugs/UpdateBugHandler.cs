@@ -1,6 +1,7 @@
 ﻿using BugLab.Business.Commands.Bugs;
 using BugLab.Business.Helpers;
 using BugLab.Data;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -22,15 +23,8 @@ namespace BugLab.Business.CommandHandlers.Bugs
             var bug = await _context.Bugs.Include(x => x.AssignedTo).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             Guard.NotFound(bug, nameof(bug), request.Id);
 
-            bug.Title = request.Title;
-            bug.Status = request.Status;
-            bug.Priority = request.Priority;
-            bug.Description = request.Description;
-            bug.BugTypeId = request.TypeId;
-            bug.SprintId = request.SprintId;
-
-            if (string.IsNullOrWhiteSpace(request.AssignedToId)) bug.AssignedToId = null;
-            else bug.AssignedToId = request.AssignedToId;
+            if (request.PartialUpdate) request.Adapt(bug, new TypeAdapterConfig().Default.IgnoreNullValues(true).Config);
+            else request.Adapt(bug);
 
             await _context.SaveChangesAsync(cancellationToken);
 
