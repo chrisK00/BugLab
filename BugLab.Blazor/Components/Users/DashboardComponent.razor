@@ -13,7 +13,7 @@
             <MudContainer>
                 <MudText Color="Color.Primary" Typo="Typo.h6">Most recently created Bug</MudText>
                 <BugCardComponent Members="_latestBugProjectMembers" Bug="_dashboard.LatestBug" BugTypes="_latestBugTypes"
-                                  OnDelete="async () => await LoadData()" OnUpdate="async () => await LoadData()" />
+                                  Sprints="_latestBugSprints" OnDelete="async () => await LoadData()" OnUpdate="async () => await LoadData()" />
                 <CommentsComponent BugId="_dashboard.LatestBug.Id" Comments="_dashboard.LatestBug.Comments" />
             </MudContainer>
         }
@@ -23,7 +23,7 @@
             <MudContainer>
                 <MudText Color="Color.Primary" Typo="Typo.h6">Most recently updated Bug</MudText>
                 <BugCardComponent Members="_latestUpdatedBugProjectMembers" BugTypes="_latestUpdatedBugTypes" Bug="_dashboard.LatestUpdatedBug"
-                                  OnDelete="async () => await LoadData()" OnUpdate="async () => await LoadData()" />
+                                  Sprints="_latestUpdatedBugSprints" OnDelete="async () => await LoadData()" OnUpdate="async () => await LoadData()" />
                 <CommentsComponent BugId="_dashboard.LatestUpdatedBug.Id" Comments="_dashboard.LatestUpdatedBug.Comments" />
             </MudContainer>
         }
@@ -38,6 +38,8 @@
     private IEnumerable<UserResponse> _latestUpdatedBugProjectMembers;
     private IEnumerable<BugTypeResponse> _latestUpdatedBugTypes;
     private IEnumerable<BugTypeResponse> _latestBugTypes;
+    private IEnumerable<SprintForListResponse> _latestBugSprints;
+    private IEnumerable<SprintForListResponse> _latestUpdatedBugSprints;
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,16 +49,28 @@
     private async Task LoadData()
     {
         _dashboard = await Client.GetFromJsonAsync<DashboardResponse>($"{Endpoints.Users}/dashboard", JsonOptions.Defaults());
+
         _chartLabels = new string[] {$"Open {_dashboard.TotalOpenBugs}", $"In Progress {_dashboard.TotalInProgressBugs}",
             $"High Prioritized {_dashboard.TotalHighPrioritizedOpenBugs}", $"Assigned to me {_dashboard.TotalBugsAssignedToMe}"};
 
+        _chartData = new double[] { _dashboard.TotalOpenBugs, _dashboard.TotalInProgressBugs, _dashboard.TotalHighPrioritizedOpenBugs, _dashboard.TotalBugsAssignedToMe };
+
         var latestUpdatedBugProjectMembersTask = Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestUpdatedBug.ProjectId));
         var latestBugProjectMembersTask = Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_dashboard.LatestBug.ProjectId));
+
+        var latestUpdatedBugTypesTask = Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestUpdatedBug.ProjectId));
+        var latestBugTypesTask = Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestBug.ProjectId));
+
+        var latestBugSprintsTask = Client.GetFromJsonAsync<IEnumerable<SprintForListResponse>>(Endpoints.Sprints(_dashboard.LatestBug.ProjectId));
+        var latestUpdatedBugSprintsTask = Client.GetFromJsonAsync<IEnumerable<SprintForListResponse>>(Endpoints.Sprints(_dashboard.LatestUpdatedBug.ProjectId));
+
         _latestUpdatedBugProjectMembers = await latestUpdatedBugProjectMembersTask;
         _latestBugProjectMembers = await latestBugProjectMembersTask;
 
-        _chartData = new double[] { _dashboard.TotalOpenBugs, _dashboard.TotalInProgressBugs, _dashboard.TotalHighPrioritizedOpenBugs, _dashboard.TotalBugsAssignedToMe };
-        _latestUpdatedBugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestUpdatedBug.ProjectId));
-        _latestBugTypes = await Client.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(_dashboard.LatestBug.ProjectId));
+        _latestUpdatedBugSprints = await latestUpdatedBugSprintsTask;
+        _latestBugSprints = await latestBugSprintsTask;
+
+        _latestUpdatedBugTypes = await latestUpdatedBugTypesTask;
+        _latestBugTypes = await latestBugTypesTask;
     }
 }

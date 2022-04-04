@@ -2,7 +2,7 @@
 
 namespace BugLab.Shared.Responses
 {
-    public class SprintResponse
+    public class SprintDetailsResponse
     {
         public int Id { get; set; }
         public string Title { get; set; }

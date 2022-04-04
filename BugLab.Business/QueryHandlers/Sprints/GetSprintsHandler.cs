@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BugLab.Business.QueryHandlers.Sprints
 {
-    public class GetSprintsHandler : IRequestHandler<GetSprintsQuery, IEnumerable<SprintResponse>>
+    public class GetSprintsHandler : IRequestHandler<GetSprintsQuery, IEnumerable<SprintForListResponse>>
     {
         private readonly AppDbContext _context;
 
@@ -20,11 +20,11 @@ namespace BugLab.Business.QueryHandlers.Sprints
             _context = context;
         }
 
-        public async Task<IEnumerable<SprintResponse>> Handle(GetSprintsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SprintForListResponse>> Handle(GetSprintsQuery request, CancellationToken cancellationToken)
         {
             var sprints = await _context.Sprints.AsNoTracking()
                 .Where(s => s.ProjectId == request.ProjectId)
-                .ProjectToType<SprintResponse>()
+                .ProjectToType<SprintForListResponse>()
                 .ToListAsync(cancellationToken);
 
             return sprints;

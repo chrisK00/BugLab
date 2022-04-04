@@ -4,7 +4,6 @@ using BugLab.Business.Queries.Sprints;
 using BugLab.Data.Extensions;
 using BugLab.Shared.Requests.Sprints;
 using BugLab.Shared.Responses;
-using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -23,10 +22,18 @@ namespace BugLab.API.Controllers
             _authService = authService;
         }
 
-        [HttpGet(Name = nameof(GetSprints))]
-        public async Task<ActionResult<IEnumerable<SprintResponse>>> GetSprints(int projectId, CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<SprintForListResponse>>> GetSprints(int projectId, CancellationToken cancellationToken)
         {
-            var sprint = await _mediator.Send(new GetSprintsQuery(projectId), cancellationToken);
+            var sprints = await _mediator.Send(new GetSprintsQuery(projectId), cancellationToken);
+
+            return Ok(sprints);
+        }
+
+        [HttpGet("{id}", Name = nameof(GetSprint))]
+        public async Task<ActionResult<SprintDetailsResponse>> GetSprint(int id, CancellationToken cancellationToken)
+        {
+            var sprint = await _mediator.Send(new GetSprintQuery(id), cancellationToken);
 
             return Ok(sprint);
         }
@@ -38,7 +45,7 @@ namespace BugLab.API.Controllers
             var command = new AddSprintCommand(projectId, request.Title);
             var id = await _mediator.Send(command, cancellationToken);
 
-            return CreatedAtRoute(nameof(GetSprints), new { projectId }, id);
+            return CreatedAtRoute(nameof(GetSprint), new { projectId, id }, id);
         }
     }
 }

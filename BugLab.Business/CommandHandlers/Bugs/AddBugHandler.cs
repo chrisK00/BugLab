@@ -26,7 +26,7 @@ namespace BugLab.Business.CommandHandlers.Bugs
                 Status = request.Status,
                 ProjectId = request.ProjectId,
                 BugTypeId = request.TypeId,
-                AssignedToId = request.AssignedToId
+                AssignedToId = string.IsNullOrWhiteSpace(request.AssignedToId) ? null : request.AssignedToId,
             };
 
             await _context.Bugs.AddAsync(newBug, cancellationToken);

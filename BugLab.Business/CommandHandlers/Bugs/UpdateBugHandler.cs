@@ -1,7 +1,6 @@
 ﻿using BugLab.Business.Commands.Bugs;
 using BugLab.Business.Helpers;
 using BugLab.Data;
-using BugLab.Data.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
@@ -20,7 +19,7 @@ namespace BugLab.Business.CommandHandlers.Bugs
 
         public async Task<Unit> Handle(UpdateBugCommand request, CancellationToken cancellationToken)
         {
-            var bug = await _context.Bugs.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var bug = await _context.Bugs.Include(x => x.AssignedTo).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             Guard.NotFound(bug, nameof(bug), request.Id);
 
             bug.Title = request.Title;
@@ -28,8 +27,10 @@ namespace BugLab.Business.CommandHandlers.Bugs
             bug.Priority = request.Priority;
             bug.Description = request.Description;
             bug.BugTypeId = request.TypeId;
-            bug.AssignedToId = request.AssignedToId;
             bug.SprintId = request.SprintId;
+
+            if (string.IsNullOrWhiteSpace(request.AssignedToId)) bug.AssignedToId = null;
+            else bug.AssignedToId = request.AssignedToId;
 
             await _context.SaveChangesAsync(cancellationToken);
 

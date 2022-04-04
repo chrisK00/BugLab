@@ -13,6 +13,8 @@ namespace BugLab.Shared.Responses
         public BugStatus Status { get; init; }
         public DateTime Created { get; set; }
         public DateTime? Modified { get; set; }
+        public string SprintTitle { get; set; }
+        public int? SprintId { get; set; }
         public string ProjectTitle { get; set; }
         public int ProjectId { get; set; }
         public BugTypeResponse BugType { get; set; }

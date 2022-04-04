@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BugLab.Business.Queries.Sprints
 {
-    public class GetSprintsQuery : IRequest<IEnumerable<SprintResponse>>
+    public class GetSprintsQuery : IRequest<IEnumerable<SprintForListResponse>>
     {
         public GetSprintsQuery(int projectId)
         {
