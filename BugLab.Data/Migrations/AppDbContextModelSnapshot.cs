@@ -257,7 +257,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2022, 4, 4, 10, 40, 34, 444, DateTimeKind.Utc).AddTicks(1536),
+                            Created = new DateTime(2022, 4, 4, 11, 57, 33, 984, DateTimeKind.Utc).AddTicks(1268),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -265,7 +265,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2022, 4, 4, 10, 40, 34, 444, DateTimeKind.Utc).AddTicks(1881),
+                            Created = new DateTime(2022, 4, 4, 11, 57, 33, 984, DateTimeKind.Utc).AddTicks(1614),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -273,7 +273,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2022, 4, 4, 10, 40, 34, 444, DateTimeKind.Utc).AddTicks(1883),
+                            Created = new DateTime(2022, 4, 4, 11, 57, 33, 984, DateTimeKind.Utc).AddTicks(1615),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -390,7 +390,7 @@ namespace Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Sprint");
+                    b.ToTable("Sprints");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -513,15 +513,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "466e4edd-146b-4ef1-b203-d3bd5cab1b57",
+                            ConcurrencyStamp = "0c600761-3b81-46ca-a54d-6deecfeb2889",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEONlT0dkXn41oeHemLJAUZmT/u+0oVfdKpT7GcXtikaLJi3PU6/pnG3dYgp85IVwhw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGS0zp3+AhiBUU4Hv27HdlFmLFtZnD+WOT1C7p0mc1cy3X02jsbnEhb1nu71ZUJoEQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "628f0db3-0f67-4664-948b-89152870ffe6",
+                            SecurityStamp = "103352b2-388f-4c5e-ab8c-f31a1683fe65",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -529,15 +529,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "acc45ebd-b66c-49a7-a270-6f7aa1f9be8e",
+                            ConcurrencyStamp = "9a3e27e7-9245-4bdf-b133-89f568afbadf",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPFt7wuapfJjSM0n/VtBngwMH7/Qw8GNIdI1jwo+DnGSc1xxFvLbMKR2ENJhAszeHw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPix0HqC9KgQLjhH2bvFVnwDTDIXGc+r0oR9pSCtpEYhCzqdv9gYyZ/3ndxHdm37VA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "92456e18-c556-45b1-97cb-2458669ce6a0",
+                            SecurityStamp = "8470c8b0-faa2-4b5c-90ec-91cd27cce36b",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });

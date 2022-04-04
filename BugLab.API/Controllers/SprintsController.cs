@@ -1,5 +1,6 @@
 ﻿using BugLab.Business.Commands.Sprints;
 using BugLab.Business.Interfaces;
+using BugLab.Business.Queries.Sprints;
 using BugLab.Data.Extensions;
 using BugLab.Shared.Requests.Sprints;
 using BugLab.Shared.Responses;
@@ -22,7 +23,7 @@ namespace BugLab.API.Controllers
             _authService = authService;
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(GetSprints))]
         public async Task<ActionResult<IEnumerable<SprintResponse>>> GetSprints(int projectId, CancellationToken cancellationToken)
         {
             var sprint = await _mediator.Send(new GetSprintsQuery(projectId), cancellationToken);
@@ -34,11 +35,10 @@ namespace BugLab.API.Controllers
         public async Task<IActionResult> AddSprint(int projectId, UpsertSprintRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToProject(User.UserId(), projectId);
-            var id = await _mediator.Send(request.Adapt<AddSprintCommand>(), cancellationToken);
+            var command = new AddSprintCommand(projectId, request.Title);
+            var id = await _mediator.Send(command, cancellationToken);
 
-            return Ok(id);
-            // TODO: add getmethod
-            //return CreatedAtRoute(nameof(GetSprint), new { projectId, id }, id);
+            return CreatedAtRoute(nameof(GetSprints), new { projectId }, id);
         }
     }
 }

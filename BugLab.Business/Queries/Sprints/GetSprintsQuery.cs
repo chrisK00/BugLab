@@ -6,7 +6,6 @@ namespace BugLab.Business.Queries.Sprints
 {
     public class GetSprintsQuery : IRequest<IEnumerable<SprintResponse>>
     {
-
         public GetSprintsQuery(int projectId)
         {
             ProjectId = projectId;
