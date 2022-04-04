@@ -69,7 +69,11 @@
 
     @if (_selectedBug != null)
     {
-        <BugCardComponent Bug="_selectedBug" BugTypes="_bugTypes" Members="_projectMembers" Sprints="_sprints" OnDelete="OnBugDeleted" OnUpdate="@(() => { })" />
+        <MudContainer Class="d-flex mt-5 mb-5">
+            <BugCardComponent Bug="_selectedBug" BugTypes="_bugTypes" Members="_projectMembers" Sprints="_sprints" OnDelete="OnBugDeleted" OnUpdate="@(() => { })" />
+
+            <CommentsComponent BugId="_selectedBug.Id" Comments="_selectedBug.Comments" />
+        </MudContainer>
     }
 }
 
