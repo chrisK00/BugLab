@@ -21,6 +21,9 @@ namespace BugLab.Data.Entities
         public string AssignedToId { get; set; }
         public IdentityUser AssignedTo { get; private set; }
 
+        public Sprint Sprint { get; set; }
+        public int? SprintId { get; set; }
+
         public ICollection<Comment> Comments { get; init; } = new List<Comment>();
     }
 }

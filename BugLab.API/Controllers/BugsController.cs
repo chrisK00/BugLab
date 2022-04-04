@@ -8,6 +8,7 @@ using BugLab.Shared.Requests.Bugs;
 using BugLab.Shared.Responses;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading;
@@ -61,12 +62,25 @@ namespace BugLab.API.Controllers
             return CreatedAtRoute(nameof(GetBug), new { id }, id);
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartialUpdateBug(int id, JsonPatchDocument<UpdateBugRequest> document, CancellationToken cancellationToken)
+        {
+            await _authService.HasAccessToBug(User.UserId(), id);
+            var request = new UpdateBugRequest();
+            document.ApplyTo(request);
+            var command = new UpdateBugCommand(id, request.Title, request.Description, request.Priority, request.Status,
+                request.TypeId, request.AssignedToId, request.SprintId, true);
+
+            await _mediator.Send(command, cancellationToken);
+
+            return NoContent();
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBug(int id, UpdateBugRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToBug(User.UserId(), id);
-            var command = new UpdateBugCommand(id, request.Title, request.Description, request.Priority, request.Status, request.TypeId, request.AssignedToId);
-            await _mediator.Send(command, cancellationToken);
+            await _mediator.Send(request.Adapt<UpdateBugCommand>(), cancellationToken);
 
             return NoContent();
         }

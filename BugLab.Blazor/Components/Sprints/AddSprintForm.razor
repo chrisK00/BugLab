@@ -1,0 +1,44 @@
+﻿@inject HttpClient Client
+
+<MudCard>
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
+        <MudCardContent>
+            <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
+                          Required="true" Label="Title" For="() => _model.Title" @bind-Value="_model.Title" />
+            <MudDateRangePicker Editable="true" Label="Expected Start and End date" @bind-DateRange="_dateRange">
+            </MudDateRangePicker>
+        </MudCardContent>
+
+        <MudCardActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Variant="@Variant.Filled" Size="Size.Large" Color="Color.Primary" ButtonType="ButtonType.Submit" />
+        </MudCardActions>
+    </EditForm>
+</MudCard>
+
+@code{
+    private DateRange _dateRange = new DateRange(DateTime.Now, DateTime.Now.AddDays(14));
+    private AddSprintRequest _model = new();
+
+    [Parameter]
+    public int ProjectId { get; set; }
+    [Parameter]
+    public EventCallback<SprintForListResponse> OnAdd { get; set; }
+
+    public async Task OnSubmit()
+    {
+        if (_dateRange.Start is null || _dateRange.End is null) return;
+        _model.StartDate = _dateRange.Start.Value.ToUniversalTime();
+        _model.EndDate = _dateRange.End.Value.ToUniversalTime();
+
+        var response = await Client.PostAsJsonAsync(Endpoints.Sprints(ProjectId), _model);
+        var id = await response.Content.ReadFromJsonAsync<int>();
+
+        await OnAdd.InvokeAsync(new SprintForListResponse
+        {
+            Id = id,
+            EndDate = _model.EndDate,
+            StartDate = _model.StartDate,
+            Title = _model.Title,
+        });
+    }
+}

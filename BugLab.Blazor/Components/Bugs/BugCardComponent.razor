@@ -12,11 +12,11 @@
             <MudTextField For="() => _model.Description" AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Description" Adornment="Adornment.End"
                           Lines="10" Variant="Variant.Filled" Label="Description" @bind-Value="_model.Description" />
 
-            <MudSelect AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
+            <MudSelect For="() => _model.Priority" AdornmentColor="@Color.Primary" Variant="Variant.Filled" Label="Priority"
                        @bind-Value="_model.Priority" OpenIcon="@Icons.Material.Filled.PriorityHigh">
                 @foreach (var priority in Enum.GetValues<BugPriority>())
                 {
-                    <MudSelectItem For="_model.Priority" Value="priority">@priority</MudSelectItem>
+                    <MudSelectItem Value="priority">@priority</MudSelectItem>
                 }
             </MudSelect>
 
@@ -30,9 +30,19 @@
 
             <MudSelect For="() => _model.AssignedToId" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.CardMembership" Variant="Variant.Filled"
                        Label="Assigned To" @bind-Value="_model.AssignedToId">
+                <MudSelectItem Value="@("")"></MudSelectItem>
                 @foreach (var member in Members)
                 {
                     <MudSelectItem Value="member.Id">@member.Email</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect For="() => _model.SprintId" T="int?" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.RunCircle" Variant="Variant.Filled"
+                       Label="Sprint" @bind-Value="_model.SprintId">
+                <MudSelectItem T="int?" Value="null"></MudSelectItem>
+                @foreach (var sprint in Sprints)
+                {
+                    <MudSelectItem T="int?" Value="sprint.Id">@sprint.Title</MudSelectItem>
                 }
             </MudSelect>
 
@@ -64,20 +74,19 @@
 </MudCard>
 
 @code {
-
     private UpdateBugRequest _model;
-    private UpdateBugValidator _validator = new();
 
     [Parameter] public BugResponse Bug { get; set; }
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
     [Parameter] public IEnumerable<UserResponse> Members { get; set; }
+    [Parameter] public IEnumerable<SprintForListResponse> Sprints { get; set; }
     [Parameter] public EventCallback OnUpdate { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
 
     protected override void OnParametersSet()
     {
         _model = Bug.Adapt<UpdateBugRequest>();
-        _model.TypeId = Bug.BugType.Id;
+        _model.TypeId = Bug.BugType.Id == default ? 1 : Bug.BugType.Id;
         _model.AssignedToId = Bug.AssignedTo?.Id;
     }
 
@@ -95,14 +104,15 @@
         await Client.PutAsJsonAsync<UpdateBugRequest>($"{Endpoints.Bugs}/{_model.Id}", _model);
         _model.Adapt(Bug);
         Bug.BugType.Id = _model.TypeId;
+        Bug.AssignedTo = new UserResponse { Id = _model.AssignedToId };
 
         await OnUpdate.InvokeAsync();
     }
 }
 
 <style>
-    .mud-card{
-        width:100%;
+    .mud-card {
+        width: 100%;
         min-width: 500px;
     }
 </style>

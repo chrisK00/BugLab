@@ -10,15 +10,17 @@ namespace BugLab.Shared.Responses
         public string Title { get; init; }
         public string Description { get; init; }
         public BugPriority Priority { get; init; }
-        public BugStatus Status { get; init; }
-        public DateTime Created { get; set; }
-        public DateTime? Modified { get; set; }
-        public string ProjectTitle { get; set; }
-        public int ProjectId { get; set; }
-        public BugTypeResponse BugType { get; set; }
-        public ICollection<CommentResponse> Comments { get; set; } = new List<CommentResponse>();
-        public UserResponse CreatedBy { get; set; }
-        public UserResponse ModifiedBy { get; set; }
+        public BugStatus Status { get; set; }
+        public DateTime Created { get; init; }
+        public DateTime? Modified { get; init; }
+        public string SprintTitle { get; init; }
+        public int? SprintId { get; init; }
+        public string ProjectTitle { get; init; }
+        public int ProjectId { get; init; }
+        public BugTypeResponse BugType { get; init; }
+        public ICollection<CommentResponse> Comments { get; init; } = new List<CommentResponse>();
+        public UserResponse CreatedBy { get; init; }
+        public UserResponse ModifiedBy { get; init; }
         public UserResponse AssignedTo { get; set; }
     }
 }

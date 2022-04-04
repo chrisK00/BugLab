@@ -1,0 +1,139 @@
+﻿@page "/project/{projectId:int}/sprints"
+
+@using Microsoft.AspNetCore.JsonPatch
+
+@inject HttpClient Http
+@inject IDialogService Dialog
+@inject NavigationManager Nav
+
+<MudButton Class="mb-5" OnClick="() => _showAddSprint = !_showAddSprint" Color="Color.Primary">@(_showAddSprint ? "Hide New Sprint" : "New Sprint")</MudButton>
+@if (_showAddSprint)
+{
+    <AddSprintForm OnAdd="SprintAdded" ProjectId="ProjectId" />
+}
+
+<MudTable Striped="true" Class="mt-5" Items="_sprints" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Sprints</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Project</MudTh>
+        <MudTh>Start Date</MudTh>
+        <MudTh>End Date</MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Title" id="title">
+            <MudButton @onclick="async () => await SelectedSprintChanged(context)" Color="Color.Primary">
+                @context.Title
+            </MudButton>
+        </MudTd>
+        <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
+        <MudTd DataLabel="End Date">@context.StartDate</MudTd>
+        <MudTd DataLabel="Start Date">@context.EndDate</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="async () => await DeleteSprint(context)"></MudIconButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+<MudButton OnClick="@(() => Nav.NavigateTo($"/project/{ProjectId}/bugs"))">Project Bugs</MudButton>
+
+@if (_selectedSprint != null)
+{
+    <MudDropContainer T="BugResponse" Items="_selectedSprint.Bugs" ItemsSelector="@((b, dropzone) => b.Status.ToString() == dropzone)"
+                      Class="d-flex flex-wrap flex-grow-1" ItemDropped="async b => await DropItemMoved(b)">
+        <ChildContent>
+            <MudDropZone T="BugResponse" Identifier="@BugStatus.Open.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                <MudText Typo="Typo.h6" Class="mb-4">Open</MudText>
+            </MudDropZone>
+
+            <MudDropZone T="BugResponse" Identifier="@BugStatus.InProgress.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                <MudText Typo="Typo.h6" Class="mb-4">In Progress</MudText>
+            </MudDropZone>
+
+            <MudDropZone T="BugResponse" Identifier="@BugStatus.Resolved.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
+                <MudText Typo="Typo.h6" Class="mb-4">Resolved</MudText>
+            </MudDropZone>
+        </ChildContent>
+        <ItemRenderer>
+            <MudButton Size="@Size.Small" OnClick="@(async () => await SelectedBugChanged(context))" Class="pa-4 my-4" Elevation="25">
+                @context.Title
+                <MudText Typo="@Typo.caption">
+                    <MudChip Size="@Size.Small" Style="@($"{Css.BgColor} {context.BugType.Color}; {Css.Color} #fff")">@context.BugType.Title</MudChip>
+                    @context.AssignedTo?.Email
+                </MudText>
+            </MudButton>
+        </ItemRenderer>
+    </MudDropContainer>
+
+    @if (_selectedBug != null)
+    {
+        <MudContainer Class="d-flex mt-5 mb-5">
+            <BugCardComponent Bug="_selectedBug" BugTypes="_bugTypes" Members="_projectMembers" Sprints="_sprints" OnDelete="OnBugDeleted" OnUpdate="@(() => { })" />
+
+            <CommentsComponent BugId="_selectedBug.Id" Comments="_selectedBug.Comments" />
+        </MudContainer>
+    }
+}
+
+@code{
+    [Parameter] public int ProjectId { get; set; }
+    private SprintDetailsResponse _selectedSprint;
+    private BugResponse _selectedBug;
+    private bool _showAddSprint;
+
+    private ICollection<SprintForListResponse> _sprints;
+    private IEnumerable<UserResponse> _projectMembers = new List<UserResponse>();
+    private IEnumerable<BugTypeResponse> _bugTypes = new List<BugTypeResponse>();
+
+    private async Task DeleteSprint(SprintForListResponse sprint)
+    {
+        var result = await Dialog.ShowMessageBox($"Are you sure you want to delete {sprint.Title}", "This cannot be undone", "OK", "Cancel");
+        if (!result.HasValue || !result.Value) return;
+
+        await Http.DeleteAsync($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}");
+        _sprints.Remove(sprint);
+    }
+
+    public async Task SelectedSprintChanged(SprintForListResponse sprint)
+    {
+        _selectedSprint = await Http.GetFromJsonAsync<SprintDetailsResponse>($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}", JsonOptions.Defaults());
+    }
+
+    private async Task SprintAdded(SprintForListResponse sprint)
+    {
+        _sprints.Add(sprint);
+        _showAddSprint = false;
+    }
+
+    private async Task SelectedBugChanged(BugResponse bug)
+    {
+        _selectedBug = bug;
+        if (_bugTypes.Any()) return;
+
+        _bugTypes = await Http.GetFromJsonAsync<IEnumerable<BugTypeResponse>>(Endpoints.BugTypes(ProjectId));
+        _projectMembers = await Http.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(ProjectId));
+    }
+
+    public async Task OnBugDeleted()
+    {
+        _selectedSprint.Bugs = _selectedSprint.Bugs.Where(x => x.Id != _selectedBug.Id).ToArray();
+        _selectedBug = null;
+    }
+
+    private async Task DropItemMoved(MudItemDropInfo<BugResponse> mudDrop)
+    {
+        mudDrop.Item.Status = Enum.Parse<BugStatus>(mudDrop.DropzoneIdentifier);
+
+        var patchDocument = new JsonPatchDocument<UpdateBugRequest>()
+            .Replace(b => b.Status, mudDrop.Item.Status);
+
+        await Http.NewtonsoftPatchAsync($"{Endpoints.Bugs}/{mudDrop.Item.Id}", patchDocument);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _sprints = await Http.GetFromJsonAsync<ICollection<SprintForListResponse>>(Endpoints.Sprints(ProjectId));
+    }
+}

@@ -27,7 +27,7 @@ namespace BugLab.API
         {
             services.AddApiServices(_config, _environment);
 
-            services.AddControllers()
+            services.AddControllers(opt => opt.InputFormatters.InsertJsonPatch())
                 .AddJsonOptions(opt => opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                 .AddFluentValidation(opt => opt.RegisterValidatorsFromAssemblyContaining<AddBugValidator>());
         }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Migrations
+namespace BugLab.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -60,6 +60,9 @@ namespace Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SprintId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -85,6 +88,8 @@ namespace Migrations
                     b.HasIndex("Priority");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("SprintId");
 
                     b.HasIndex("Status");
 
@@ -252,7 +257,7 @@ namespace Migrations
                         {
                             Id = 1,
                             BugId = 1,
-                            Created = new DateTime(2022, 4, 3, 6, 47, 23, 748, DateTimeKind.Utc).AddTicks(5004),
+                            Created = new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7200),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "This has been implemented"
                         },
@@ -260,7 +265,7 @@ namespace Migrations
                         {
                             Id = 2,
                             BugId = 1,
-                            Created = new DateTime(2022, 4, 3, 6, 47, 23, 748, DateTimeKind.Utc).AddTicks(5304),
+                            Created = new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7543),
                             CreatedById = "757b2158-40c3-4917-9523-5861973a4d2e",
                             Text = "Nope"
                         },
@@ -268,7 +273,7 @@ namespace Migrations
                         {
                             Id = 3,
                             BugId = 2,
-                            Created = new DateTime(2022, 4, 3, 6, 47, 23, 748, DateTimeKind.Utc).AddTicks(5305),
+                            Created = new DateTime(2022, 4, 4, 20, 23, 56, 69, DateTimeKind.Utc).AddTicks(7545),
                             CreatedById = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             Text = "Any progress?"
                         });
@@ -364,6 +369,34 @@ namespace Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.Sprint", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Sprints");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -486,15 +519,15 @@ namespace Migrations
                         {
                             Id = "757b2158-40c3-4917-9523-5861973a4d2e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d873e2f-0832-4ae6-ae0c-2501bb89954b",
+                            ConcurrencyStamp = "e49be0c9-3654-4a6e-8daf-d2cd863ab7ad",
                             Email = "chris@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRIS@GMAIL.COM",
                             NormalizedUserName = "CHRIS@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEH+IL30TewSSj07BlPfT4+MHwYHVIkR50NQN4eWvxI2FxVsHycp7o/UoDzfCqaNL/A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELt8yjgK+/RmYjXghvGZ3Wl8fAqRo3htaWI/69lAa2cMeoBIXdfRJN/YSUjdxuqA2g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2ca28394-9291-41f8-b64b-05c97a866d3d",
+                            SecurityStamp = "914b457a-4b14-4b15-8e66-888d89aea699",
                             TwoFactorEnabled = false,
                             UserName = "chris@gmail.com"
                         },
@@ -502,15 +535,15 @@ namespace Migrations
                         {
                             Id = "9789ABC4-C48A-45E8-9E7A-0F7E341E7A62",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "32f62e50-1c23-4d6b-813e-3386887dd92f",
+                            ConcurrencyStamp = "408c1019-5cb5-4fce-93af-c2423d301d25",
                             Email = "chrisk@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CHRISK@GMAIL.COM",
                             NormalizedUserName = "CHRISK@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGBsizYHw/zIiBpFdtYoY2rQM/qHoN3LGKxEaAZbIN4cokK37OqKua9vZBv3MFKGcg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIwy6eSagYeU7r/y4XhLGZMm9uYaYhqLB1fNP04+aQ+fG40NIZhcFYM8uwKNBvV2lw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d759d0bb-a54a-4156-a29d-6c807961c315",
+                            SecurityStamp = "6c810a9e-30f5-47f5-8f25-287b7e077629",
                             TwoFactorEnabled = false,
                             UserName = "chrisk@gmail.com"
                         });
@@ -628,6 +661,11 @@ namespace Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BugLab.Data.Entities.Sprint", "Sprint")
+                        .WithMany("Bugs")
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("AssignedTo");
 
                     b.Navigation("BugType");
@@ -639,6 +677,8 @@ namespace Migrations
                     b.Navigation("ModifiedBy");
 
                     b.Navigation("Project");
+
+                    b.Navigation("Sprint");
                 });
 
             modelBuilder.Entity("BugLab.Data.Entities.BugType", b =>
@@ -705,6 +745,17 @@ namespace Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BugLab.Data.Entities.Sprint", b =>
+                {
+                    b.HasOne("BugLab.Data.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -759,6 +810,11 @@ namespace Migrations
             modelBuilder.Entity("BugLab.Data.Entities.Bug", b =>
                 {
                     b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("BugLab.Data.Entities.Sprint", b =>
+                {
+                    b.Navigation("Bugs");
                 });
 #pragma warning restore 612, 618
         }

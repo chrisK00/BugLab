@@ -24,9 +24,19 @@
                 }
             </MudSelect>
 
+            <MudSelect For="() => _model.SprintId" T="int?" AdornmentColor="@Color.Primary" OpenIcon="@Icons.Material.Filled.RunCircle" Variant="Variant.Filled"
+                       Label="Sprint" @bind-Value="_model.SprintId">
+                <MudSelectItem T="int?" Value="null"></MudSelectItem>
+                @foreach (var sprint in Sprints)
+                {
+                    <MudSelectItem T="int?" Value="sprint.Id">@sprint.Title</MudSelectItem>
+                }
+            </MudSelect>
+
             <MudSelect For="() => _model.AssignedToId" AdornmentColor="@Color.Primary"
                        OpenIcon="@Icons.Material.Filled.CardMembership" Variant="Variant.Filled"
                        Label="Assigned To" @bind-Value="_model.AssignedToId">
+                <MudSelectItem Value="@("")"></MudSelectItem>
                 @foreach (var member in Members)
                 {
                     <MudSelectItem Value="member.Id">@member.Email</MudSelectItem>
@@ -53,16 +63,17 @@
 
 @code {
     private AddBugRequest _model = new();
-    private AddBugValidator _validator = new();
 
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
     [Parameter] public int ProjectId { get; init; }
     [Parameter] public EventCallback<int> OnAdd { get; set; }
     [Parameter] public IEnumerable<UserResponse> Members { get; set; }
+    [Parameter] public IEnumerable<SprintForListResponse> Sprints { get; set; }
 
     protected override void OnParametersSet()
     {
         _model.ProjectId = ProjectId;
+        _model.TypeId = 1;
     }
 
     public async Task OnSubmit()

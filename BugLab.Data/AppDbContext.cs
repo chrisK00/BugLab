@@ -23,6 +23,7 @@ namespace BugLab.Data
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Bug> Bugs { get; set; }
+        public DbSet<Sprint> Sprints { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<BugType> BugTypes { get; set; }
         public DbSet<ProjectUser> ProjectUsers { get; set; }

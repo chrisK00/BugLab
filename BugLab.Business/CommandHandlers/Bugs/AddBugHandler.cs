@@ -1,9 +1,7 @@
 ﻿using BugLab.Business.Commands.Bugs;
-using BugLab.Business.Helpers;
 using BugLab.Data;
 using BugLab.Data.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +26,7 @@ namespace BugLab.Business.CommandHandlers.Bugs
                 Status = request.Status,
                 ProjectId = request.ProjectId,
                 BugTypeId = request.TypeId,
-                AssignedToId = request.AssignedToId
+                AssignedToId = string.IsNullOrWhiteSpace(request.AssignedToId) ? null : request.AssignedToId,
             };
 
             await _context.Bugs.AddAsync(newBug, cancellationToken);

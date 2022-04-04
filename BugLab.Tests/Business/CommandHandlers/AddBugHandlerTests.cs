@@ -19,7 +19,7 @@ namespace BugLab.Tests.Business.CommandHandlers
         {
             using var context = await DbContextHelpers.CreateAsync();
             _sut = new(context);
-            var command = new AddBugCommand("New Bug",null ,BugPriority.None, BugStatus.InProgress, 1, 1, null);
+            var command = new AddBugCommand("New Bug",null ,BugPriority.None, BugStatus.InProgress, 1, 1, null, null);
             var id = await _sut.Handle(command, default);
 
             id.Should().NotBe(0);
