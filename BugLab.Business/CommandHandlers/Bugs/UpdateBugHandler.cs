@@ -20,7 +20,7 @@ namespace BugLab.Business.CommandHandlers.Bugs
 
         public async Task<Unit> Handle(UpdateBugCommand request, CancellationToken cancellationToken)
         {
-            var bug = await _context.Bugs.Include(x => x.AssignedTo).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var bug = await _context.Bugs.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             Guard.NotFound(bug, nameof(bug), request.Id);
 
             if (request.PartialUpdate) request.Adapt(bug, new TypeAdapterConfig().Default.IgnoreNullValues(true).Config);
