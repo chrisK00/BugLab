@@ -42,6 +42,7 @@
         <MudTh>Modified On</MudTh>
         <MudTh>Project</MudTh>
         <MudTh>Assigned dev</MudTh>
+        <MudTh>Sprint</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Title"><MudButton Color="Color.Primary" @onclick="async () => await SelectedBugChanged(context)">@context.Title</MudButton> </MudTd>
@@ -54,6 +55,7 @@
         <MudTd DataLabel="Modified">@context.Modified?.ToLocalTime()</MudTd>
         <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
         <MudTd DataLabel="Assigned Dev">@context.AssignedTo?.Email</MudTd>
+        <MudTd DataLabel="Sprint"><MudLink @onclick="@(() => Nav.NavigateTo($"/project/{context.ProjectId}/sprints"))">@context.SprintTitle</MudLink></MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Bugs per page" />
