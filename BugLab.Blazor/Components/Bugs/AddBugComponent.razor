@@ -63,7 +63,6 @@
 
 @code {
     private AddBugRequest _model = new();
-    private AddBugValidator _validator = new();
 
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }
     [Parameter] public int ProjectId { get; init; }

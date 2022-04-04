@@ -24,6 +24,7 @@ namespace BugLab.Business.QueryHandlers.Sprints
         {
             var sprints = await _context.Sprints.AsNoTracking()
                 .Where(s => s.ProjectId == request.ProjectId)
+                .OrderByDescending(x => x.StartDate)
                 .ProjectToType<SprintForListResponse>()
                 .ToListAsync(cancellationToken);
 

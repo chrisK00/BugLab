@@ -39,10 +39,10 @@ namespace BugLab.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSprint(int projectId, UpsertSprintRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddSprint(int projectId, AddSprintRequest request, CancellationToken cancellationToken)
         {
             await _authService.HasAccessToProject(User.UserId(), projectId);
-            var command = new AddSprintCommand(projectId, request.Title);
+            var command = new AddSprintCommand(projectId, request.Title, request.StartDate, request.EndDate);
             var id = await _mediator.Send(command, cancellationToken);
 
             return CreatedAtRoute(nameof(GetSprint), new { projectId, id }, id);

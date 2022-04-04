@@ -75,7 +75,6 @@
 
 @code {
     private UpdateBugRequest _model;
-    private UpdateBugValidator _validator = new();
 
     [Parameter] public BugResponse Bug { get; set; }
     [Parameter] public IEnumerable<BugTypeResponse> BugTypes { get; set; }

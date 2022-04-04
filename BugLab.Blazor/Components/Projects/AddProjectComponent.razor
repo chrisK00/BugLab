@@ -1,7 +1,7 @@
 ﻿@inject HttpClient Client
 
 <MudCard>
-    <EditForm Model="_model" OnSubmit="OnSubmit">
+    <EditForm Model="_model" OnValidSubmit="OnSubmit">
         <FluentValidationValidator />
         <MudCardContent>
             <MudTextField AdornmentColor="@Color.Primary" AdornmentIcon="@Icons.Material.Filled.Title" Adornment="Adornment.End" Variant="Variant.Filled"
@@ -17,7 +17,6 @@
 
 @code {
     private AddProjectRequest _model = new();
-    private AddProjectValidator _validator = new();
 
     [Parameter] public EventCallback<int> OnAdd { get; set; }
 

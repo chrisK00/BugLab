@@ -5,17 +5,31 @@
 @inject HttpClient Http
 @inject NavigationManager Nav
 
-<MudTable Items="_sprints" Dense="true">
+<MudButton Class="mb-5" OnClick="() => _showAddSprint = !_showAddSprint" Color="Color.Primary">@(_showAddSprint ? "Hide New Sprint" : "New Sprint")</MudButton>
+@if (_showAddSprint)
+{
+    <AddSprintForm OnAdd="SprintAdded" ProjectId="ProjectId" />
+}
+
+<MudTable Striped="true" Class="mt-5" Items="_sprints" Dense="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Sprints</MudText>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>
         <MudTh>Project</MudTh>
+        <MudTh>Start Date</MudTh>
+        <MudTh>End Date</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Title" id="title"><MudButton @onclick="async () => await SelectedSprintChanged(context)">@context.Title</MudButton></MudTd>
+        <MudTd DataLabel="Title" id="title">
+            <MudButton @onclick="async () => await SelectedSprintChanged(context)" Color="Color.Primary">
+                @context.Title
+            </MudButton>
+        </MudTd>
         <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
+        <MudTd DataLabel="End Date">@context.StartDate</MudTd>
+        <MudTd DataLabel="Start Date">@context.EndDate</MudTd>
     </RowTemplate>
 </MudTable>
 <MudButton OnClick="@(() => Nav.NavigateTo($"/project/{ProjectId}/bugs"))">Project Bugs</MudButton>
@@ -38,9 +52,12 @@
             </MudDropZone>
         </ChildContent>
         <ItemRenderer>
-            <MudButton OnClick="@(async () => await SelectedBugChanged(context))" Class="pa-4 my-4" Elevation="25">
+            <MudButton Size="@Size.Small" OnClick="@(async () => await SelectedBugChanged(context))" Class="pa-4 my-4" Elevation="25">
                 @context.Title
-                <MudChip Style="@($"{Css.BgColor} {context.BugType.Color}; {Css.Color} #fff")">@context.BugType.Title</MudChip>
+                <MudText Typo="@Typo.caption">
+                    <MudChip Size="@Size.Small" Style="@($"{Css.BgColor} {context.BugType.Color}; {Css.Color} #fff")">@context.BugType.Title</MudChip>
+                    @context.AssignedTo?.Email
+                </MudText>
             </MudButton>
         </ItemRenderer>
     </MudDropContainer>
@@ -55,6 +72,7 @@
     [Parameter] public int ProjectId { get; set; }
     private SprintDetailsResponse _selectedSprint;
     private BugResponse _selectedBug;
+    private bool _showAddSprint;
 
     private ICollection<SprintForListResponse> _sprints;
     private IEnumerable<UserResponse> _projectMembers = new List<UserResponse>();
@@ -63,6 +81,12 @@
     public async Task SelectedSprintChanged(SprintForListResponse sprint)
     {
         _selectedSprint = await Http.GetFromJsonAsync<SprintDetailsResponse>($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}", JsonOptions.Defaults());
+    }
+
+    private async Task SprintAdded(SprintForListResponse sprint)
+    {
+        _sprints.Add(sprint);
+        _showAddSprint = false;
     }
 
     private async Task SelectedBugChanged(BugResponse bug)

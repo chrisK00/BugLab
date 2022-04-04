@@ -21,19 +21,23 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Title</MudTh>
+        <MudTh></MudTh>
         <MudTh>High prioritized bugs</MudTh>
         <MudTh>Bugs</MudTh>
-        <MudTh></MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Title" id="title"><MudButton @onclick="async () => await SelectedProjectChanged(context)">@context.Title</MudButton></MudTd>
+        <MudTd DataLabel="Title" id="title">
+            <MudButton Color="Color.Primary" @onclick="async () => await SelectedProjectChanged(context)">
+                @context.Title
+            </MudButton>
+        </MudTd>
+        <MudTd>
+            <MudLink Class="pa-1" @onclick="() => NavigateToBugs(context.Id)">Bugs</MudLink>
+            |
+            <MudLink Class="pa-1" @onclick="() => NavigateToSprints(context.Id)">Sprints</MudLink>
+        </MudTd>
         <MudTd DataLabel="High prioritized bugs">@context.TotalHighPriorityBugs</MudTd>
         <MudTd DataLabel="Total bugs">@context.TotalBugs</MudTd>
-        <MudTd>
-            <MudLink @onclick="() => NavigateToBugs(context.Id)">Bugs </MudLink>
-            |
-            <MudLink @onclick="() => NavigateToSprints(context.Id)">Sprints</MudLink>
-        </MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="_pageSizeOptions" RowsPerPageString="Projects per page" />
