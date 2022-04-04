@@ -1,6 +1,7 @@
 ﻿@page "/project/{projectId:int}/sprints"
 
 @inject HttpClient Http
+@inject NavigationManager Nav
 
 <MudTable Items="_sprints" Dense="true">
     <ToolBarContent>
@@ -15,11 +16,12 @@
         <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
     </RowTemplate>
 </MudTable>
+<MudButton OnClick="@(() => Nav.NavigateTo($"/project/{ProjectId}/bugs"))">Project Bugs</MudButton>
 
 @if (_selectedSprint != null)
 {
     <MudDropContainer T="BugResponse" Items="_selectedSprint.Bugs" ItemsSelector="@((b, dropzone) => b.Status.ToString() == dropzone)"
-                      Class="d-flex flex-wrap flex-grow-1" ItemDropped="async b => await ItemUpdated(b)">
+                      Class="d-flex flex-wrap flex-grow-1" ItemDropped="async b => await DropItemMoved(b)">
         <ChildContent>
             <MudDropZone T="BugResponse" Identifier="@BugStatus.Open.ToString()" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
                 <MudText Typo="Typo.h6" Class="mb-4">Open</MudText>
@@ -76,9 +78,13 @@
         _selectedBug = null;
     }
 
-    private async Task ItemUpdated(MudItemDropInfo<BugResponse> mudDrop)
+    private async Task DropItemMoved(MudItemDropInfo<BugResponse> mudDrop)
     {
         mudDrop.Item.Status = Enum.Parse<BugStatus>(mudDrop.DropzoneIdentifier);
+        var updateRequest = mudDrop.Item.Adapt<UpdateBugRequest>();
+        updateRequest.TypeId = mudDrop.Item.BugType.Id;
+        var response = await Http.PutAsJsonAsync($"{Endpoints.Bugs}/{mudDrop.Item.Id}", updateRequest);
+        Console.WriteLine(response.StatusCode);
     }
 
     protected override async Task OnInitializedAsync()

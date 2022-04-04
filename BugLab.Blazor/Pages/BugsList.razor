@@ -62,7 +62,7 @@
 
 @if (ProjectId.HasValue)
 {
-    <MudButton OnClick="@(async () => { Nav.NavigateTo("/my-bugs"); ProjectId = null; await _table.ReloadServerData();  })">myy bugs</MudButton>
+    <MudButton OnClick="@(async () => { Nav.NavigateTo("/my-bugs"); ProjectId = null; await _table.ReloadServerData();  })">my bugs</MudButton>
     <MudButton OnClick="@(() => Nav.NavigateTo($"/project/{ProjectId}/sprints"))">project sprints</MudButton>
 }
 
