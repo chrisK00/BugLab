@@ -1,0 +1,39 @@
+﻿@page "/project/{projectId:int}/sprints"
+
+@inject HttpClient Http
+
+<MudTable Items="_sprints" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Sprints</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Title</MudTh>
+        <MudTh>Project</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Title" id="title"><MudButton @onclick="async () => await SelectedSprintChanged(context)">@context.Title</MudButton></MudTd>
+        <MudTd DataLabel="Project">@context.ProjectTitle</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@if (_selectedSprint != null)
+{
+    //TODO: show sprintkianban or details or component idk if want to include edit etc in the same but dont think so
+    <MudDropContainer></MudDropContainer>
+}
+
+@code{
+    [Parameter] public int ProjectId { get; set; }
+    private SprintDetailsResponse _selectedSprint;
+    private ICollection<SprintForListResponse> _sprints = new List<SprintForListResponse>();
+
+    public async Task SelectedSprintChanged(SprintForListResponse sprint)
+    {
+        _selectedSprint = await Http.GetFromJsonAsync<SprintDetailsResponse>($"{Endpoints.Sprints(ProjectId)}/{sprint.Id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _sprints = await Http.GetFromJsonAsync<ICollection<SprintForListResponse>>(Endpoints.Sprints(ProjectId));
+    }
+}

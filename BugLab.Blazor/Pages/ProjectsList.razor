@@ -30,7 +30,9 @@
         <MudTd DataLabel="High prioritized bugs">@context.TotalHighPriorityBugs</MudTd>
         <MudTd DataLabel="Total bugs">@context.TotalBugs</MudTd>
         <MudTd>
-            <MudLink @onclick="() => OnProjectClick(context.Title, context.Id)">Go to bugs</MudLink>
+            <MudLink @onclick="() => NavigateToBugs(context.Id)">Bugs </MudLink>
+            |
+            <MudLink @onclick="() => NavigateToSprints(context.Id)">Sprints</MudLink>
         </MudTd>
     </RowTemplate>
     <PagerContent>
@@ -100,10 +102,8 @@
         _selectedProjectMembers = await Client.GetFromJsonAsync<IEnumerable<UserResponse>>(Endpoints.ProjectUsers(_selectedProject.Id));
     }
 
-    public void OnProjectClick(string projectTitle, int projectId)
-    {
-        Nav.NavigateTo($"/project/{projectId}/bugs");
-    }
+    public void NavigateToBugs(int projectId) => Nav.NavigateTo($"/project/{projectId}/bugs");
+    public void NavigateToSprints(int projectId) => Nav.NavigateTo($"/project/{projectId}/sprints");
 
     public async Task OnProjectAdded(int id)
     {
