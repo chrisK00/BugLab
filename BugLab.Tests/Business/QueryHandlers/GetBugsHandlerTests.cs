@@ -33,7 +33,7 @@ namespace BugLab.Tests.Business.QueryHandlers
             var bugs = await _sut.Handle(new GetBugsQuery(DbContextHelpers.CurrentUserId), default);
 
             bugs.Should().NotBeNullOrEmpty();
-            bugs.Should().NotContain(x => x.Title == deletedBug.Title);
+            bugs.Should().NotContain(x => x.Id == deletedBug.Id);
         }
 
         [Fact]
